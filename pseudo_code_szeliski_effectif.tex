@@ -1,0 +1,189 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{fullpage}
+
+
+
+\newcommand{\affinite}[1]{\left(\begin{array}{c c|c} #1 \end{array}\right)}
+	% matrice dont la troisième colonne est séparée par une barre verticale
+\newcommand{\pmatrice}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+	% raccourci vers pmatrix
+
+\newcommand{\pgcd}{\wedge}
+\newcommand{\ppcm}{\vee}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+\newcommand{\Chi}{\raisebox{.40ex}{\ensuremath{\chi}}}
+	% faire un "chi majuscule" (chi surélevé)
+
+\newcommand{\bloc}[2]{\ \\ \underline{#1 :}\\ #2 \ \\}
+	% séparer des blocs de pseudo-codes
+
+
+
+\newenvironment{algorithme}{\begin{algorithm}[H]}{\end{algorithm}}
+	% algorithme insérer de manière plus ou moins contrôlée
+
+
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{Pseudo-codes}
+
+\begin{document}
+ \maketitle
+ On définit des notations :
+ \begin{itemize}
+ \item $x \ppcm y = \max(x,y)$, $x \pgcd y = \min(x,y)$
+ \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
+ \item $img[1..m][1..n]$ désigne une image représentée par un tableau de $m$ lignes et $n$ colonnes
+ \item un point $\pmatrice{x\\y}$ du plan est représenté par tout triplet $\pmatrice{lx\\ly\\l}$. On considère donc que deux triplets proportionnels sont égaux
+ \item une homographie est identifiée à une matrice $H \in \mathcal{M}_{3,3}$ telle que $X=HX'$ ($X$ l'ancienne coordonnée, $X'$ la nouvelle coordonnée) ; $H$ n'est unique qu'à un facteur de proportionnalité près
+ \item une affinité est un cas particulier d'homographie dont la matrice a pour dernière ligne $(0,0,1)$ (à un facteur de proportionnalité près) ; on la représente donc de manière unique par une matrice $A \in \mathcal{M}_{2,3}$ (qui correspond à la représentation habituelle d'une affinité du plan)
+ \end{itemize}
+
+
+\section*{Traitement des affinités pour les homographies}
+  Les trois algorithmes qui suivent (algorithmes \ref{algoUniqueEnSonGenre}, \ref{algoToutAussiUnique} et \ref{algoPresqueAussiUniqueQueLesDeuxAutres}) fonctionnent de la même manière que leurs analogues vus plus haut. La seule différence est qu'ils changent la taille de l'image de sorte à ce que les bords de l'image de sortie collent le plus possible aux sommets de l'image d'entrée transformée (sans rogner ces sommets). Pour cela, les \emph{shear} élémentaires doivent connaitre sur quelle partie du plan ils travaillent, afin que de ne pas faire sortir l'image de la zone sur laquelle on travaille. Chaque image étant un rectangle, possédant un centre, on peut situer ce rectangle dans le plan par la coordonnée (réelle) de ce centre. On leur donne donc en argument les coordonnées du centre du rectangle d'entrée ($x_i,y_i$) et de sortie ($x_f,y_f$). Les translations (qui feraient sortir l'image du cadre) sont donc aussi prises en compte dans ces changements de coordonnée du centre de l'image.
+  
+  Ainsi, si on veut appliquer une homographie à la sortie de $applyAffinity$, il faut considérer que le point $img_a[0][0]$ a pour coordonnées $\mu',\nu'$ dans le plan.
+  
+   \begin{algorithme}
+    \label{algoUniqueEnSonGenre}
+    \caption{$\mathcal{R}_h(img,s,a_0,a_1,x_i,y_i,x_f,y_f)$ (\textit{shear} horizontal, $x$ variable, $y$ constant)}
+    \KwData{Une image d'entrée $img[1..m][1..n]$, des coefficients $s, a_0, a_1 \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    $N = \lceil sM \rceil$\;
+    $H = $ tableau de taille $(2N+1) \times 2^b$\;
+    \bloc{Stockage des valeurs prises par $h$}{
+     \For{$(k,p) \in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket$}{
+      $H[k][p]=h(\frac{k+2^{-b}p}{s})$\;
+     }
+    }
+    \bloc{Normalisation des colonnes}{
+     \For{$p \in \llbracket 0,2^b-1 \rrbracket$}{
+      $H[:][p]=\frac{H[:][p]}{\sum_k H[k][p]}$\;
+     }
+    }
+    $img_f = $ tableau de taille $m \times n$\;
+    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant}{
+     \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+      $i' = \frac{m}{2}-x_i+a_0(i+x_f-\frac{m}{2})+a_1(j+y_f-\frac{n}{2})$\;
+      $k^* = \lfloor i' \rfloor$\;
+      $\phi = i'-k^*$\;
+      $p = \lfloor 2^b\phi \rfloor$
+      $img_f[i][\red j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[k][\red j]$\;
+     }
+    }
+    \KwRet{$img$}
+   \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+   \begin{algorithme}
+    \label{algoToutAussiUnique}
+    \caption{$\mathcal{R}_v(img,s,a_0,a_1,x_i,y_i,x_f,y_f)$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    $N = \lceil sM \rceil$\;
+    $H = $ tableau de taille $(2N+1) \times 2^b$\;
+    \bloc{Stockage des valeurs prises par $h$}{
+     \For{$(k,p) \in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket$}{
+      $H[k][p]=h(\frac{k+2^{-b}p}{s})$\;
+     }
+    }
+    \bloc{Normalisation des colonnes}{
+     \For{$p \in \llbracket 0,2^b-1 \rrbracket$}{
+      $H[:][p]=\frac{H[:][p]}{\sum_k H[k][p]}$\;
+     }
+    }
+    $img_f = $ tableau de taille $m \times n$\;
+    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant}{
+     \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+      $j' = \frac{n}{2}-y_i-y+a_i(i+x_f-\frac{m}{2})+a_0(j+y_f-\frac{n}{2})$\;
+      $k^* = \lfloor j' \rfloor$\;
+      $\phi = j'-k^*$\;
+      $p = \lfloor 2^b\phi \rfloor$
+      $img_f[\red i][j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[\red i][k]$\;
+     }
+    }
+    \KwRet{$img_f$}
+   \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+   \begin{algorithme}
+    \label{algoPresqueAussiUniqueQueLesDeuxAutres}
+    \caption{Affinité "multi-pass" $applyAffinity(img,img',A)$}
+    \KwData{Une image d'entrée $img[1..m][1..n]$, une image de sortie $img'[1..m'][1..n']$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}
+    \bloc{Normalisation de la partie linéaire de $A$}{
+     \For{$k \in \{0,1\}$}{
+      $l_k=\sqrt{a_{k0}^2+a_{k1}^2}$\;
+      $\hat{a}_{k0}=a_{k0}/l_k$\;
+      $\hat{a}_{k1}=a_{k1}/l_k$\;
+     }
+    }
+    \bloc{Échange des rôles de $i$ et $j$ si besoin}{
+     \If{$|\hat{a}_{00}|+|\hat{a}_{11}| < |\hat{a}_{01}|+|\hat{a}_{10}|$}{
+      $img_{temp}$ tableau $n \times m$\;
+      \For{$(i,j) \in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+       $img_{temp}[j][i]=f[i][j]$\;
+      }
+      $img=img_{temp}$\;
+      $A=\pmatrice{a_{10} & a_{11} & t_1\\ a_{00} & a_{01} & t_0}$\;
+      $\pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}=A$\;
+      $(m,n) = (n,m)$\;
+     }
+    }
+    $u_{max}, v_{max} = frequencesMax(A)$\;
+	$b_0 = a_{00}-\frac{a_{01}a_{10}}{a_{11}}$\;
+	$b_1 = \frac{a_{01}}{a_{11}}$\;
+	$r_v = \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))$\;
+	$r_v = \min (r_v, 3)$\;
+	$r_h = \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))$\;
+	$r_h = \min (r_h, 3)$\;
+	\\
+	$dm,dn = \frac{m'-m}{2},\frac{n'-n}{2}$\;
+	$img_0 = $ tableau vide de taille $3(m \ppcm m') \times 3(n \ppcm n')$\;
+	Plonger $img$ au centre de $img_0$\;
+	\tcc{Remplir le reste de $img_0$ selon les conditions aux bords voulues (symétriques pour une homographie standard, périodiques pour une homographie périodisée)}
+	$x_i = \frac{m}{2}, y_i = \frac{n}{2}$\;
+	$x_f = x_i, y_f = \frac{r_v}{a_{11}}y_i$\;
+	$img_1 = \mathcal{R}_v(img_0,\frac{1}{v_{max}},\frac{a_{11}}{r_v},0)$\;
+	$x_i = x_f-t_2, y_i = y_f$;\tcc{translation selon les lignes}
+	$x_f = \frac{r_h}{b_0} x_i - \frac{a_{01}r_h}{r_v b_0} y_i, y_f = y_i$\;
+	$img_2 = \mathcal{R}_h(img_1,\frac{1}{u_{max}},\frac{b_0}{r_h},\frac{a_{01}}{r_v})$\;
+	$x_i = x_f, y_i = y_f - \frac{t_1r_v}{a_{11}}$;\tcc{translation selon les colonnes}
+	$x_f = x_i, y_f = \frac{n \ppcm n'}{2}$\;
+	$img_3 = \mathcal{R}_v(img_2,r_v,r_v,\frac{a_{10}r_v}{a_{11}r_h})$\;
+	$x_i = x_f, y_i = y_f$;
+	$x_f = \frac{m \ppcm m'}{2}, y_f = \frac{n \ppcm n'}{2}$\;
+	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0)$\;
+	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n'], (\mu',\nu')$}
+   \end{algorithme}
+\end{document}

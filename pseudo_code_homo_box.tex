@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{stmaryrd}
+\usepackage{nccmath}
+\usepackage[french]{babel}
+\selectlanguage{french} 
+\newcommand{\A}[0]{{\cal A}}
+\newcommand{\C}[0]{{\cal C}}
+\newcommand{\se}[1]{\medbreak \medbreak \section*{#1}}
+\newcommand{\sse}[1]{\medbreak \subsection*{#1}}
+\newcommand{\ssse}[1]{\subsubsection*{#1}}
+\newcommand{\Def}[0]{\ssse{Définition}}
+\newcommand{\The}[0]{\ssse{Théorème}}
+\newcommand{\Pro}[0]{\ssse{Propriété}}
+\newcommand{\Exo}[1]{\sse{Exercice #1}}
+\newcommand{\Que}[1]{\ssse{Question #1}}
+\newcommand{\llb}[0]{\llbracket}
+\newcommand{\rrb}[0]{\rrbracket}
+\newcommand{\dd}[0]{\txt{d}}
+\newcommand{\ssi}[0]{\Leftrightarrow}
+\newcommand{\ra}[0]{\rightarrow}
+\newcommand{\Ra}[0]{\Rightarrow}
+\newcommand{\la}[0]{\leftarrow}
+\newcommand{\La}[0]{\Leftarrow}
+\newcommand{\txt}[1]{\textrm{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\mb}[1]{\mathbb{#1}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\iso}[0]{\simeq}
+\newcommand{\dr}[0]{\partial}
+\newcommand{\floor}[1]{\lfloor #1\rfloor}
+ \newcommand{\BlockIf}[1]{\KwSty{Start If} \\ #1 \\ \KwSty{End If}}
+ \newcommand{\BlockElseIf}[1]{\KwSty{Start Else If} \\ #1 \\ \KwSty{End Else If}}
+ \newcommand{\BlockElse}[1]{\KwSty{Start Else} \\ #1 \\ \KwSty{End Else}}
+\usepackage[french,onelanguage]{algorithm2e}
+\usepackage{algorithmique}
+\begin{document}
+\se{Peudo-code pour l'homographie particulière}
+
+\sse{Conventions}
+
+Les images sont des matrices. On a ignoré les éventuelles multiples niveaux de couleurs (qui seront traités indépendamment).
+
+Il y a en faites une origine sur les images (pour pouvoir faire des translations instantanées).
+
+\medbreak
+Les fonctions $Extraire$ se contente de renvoyer la n-ième ligne/colonne.
+Les fonctions $Integrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
+
+\sse{Corps de l'algorithme}
+
+\begin{algorithm}
+\caption{$ApplyHomo(img,imgf,H)$}
+\KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $imgf[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
+$f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
+$f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
+\For{$j \leq h$}{
+	$iimgw = ExtraireVerticale(img,j)$ \;
+	\For{$i\leq w_f$}{
+		$x = f_1(i)$\;
+		$d = |f_1'(i)|$\;
+		$img1(i,j) = Interpole(iimgw,x,d)$\;
+	}
+}
+\For{$i\leq w$}{
+	$iimgh = ExtraireHorizontale(img,i)$\;
+	$d=\frac{\dr}{\dr y} f_2(i,0)$ (indépendant de $j$)\;
+	\For{$j\leq h_f$}{
+		$y=f_2(i,j)$\;
+		$imgf(i,j)=Interpole(iimgh,y,d)$\;
+	}
+}
+\end{algorithm}
+
+\sse{Interpolation à l'aide de l'image intégrale}
+
+Une première version naive. Nous n'avons pas réglé les cas où $InterpoleInt$ n'est pas définie.
+
+\begin{algorithm}
+\caption{$Interpole(iimg,u,d)$}
+\KwData{Un vecteur $iimg$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+$u=u-\frac{d}{2}$\;
+$iimgint = Integrale(iimg)$\;
+$id=floor(d)$\;
+$iu=floor(u)$\;
+$x = d-id$\;
+$y = u-iu$\;
+$a=InterpoleInt(iimgint,iu,id)$\;
+$b=InterpoleInt(iimgint,iu+1,id)$\;
+$c=InterpoleInt(iimgint,iu,id+1)$\;
+$d=InterpoleInt(iimgint,iu+1,id+1)$\;
+\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$InterpoleInt(iimgint,i,d)$}
+\KwData{Un vecteur $iimgint$, deux entiers $i,d$}
+\KwRet{$\frac{iimgint[i+d-1]-iimgint[i-1]}{d}$}
+\end{algorithm}
+
+
+\sse{A l'aide de la convolé de trois portes}
+
+Notons $h_3$ la convolé de trois portes. On a $h_3'' = \mb{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mb{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mb{1}_{[\frac{1}{2},\frac{3}{2}]}$.
+Ainsi en notant $F_2$ l'intégrale seconde de l'image, on a $\int f h_3 = \int F h_3' = \int F_2 h_3''$.
+Ainsi on peut prendre plutôt : 
+
+\begin{algorithm}
+\caption{$Interpole(iimg,u,d)$}
+\KwData{Un vecteur $iimg$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+$id=floor(d)$\;
+$iu=floor(u)$\;
+$x = d-id$\;
+$y = u-iu$\;
+$iimgint3 = Integrale(Integrale(Integrale(iimgint)))$\;
+$a=Interpole3(iimgint3,iu,id)$\;
+$b=Interpole3(iimgint3,iu+1,id)$\;
+$c=Interpole3(iimgint3,iu,id+1)$\;
+$d=Interpole3(iimgint3,iu+1,id+1)$\;
+\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$Interpole3(iimg,i,d)$}
+\KwData{Un vecteur $iimgint$, deux entiers $i,d$}
+$a=InterpoleInt(iimgint3,i-d,d)$\;
+$b=InterpoleInt(iimgint3,i,d)$\;
+$c=InterpoleInt(iimgint3,i+d,d)$\;
+\KwRet{$\frac{a-2*b+c}{d^2}$}
+\end{algorithm}
+
+
+\end{document}

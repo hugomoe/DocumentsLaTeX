@@ -1,0 +1,297 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{fullpage}
+
+
+
+\newcommand{\affinite}[1]{\left(\begin{array}{c c|c} #1 \end{array}\right)}
+	% matrice dont la troisième colonne est séparée par une barre verticale
+\newcommand{\pmatrice}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+	% raccourci vers pmatrix
+
+\newcommand{\pgcd}{\wedge}
+\newcommand{\ppcm}{\vee}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+\newcommand{\Chi}{\raisebox{.40ex}{\ensuremath{\chi}}}
+	% faire un "chi majuscule" (chi surélevé)
+
+\newcommand{\bloc}[2]{\ \\ \underline{#1 :}\\ #2 \ \\}
+	% séparer des blocs de pseudo-codes
+
+
+
+\newenvironment{algorithme}{\begin{algorithm}[H]}{\end{algorithm}}
+	% algorithme insérer de manière plus ou moins contrôlée
+
+
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{Pseudo-codes}
+
+\begin{document}
+ \maketitle
+ On définit des notations :
+ \begin{itemize}
+ \item $x \ppcm y = \max(x,y)$, $x \pgcd y = \min(x,y)$
+ \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
+ \item $img[1..m][1..n]$ désigne une image représentée par un tableau de $m$ lignes et $n$ colonnes
+ \item un point $\pmatrice{x\\y}$ du plan est représenté par tout triplet $\pmatrice{lx\\ly\\l}$. On considère donc que deux triplets proportionnels sont égaux
+ \item une homographie est identifiée à une matrice $H \in \mathcal{M}_{3,3}$ telle que $X=HX'$ ($X$ l'ancienne coordonnée, $X'$ la nouvelle coordonnée) ; $H$ n'est unique qu'à un facteur de proportionnalité près
+ \item une affinité est un cas particulier d'homographie dont la matrice a pour dernière ligne $(0,0,1)$ (à un facteur de proportionnalité près) ; on la représente donc de manière unique par une matrice $A \in \mathcal{M}_{2,3}$ (qui correspond à la représentation habituelle d'une affinité du plan)
+ \end{itemize}
+ 
+ \section*{Traitement des affinités : High-Quality Multi-Pass Resampling}
+  Par abus de langage, et pour être dans la continuation du travail de Szeliski, on appellera \textit{shear} (ou cisaillement) toute transformation affine représentée par $A = \pmatrice{a_0&a_1&t\\0&1&0}$ (traité par $\mathcal{R}_h$) ou $A = \pmatrice{0&1&0\\a_1&a_0&t}$ (traité par $\mathcal{R}_v$).
+  
+  Dans les algorithmes $\mathcal{R}_h$ et $\mathcal{R}_v$, on considère que l'image est prolongée par symétrie (par exemple, si on appelle $img[k][j]$ avec $k > m = $ nombre de lignes de $img$, on obtient la valeur $img[2m-k][j]$).
+  
+  Ces deux algorithmes fonctionnent de la manière suivante : on stocke à l'avance les valeurs prises par le filtre $h(\frac{\dot{}}{s})$ sur $\{k+p*2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$. $s$ est donc un paramètre pour élargir éventuellement le support de la fonction filtre ; $b$ est un paramètre de précision des calculs. Dans un second  temps on utilise ces valeurs calculées pour convoler selon une direction avec ledit filtre.
+  
+   \begin{algorithme}
+    \caption{$\mathcal{R}_h(f,s,a_0,a_1,t)$ (\textit{shear} horizontal : $y$ constant, $x$ variable)}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, $h$ filtre d'interpolation, $M$ tel que $[-M,M]\subset \supp h$, $b$ une précision de calcul en bits}
+    $N = \lceil sM \rceil$\;
+    $H = $ tableau de taille $(2N+1) \times 2^b$\;
+    \bloc{Stockage des valeurs prises par $h$}{
+     \For{$(k,p) \in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket$}{
+      $H[k][p]=h(\frac{k+2^{-b}p}{s})$\;
+     }
+    }
+    \bloc{Normalisation de la colonne}{
+     \For{$p \in \llbracket 0,2^b-1 \rrbracket$}{
+      $H[:][p]=\frac{H[:][p]}{\sum_k H[k][p]}$\;
+     }
+    }
+    $img_f = $ tableau de taille $m \times n$\;
+    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant}{
+     \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+      $i' = \frac m 2+a_0(i-\frac m 2)+a_1(j-\frac n 2)+t$\;
+      $k^* = \lfloor i' \rfloor$\;
+      $\phi = i'-k^*$\;
+      $p = \lfloor 2^b\phi \rfloor$\;
+      $img_f[i][\red j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[k][\red j]$\;
+     }
+    }
+    \KwRet{$img_f$}
+   \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+   \begin{algorithme}
+    \caption{$\mathcal{R}_v(f,s,a_0,a_1,t)$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    $N = \lceil sM \rceil$\;
+    $H = $ tableau de taille $(2N+1) \times 2^b$\;
+    \bloc{Stockage des valeurs prises par $h$}{
+     \For{$(k,p) \in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket$}{
+      $H[k][p]=h(\frac{k+2^{-b}p}{s})$\;
+     }
+    }
+    \bloc{Normalisation de la colonne}{
+     \For{$p \in \llbracket 0,2^b-1 \rrbracket$}{
+      $H[:][p]=\frac{H[:][p]}{\sum_k H[k][p]}$\;
+     }
+    }
+    $img_f = $ tableau de taille $m \times n$\;
+    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant}{
+     \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+      $j' = \frac n 2+a_1(i-\frac m 2)+a_0(j-\frac n 2)+t$\;
+      $k^* = \lfloor j' \rfloor$\;
+      $\phi = j'-k^*$\;
+      $p = \lfloor 2^b\phi \rfloor$\;
+      $img_f[\red i][j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[\red i][k]$\;
+     }
+    }
+    \KwRet{$img_f$}
+   \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+  Dans le traitement de l'affinité totale, on transpose éventuellement l'image (et l'affinité) pour réduire la compression que feront les \textit{shear} (effet Bottleneck), puis on décompose l'affinité en quatre \textit{shear} dont les coefficients dépendent de ceux de $A$ et des fréquences maximales utiles, déterminées par un algorithme plus bas.
+  
+   \begin{algorithme}
+    \caption{Affinité "multi-pass"}
+    \KwData{Une image $img[1..m][1..n]$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}
+    \bloc{Normalisation}{
+     \For{$k \in \{0,1\}$}{
+      $l_k=\sqrt{a_{k0}^2+a_{k1}^2}$\;
+      $\hat{a}_{k0}=a_{k0}/l_k$\;
+      $\hat{a}_{k1}=a_{k1}/l_k$\;
+     }
+    }
+    \bloc{Échange des rôles de $i$ et $j$}{
+     \If{$|\hat{a}_{00}|+|\hat{a}_{11}| < |\hat{a}_{01}|+|\hat{a}_{10}|$}{
+      $img_{temp} = $ tableau de taille $n \times m$\;
+      \For{$(i,j) \in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
+       $img_{temp}[j][i]=img[i][j]$\;
+      }
+      $img=img_{temp}$\;
+      $A=\pmatrice{a_{10} & a_{11} & t_1\\ a_{00} & a_{01} & t_0}$\;
+      $\pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}=A$\;
+      $(m,n) = (n,m)$\;
+     }
+    }
+    $u_{max}, v_{max} = frequencesMax(A)$\;
+	$b_0 = a_{00}-\frac{a_{01}a_{10}}{a_{11}}$\;
+	$b_1 = \frac{a_{01}}{a_{11}}$\;
+	$t_2 = t_0 - \frac{a_{01}t_1}{a_{11}}$\;
+	$r_v = \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))$\;
+	$r_v = \min (r_v, 3)$\;
+	$r_h = \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))$\;
+	$r_h = \min (r_h, 3)$\;
+	$img_0 =$ image noire de taille$3m \times 3n$\;
+	$img_0[m+1..2m][n+1..2n] = f$\;
+	$img_1 = \mathcal{R}_v(img_0,\frac{1}{v_{max}},\frac{a_{11}}{r_v},0,0)$\;
+	$img_2 = \mathcal{R}_h(img_1,\frac{1}{u_{max}},\frac{b_0}{r_h},\frac{a_{01}}{r_v},t_2)$\;
+	$img_3 = \mathcal{R}_v(img_2,r_v,r_v,\frac{a_{10}r_v}{a_{11}r_h},\frac{t_1r_v}{a_{11}})$\;
+	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,0)$\;
+	\KwRet{$f_4[m+1..2m][n+1..2n]$}
+   \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+  Dans $frequencesMax$, on détermine $u_{max}$ et $v_{max}$ les fréquences (respectivement horizontales et verticales) au-delà desquelles l'application de l'affinité coupera le spectre, en considérant le spectre comme étant sur le carré $[-1,1]^2$ (par exemple : si l'affinité effectue un zoom arrière de facteur 2 ($A = \pmatrice{2&0&0\\0&2&0}$), on perdra toutes les fréquences au-delà du carré $[-1/2,1/2]^2$). Cela permet de connaître les valeurs minimales des paramètres $r_v$ et $r_h$ (paramètres de sur-échantillonnage) qui éviteront l'aliasing. Tout cela se déroulant dans le domaine de Fourier, seule la partie linéaire de l'affinité nous intéresse.
+  
+  \textit{insérer les schémas de $u_{max}$, $v_{max}$}
+  
+  Les deux algorithmes $intersectionsVerticales$ et $intersectionsHorizontales$ intersectent un segment (dont les extrémités ont pour coordonnées $(U_1,V_1)$ et $(U_2,V_2)$) avec deux côtés parallèles du carré $[-1,1]^2$. La connaissance de ces intersections et la symétrie par rapport au point $(0,0)$ de l'application linéaire suffisent à connaître la totalité des sommets du polygone $[-1,1]^2 \cap \ ^t\!\!A^{-1}[-1,1]^2$, et donc les points de coordonnées maximales.
+  
+  NB : $^t\!\!A^{-1}[-1,1]^2$ est l'ensemble des fréquences conservées par l'effet de l'affinité $A$.
+  
+  \begin{algorithme}
+   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$}
+   \KwData{$(U_1,V_1)$ et $(U_2,V_2)$ coordonnées des extrémités d'un segment non vertical ($U_1\neq U_2$)}
+   $u_+ = 1$\;
+   $u_- = -1$\;
+   $v_+ = V_1+(u_+-U_1)\frac{V_2-V_1}{U_2-U_1}$\;
+   $v_- = V_1+(u_--U_1)\frac{V_2-V_1}{U_2-U_1}$\;
+   $l =$ tableau de taille $2 \times 0$\;
+   \If{$|u_+|\leq1$ et $|v_+|\leq1$ et ($U_1 \leq u_+ \leq U_2$ ou $U_2 \leq u_+ \leq U_1$)}{
+    Concaténer $l$ et $(u_+,v_+)^T$\;
+   }
+   \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($U_1 \leq u_- \leq U_2$ ou $U_2 \leq u_- \leq U_1$)}{
+    Concaténer $l$ et $(u_-,v_-)^T$\;
+   }
+  \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+  \begin{algorithme}
+   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$}
+   \KwData{$(U_1,V_1)$ et $(U_2,V_2)$ coordonnées des extrémités d'un segment non horizontal ($V_1 \neq V_2$)}
+   $v_+ = 1$\;
+   $v_- = -1$\;
+   $u_+ = U_1+(v_+-V_1)\frac{U_2-U_1}{V_2-V_1}$\;
+   $u_- = U_1+(v_--V_1)\frac{U_2-U_1}{V_2-V_1}$\;
+   $M =$ tableau de taille $2 \times 0$\;
+   \If{$|u_+|\leq1$ et $|v_+|\leq1$ et ($V_1 \leq v_+ \leq V_2$ ou $V_2 \leq v_+ \leq V_1$)}{
+    Concaténer $M$ et $(u_+,v_+)^T$\;
+   }
+   \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($V_1 \leq v_- \leq V_2$ ou $V_2 \leq v_- \leq V_1$)}{
+    Concaténer $M$ et $(u_-,v_-)^T$\;
+   }
+  \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+  \begin{algorithme}
+   \caption{$frequencesMax(A)$}
+   \KwData{$A$ matrice d'application linéaire $2 \times 2$}
+   $\pmatrice{u_1\\v_1} =\ ^t\!\!A^{-1}\pmatrice{1\\1}$\;
+   $\pmatrice{u_2\\v_2} =\ ^t\!\!A^{-1}\pmatrice{1\\-1}$\;
+   $M = $ tableau vide de taille $2 \times 0$\;
+   \If{$|u_1|\leq1$ et $|v_1|\leq1$}{
+    Concaténer $M$ et $(u_1,v_1)^T$\;
+   }
+   \If{$|u_2|\leq1$ et $|v_2|\leq1$}{
+    Concaténer $M$ et $(u_2,v_2)^T$\;
+   }
+   \uIf{$u_1=u_2$}{
+    \eIf{$v_1=-v_2$}{
+     \KwRet{$(\min(|u_1|,1),\min(|v_1|,1)$}
+    }{
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+     Concaténer $M$ et $intersectionsVerticales(u_1,v_1,-u_2,-v_2)$\;
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+    }
+   }
+   \uElseIf{$u_1=-u_2$}{
+    \eIf{$v_1=v_2$}{
+     \KwRet{$(\min(|u_1|,1),\min(|v_1|,1)$}
+    }{
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+     Concaténer $M$ et $intersectionsVerticales(u_1,v_1,u_2,v_2)$\;
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+    }
+   }
+   \Else{
+    Concaténer $M$ et $intersectionsVerticales(u_1,v_1,u_2,v_2)$\;
+    Concaténer $M$ et $intersectionsVerticales(u_1,v_1,-u_2,-v_2)$\;
+    \uIf{$v_1=v_2$}{
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+    }
+    \uElseIf{$v_1=-v_2$}{
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+    }
+    \Else{
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+     Concaténer $M$ et $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+    }
+   }
+   \tcc{À ce stade, $M$ est la liste presque complète des sommets $(M[1][i],M[2][i])$ du polygone dont on veut connaître les fréquences maximales}
+   \eIf{$M$ est vide}{
+    \KwRet{$(1,1)$}
+   }{
+   \KwRet{$(\max_{i}\{|M[1][i]|\},\max_{i}\{|M[2][i]|\})$}
+   }
+  \end{algorithme}

@@ -1,0 +1,216 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{fullpage}
+
+
+
+\newcommand{\affinite}[1]{\left(\begin{array}{c c|c} #1 \end{array}\right)}
+	% matrice dont la troisième colonne est séparée par une barre verticale
+\newcommand{\pmatrice}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+	% raccourci vers pmatrix
+
+\newcommand{\pgcd}{\wedge}
+\newcommand{\ppcm}{\vee}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+\newcommand{\Chi}{\raisebox{.40ex}{\ensuremath{\chi}}}
+	% faire un "chi majuscule" (chi surélevé)
+
+\newcommand{\bloc}[2]{\ \\ \underline{#1 :}\\ #2 \ \\}
+	% séparer des blocs de pseudo-codes
+
+
+
+\newenvironment{algorithme}{\begin{algorithm}[H]}{\end{algorithm}}
+	% algorithme insérer de manière plus ou moins contrôlée
+
+
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{Pseudo-codes}
+
+\begin{document}
+ \maketitle
+ On définit des notations :
+ \begin{itemize}
+ \item $x \ppcm y = \max(x,y)$, $x \pgcd y = \min(x,y)$
+ \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
+ \item $img[1..m][1..n]$ désigne une image représentée par un tableau de $m$ lignes et $n$ colonnes
+ \item un point $\pmatrice{x\\y}$ du plan est représenté par tout triplet $\pmatrice{lx\\ly\\l}$. On considère donc que deux triplets proportionnels sont égaux
+ \item une homographie est identifiée à une matrice $H \in \mathcal{M}_{3,3}$ telle que $X=HX'$ ($X$ l'ancienne coordonnée, $X'$ la nouvelle coordonnée) ; $H$ n'est unique qu'à un facteur de proportionnalité près
+ \item une affinité est un cas particulier d'homographie dont la matrice a pour dernière ligne $(0,0,1)$ (à un facteur de proportionnalité près) ; on la représente donc de manière unique par une matrice $A \in \mathcal{M}_{2,3}$ (qui correspond à la représentation habituelle d'une affinité du plan)
+ \end{itemize}
+ 
+ \section*{Traitement d'une homographie}
+    Chaque image $img_i$ est de taille $m_i \times n_i$ et son sommet supérieur droit a pour coordonnées $\mu_i,\nu_i$. La donnée $img_i$ est dans ce pseudo-code la donnée du contenu de $img_i$ mais aussi de ces quatre nombre $(m_i,n_i,\mu_i,\nu_i)$. Ces quatre nombres définissent un rectangle (en définissant sa hauteur, sa largeur et la coordonnée de son coin supérieur droit), et peuvent donc être définis comme le plus petit rectangle contenant une surface donnée.
+    
+    \textit{insérer un schéma où ledit rectangle entoure une surface donnée}
+    
+    En particulier, cette surface sera l'ensemble des pixels conservés par l'application de l'homographie, $H(img_4)$, ou l'ensemble des pixels conservés par l'application de la dernière affinité, $B(img_4)$.
+    
+    En pratique, pour prendre en compte les différents $\mu,\nu$, on effectue des opérations de changement de coordonnée dans $applyHomography$ et on modifie les coefficients de translation des affinités : on applique $applyAffinity(\tilde A)$ telle que :
+    \[\tilde A^{-1}\pmatrice{0\\0}=A^{-1}\pmatrice{\mu_1\\ \nu_1}\]
+    ($\tilde A$ effectue l'opération que faisait $A$, mais en restant à l'intérieur d'un rectangle dont le coin supérieur gauche aurait pour coordonnées $(0,0)$). C'est la raison d'être des changements de valeur de certains coefficients de $A$ et $B$ dans le pseudo-code ci-dessous.
+    
+    \begin{algorithme}
+     \caption{$\mathcal H(img,H)$ : traitement d'une homographie à partir d'une décomposition}
+     \KwData{Une matrice d'homographie $H\in \mathcal{M}_{3,3}$, une image de départ $img_0$, une image d'arrivée (vide) $img_4$, une fonction $decomposition$ comme plus bas}
+     \eIf{$H$ est une affinité}{$img_4 = \mathcal A(img_1,H)$}
+     {
+     $A,\tilde H,B = decomposition(H)$\;
+     $(m_1,n_1,\mu_1,\nu_1) =$ plus petit rectangle contenant $H(img_4)$\;
+     $img_1 =$ troncature de $img_0$ (intersection de $img_0$ et du rectangle $(m_1,n_1,\mu_1,\nu_1)$)\;
+     $(m_2,n_2,\mu_2,\nu_2) =$ plus petit rectangle contenant $A^{-1}(img_1)$\;
+     $A(1,3) = A(1,1)\mu_2+A(1,2)\nu_2+A(1,3) - \mu_1$\;
+     $A(2,3) = A(2,1)\mu_2+A(2,2)\nu_2+A(2,3) - \nu_1$\;
+     $img_2 = applyAffinity(img_1,A)$\;
+     $(m_3,n_3,\mu_3,\nu_3) =$ plus petit rectangle contenant $B(img_4)$\;
+     $img_3 = applyHomography(img_2,\tilde H)$\;
+     $B(1,3) = B(1,1)\mu_4+B(1,2)\nu_4+B(1,3) - \mu_3$\;
+     $B(2,3) = B(2,1)\mu_4+B(2,2)\nu_4+B(2,3) - \nu_3$\;
+     $img_4 = applyAffinity(img_3,B)$\;
+     }
+     \KwRet{$img_4$}
+    \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+ \section*{Décompositions}
+  Sont présentés ici deux algorithmes de décomposition, l'ancien ayant été abandonné pour manque d'efficacité (la première matrice $A$ pouvait facilement demander des images intermédiaires trop grandes et donc ralentir voir arrêter le programme). Le second est issu de la décomposition géométrique d'une homographie comme un mouvement de caméra dans l'espace depuis une vue frontale.
+  
+  Les contraintes pour ces décompositions sont :
+  \begin{itemize}
+  \item décomposer matriciellement (et explicitement) une homographie quelconque en une affinité $A$, une homographie particulière $\tilde H$ et une affinité $B$
+  \item l'homographie particulière doit appartenir à une famille d'homographie qui se traite plus facilement qu'une homographie générale, et on suppose disposer d'une fonction $applyHomography$ qui traite correctement cette famille d'homographie ; dans les décompositions ici, la famille d'homographie est l'ensemble des homographies pouvant se traiter à y constant d'abord puis à x constant ($x'$ ne dépend que de $x$) et dont le taux de compression à $x$ constant ne dépend pas de $y$
+  \end{itemize}
+  
+    \begin{algorithme}
+     \caption{Ancienne $decomposition(H)$}
+     \KwData{Une matrice d'homographie $H\in \mathcal{M}_{3,3}$ telle que $H(3,3)=1$}
+     $\pmatrice{
+      \alpha&\beta&p\\
+      \delta&\epsilon&q\\
+      \rho&\sigma&\tau}
+      = H$\;
+     $N = \sqrt{\rho^2+\sigma^2}$\;
+     $\Delta_1 = \beta \rho - \alpha \sigma$\;
+     $\Delta_2 = \epsilon \rho - \delta \sigma$\;
+     $\Gamma_1 = \alpha \rho + \beta \sigma$\;
+     $\Gamma_2 = \delta \rho + \epsilon \sigma$\;
+     $s = -\frac
+      {\Delta_1(\Gamma_1/N-pN)+\Delta_2(\Gamma_2/N-qN)}
+      {\Delta_1^2+\Delta_2^2}$\;
+     
+     $b = \left(s\Delta_1-pN+\frac{\Gamma_1}{N}\right)^2+\left(s\Delta_2-qN+\frac{\Gamma_2}{N}\right)^2+\left(\frac{\Delta_1}{N}\right)^2+\left(\frac{\Delta_2}{N}\right)^2$\;
+     $\lambda = \max\left(\frac{b+\sqrt{b^2-4det(H)^2}}{2},1\right)$\;
+     $A = \pmatrice{
+      \frac{s\Delta_1-pN+\Gamma_1/N}{\lambda} & \frac{\Delta_1/N}{\lambda} & p - s\Delta_1/N\\
+      \frac{s\Delta_2-qN+\Gamma_2/N}{\lambda} & \frac{\Delta_2/N}{\lambda} & q - s\Delta_2/N\\
+      0&0&1
+      }$\;
+     $H_N = \pmatrice{
+      \lambda & 0 & 0\\
+      0 & \lambda & 0\\
+      N & 0 & 1}$\;
+     $B = \pmatrice{
+      \rho/N&\sigma/N&0\\
+      -\sigma/N&\rho/N&s\\
+      0&0&1}$\;
+    \end{algorithme}
+
+
+
+
+
+
+
+
+
+
+  Pour la seconde décomposition (la décomposition actuelle), on utilise une fonction discriminant définie par
+  \[\Delta(H) = (as-br)(ar+bs)+(cs-dr)(cr+ds)\]
+  (avec $a,b,c,d,p,q,r,s,t$ les coefficients habituels de l'homographie).
+  
+  Le pseudo-code tel qu'il est se sert directement de la décomposition géométrique (sans prise en compte de la translation de l'écran de caméra) en s'y ramenant via $H'$. Plus bas se trouve un pseudo-code plus explicite, sans définir $H'$.
+  
+    \begin{algorithme}
+     \caption{$decomposition(H)$}
+     \KwData{Une matrice d'homographie $H \in \mathcal M_{3,3}$}
+     \eIf{$as-br\neq0$}{
+      $t_0 = -\frac{\Delta(H)}{(r^2+s^2)(as-br)}$\;
+      $t_1 = 0$\;
+     }{
+      $t_0 = 0$\;
+      $t_1 = -\frac{\Delta(H)}{(r^2+s^2)(cs-dr)}$\;
+     }
+     $T = \pmatrice{1&0&t_0\\0&1&t_1\\0&0&1}$\;
+     $H' = TH$\;
+     $N_\phi = \sqrt{r'^2+s'^2}$\;
+     $R_\phi = \pmatrice{
+      \frac{r'}{N_\phi} & \frac{s'}{N_\phi} & 0\\
+      -\frac{s'}{N_\phi} & \frac{r'}{N_\phi} & 0\\
+      0 & 0 & 1}$\;
+     $N_\psi = \sqrt{(a's'-b'r')^2+(c's'-d'r')^2}$\;
+     $R_\psi = \pmatrice{
+      \frac{c's'-d'r'}{N_\psi} & \frac{a's'-b'r'}{N_\psi} & 0\\
+      -\frac{a's'-b'r'}{N_\psi} & \frac{c's'-d'r'}{N_\psi} & 0\\
+      0 & 0 & 1}$\;
+     $A = T^{-1}R_\psi$\;
+     $\tilde H = \pmatrice{
+      -\frac{(a'd'-b'c')N_\phi}{N_\psi} & 0 & \frac{p'(c's'-d'r')-q'(a's'-b'r')}{N_\psi}\\
+      0 & -\frac{N_\psi}{N_\phi} & \frac{p'(a's'-b'r')+q'(c's'-d'r')}{N_\psi}\\
+      N_\phi & 0 & t'}$\;
+     $B = R_\phi$\;
+     \KwRet{$A,\tilde H,B$}
+   \end{algorithme}
+   \begin{algorithme}
+     \caption{$decomposition(H)$}
+     \KwData{Une matrice d'homographie $H \in \mathcal M_{3,3}$}
+     \eIf{$as-br\neq0$}{
+      $t_0 = -\frac{\Delta(H)}{(r^2+s^2)(as-br)}$\;
+      $t_1 = 0$\;
+     }{
+      $t_0 = 0$\;
+      $t_1 = -\frac{\Delta(H)}{(r^2+s^2)(cs-dr)}$\;
+     }
+     $T = \pmatrice{1&0&t_0\\0&1&t_1\\0&0&1}$\;
+     $N_\phi = \sqrt{r^2+s^2}$\;
+     $R_\phi = \pmatrice{
+      \frac{r}{N_\phi} & \frac{s}{N_\phi} & 0\\
+      -\frac{s}{N_\phi} & \frac{r}{N_\phi} & 0\\
+      0 & 0 & 1}$\;
+     $N_\psi = \sqrt{((a+t_0r)s-(b+t_0s)r)^2+((c+t_1r)s-(d+t_1s)r)^2}$\;
+     $R_\psi = \pmatrice{
+      \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & \frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & 0\\
+      -\frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & 0\\
+      0 & 0 & 1}$\;
+     $A = T^{-1}R_\psi$\;
+     $\tilde H = \pmatrice{
+      -\frac{((a+t_0r)(d+t_1s)-(b+t_0s)(c+t_1r))N_\phi}{N_\psi} & 0 & \frac{p'((c+t_1r)s-(d+t_1s)r)-q'((a+t_0r)s-(b+t_0s)r)}{N_\psi}\\
+      0 & -\frac{N_\psi}{N_\phi} & \frac{p'((a+t_0r)s-(b+t_0s)r)+q'((c+t_1r)s-(d+t_1s)r)}{N_\psi}\\
+      N_\phi & 0 & t'}$\;
+     $B = R_\phi$\;
+     \KwRet{$A,\tilde H,B$}
+   \end{algorithme}
+\end{document}

@@ -1,0 +1,338 @@
+\documentclass{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{stmaryrd}
+\usepackage{nccmath}
+\usepackage[french]{babel}
+\selectlanguage{french} 
+\newcommand{\A}[0]{{\cal A}}
+\newcommand{\C}[0]{{\cal C}}
+\newcommand{\se}[1]{\medbreak \medbreak \section*{#1}}
+\newcommand{\sse}[1]{\medbreak \subsection*{#1}}
+\newcommand{\ssse}[1]{\subsubsection*{#1}}
+\newcommand{\Def}[0]{\ssse{Définition}}
+\newcommand{\The}[0]{\ssse{Théorème}}
+\newcommand{\Pro}[0]{\ssse{Propriété}}
+\newcommand{\Exo}[1]{\sse{Exercice #1}}
+\newcommand{\Que}[1]{\ssse{Question #1}}
+\newcommand{\llb}[0]{\llbracket}
+\newcommand{\rrb}[0]{\rrbracket}
+\newcommand{\dd}[0]{\txt{d}}
+\newcommand{\ssi}[0]{\Leftrightarrow}
+\newcommand{\ra}[0]{\rightarrow}
+\newcommand{\Ra}[0]{\Rightarrow}
+\newcommand{\la}[0]{\leftarrow}
+\newcommand{\La}[0]{\Leftarrow}
+\newcommand{\txt}[1]{\textrm{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\mb}[1]{\mathbb{#1}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\iso}[0]{\simeq}
+\newcommand{\dr}[0]{\partial}
+\newcommand{\floor}[1]{\lfloor #1\rfloor}
+ \newcommand{\BlockIf}[1]{\KwSty{Start If} \\ #1 \\ \KwSty{End If}}
+ \newcommand{\BlockElseIf}[1]{\KwSty{Start Else If} \\ #1 \\ \KwSty{End Else If}}
+ \newcommand{\BlockElse}[1]{\KwSty{Start Else} \\ #1 \\ \KwSty{End Else}}
+\usepackage[french,onelanguage]{algorithm2e}
+\usepackage{algorithmique}
+\begin{document}
+\se{Algorithme de mip-mapping Version 2}
+
+\sse{Introduction}
+
+C'est une méthode utilisée en texturing, présentée par Williams en 1983.
+
+\sse{Principe}
+
+Le principe est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
+
+Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quittes à faire un premier zoom). On calcul ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
+Le mipmap est donc représenté par une suite d'image chacune deux fois plus petite que la précédente, qui sont des "zoom-out" de l'image d'origine de facteur une puissance de 2.
+
+%image d'un vrai mipmap, que je ferais moi
+
+Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors approximativement un parallélogramme, qu'on essaye d'approximer par des carrés.
+
+%image de parallélogramme avec les différentielles, avec au mieux schéma image de départ / arrivé qui explique la correspondance entre un pixel est un parallélogramme
+
+On appelle distance la taille d'un carré (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
+
+On suppose une formule nous donnant la distance d'un point quelconque, la géométrie du mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
+
+-d'une part on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
+
+-d'autre part dans chaque niveau du mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+
+%image de l'inter trilinéaire avec deux plans pour les profondeurs
+
+\sse{Conventions}
+
+Un mipmapping est un tableau à trois dimensions, avec les deux axes usuels et une profondeur $d$.
+Ainsi $M[3]$ est le carré $4$ fois moins haut que l'image d'origine. 
+
+Convention sur les profondeurs : $$D = 1 \ssi \txt{image d'origine et} \ D = \txt{taille d'origine} \ssi \txt{moyenne de tous les points}$$
+
+%ici mettre une image symbolique, schéma de la pyramide avec u,v et d
+
+En pratique, on a périodisé l'image.
+
+\sse{Pseudo-code}
+
+Corps de la fonction : la fonction de distance et la construction du mipmap ne sont pas précisés, ils le sont dans les sections suivantes.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{$mainFunction(img,H,I)$}
+\KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}%préciser l'homographie
+$M=builtMipMap(img)$ \;%Faire le mip-mapping de $img$ noté $M$\;
+Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
+\For{$(x,y) \in \llb 1,m \rrb^2$}{
+Calculer $d=D(x,y)$ \;%préciser les équations
+$I[x][y] = evalPixel(H^{-1}(x,y),d,M)$\;
+}
+\KwRet{I}
+\end{algorithm}
+
+\medbreak
+\medbreak
+L'interpolation trilinéaire :
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$evalPixel(u,v,d,M)$}
+\KwData{coordonnées $u,v \in \mb{R}$, la distance $d \in \mb{R}$, le mipmap $M$}
+\If{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
+\If{$d>\txt{taille d'image}$}{\KwRet{$M[\log_2 (\txt{taille d'image})][1][1]$}}
+Trouver $m \in \mb{N}$ tels que $2^m \leq d < 2^{m+1}$ (ou m=0 sinon)\;
+$a=bilinearMipMap(\frac{u}{2^{m-1}}, \frac{v}{2^{m-1}},M[m])$\;
+$b= bilinearMipMap(\frac{u}{2^{m}}, \frac{v}{2^{m}},M[m+1])$\; 
+\KwRet{$ (m+1 - \log (d)) a + (\log (d) - m) b$}
+\end{algorithm}
+
+\medbreak
+\medbreak
+Ici l'interpolation bilinéaire, au niveau $d$.
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$bilinearMipMap(u,v,M)$}
+\KwData{coordonnées $(u,v) \in \mb{R}^2$, l'image tirée du mipmap $I$}
+$u'=floor(u)$\;
+$v' = floor(v)$\;
+$x=u-u'$\;
+$y = v-v'$\;
+\KwRet{$(1-x)(1-y)*I[u'][v'] + (1-x)y*I[u'][v'+1] + x(1-y)*I[u'+1][v']+xy*I[u'+1][v'+1]$}\;
+\end{algorithm}
+
+\medbreak
+\medbreak
+Ce n'est qu'un algorithme générique, nous allons maintenant voir comment le spécifier pour permettre une implémentation réelle. Il faut examiner la construction du mipmap et le choix de la fonction de distance.
+
+\sse{Construction du mipmap}
+
+Voici un exemple naïf de construction d'un mipmap. On fait simplement la moyenne des quatre pixels concernés.
+ \medbreak
+  \medbreak
+ \begin{algorithm}[H]
+ \caption{$buildMipMap(*img)$}
+ \KwData{Une image $img[1..n][1..n]$ (où $n = 2^d$)}
+ \For{$(i,j)\in \llb1,n\rrb^2$}{
+ 	$M[1][i][j]=img[i][j]$\;
+ }
+ \For{$u \in \llb 2,d+1\rrb$}{
+ 	\For{$(i,j)\in \llb1,\frac{n}{2^{u-1}}\rrb^2$}{
+		$M[u][i][j]=\frac{M[u-1][2i][2j][u-1]+M[u-1][2i-1][2j]+M[u-1][2i][2j-1]+M[u-1][2i-1][2j-1]}{4}$\;
+	}
+ }
+ \end{algorithm}
+ \medbreak
+  \medbreak
+ Ce n'est pas une bonne méthode, en pratique on a fait précédé chaque moyennage par un filtrage gaussiens de l'image. On peut se permettre cela car l'algorithme écrit calcul le mipmap une bonne fois pour toute au début de son exécution, et il permet ensuite de déformer l'image en temps réel.  
+
+\sse{La fonction de distance}
+
+Toutes les fonctions de distance proviennent de la différentielle de l'homographie inverse.
+On note $(u,v)$ les coordonnées de l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
+
+Il est aisé de calculer les coefficients des dérivées partielles. On note $H$ l'homographie inverse.
+
+%re image prgm, avec les dérivé partielle indiqués
+
+L'enjeu est que si $d$ est trop grand, l'image est inutilement floutée (on parle d'over-blurring), et si $d$ est trop petit l'image est aliasée.
+
+On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
+
+On note $\dd_{(x,y)} H$ la différentielle de $H$ en $(x,y)$.
+
+On note $(u,v)=H(x,y)$.
+
+\ssse{Méthode du déterminant}
+$$D(x,y) = \sqrt{\det \txt{d}_{(x,y)} H}$$
+En effet le déterminant est l'aire du parallélogramme, donc prendre un carré de coté la racine donne un carré de même aire.
+
+Le résultat est relativement satisfaisant.
+
+%schéma avec un ârallélogramme et le carré correspondant
+
+\ssse{Méthode du plus grand côté}
+$$ D(x,y) = \max (\sqrt{(\frac{\dr u}{\dr x})^2 + (\frac{\dr v}{\dr x})^2},\sqrt{(\frac{\dr u}{\dr y})^2 + (\frac{\dr v}{\dr y})^2})$$
+On prend le plus grand côté du parallélogramme comme côté du carré. Le résultat est bon. Cette formule viens d'un article de Heckbert.
+
+Ce résultat est satisfaisant.
+
+%schéma avec un ârallélogramme et le carré correspondant
+
+\ssse{Méthode des diagonales}
+$$D(x,y) = \max \left( \sqrt{(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x})^2+(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y})^2}, \sqrt{(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x})^2+(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y})^2} \right)$$
+On prend la plus grande diagonale du parallélogramme. Ici l'image est trop flou.
+
+%schéma avec un ârallélogramme et le carré correspondant
+
+\ssse{Méthode des valeurs singulières}
+
+On peut décomposer toute matrice $A$ en trois matrices $A = PDQ^{-1}$ (référence needed).
+
+Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs propres normalisés de ces matrices, et $D$ la racine de leur diagonalisée. Il faut veiller à ce que $P$ et $Q$ correspondent bien (reference needed).
+
+Ainsi $P$ et $Q$ sont orthogonales et $D$ est diagonale, ses coefficients sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
+
+Rq : On a une interprétation géométrique à l'aide d'une caméra de ces valeurs.
+
+\ssse{Conclusion}
+
+Les méthode du déterminant, du maximum des côtés et des valeurs singulières sont satisfaisantes.
+
+On a une préférence pour le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'aliasing. 
+
+\sse{Complexités}
+
+On souhaite un algorithme en $O(N_1 + k N_2)$ où $N_1$ est le nombre de pixels de l'image d'origine, $N_2$ celui de la fenêtre d'arrivée et $k$ le nombre d'homographies réalisées. On a ainsi un algorithme en "temps réel".
+
+\ssse{Généralités}
+
+On voit que seuls $8$ coefficients sont consultés lors du calcul d'un pixel de l'image d'arrivée. Il faut ensuite effectuer l'interpolation trilinéaire, ce qui se fait clairement en un nombre constant de multiplications et d'additions.
+
+\ssse{Calcul de la distance}
+
+Avant chaque homographie on peut aisément précalculer des coefficients permettant d'évaluer rapidement les dérivés partielles. 
+
+(à expliciter ????)
+
+L'évaluation de la distance se fait avec toutes les méthodes en évaluant les quatre dérivées partielles, puis en les combinant, c'est bien du temps constant. Les complexités des calculs sont comparables, seul la valeurs singulière en demande un peu plus (Il faut calculer une racine du polynôme caractéristique de $AA^t$).
+
+\ssse{Construction du mipmap}
+
+C'est un phase de pré-calcul. Elle est peu couteuse avec la méthode naïve. Le calcul d'un niveau à partir du précédent se fait en temps linéaire, et on obtient un temps linéaire au total car chaque niveau est quatre fois moins grand que le précédent.
+
+Dans le cas du filtre gaussien on peut se borner à un temps linéaire en utilisant une approximation de la gaussienne à support compact, de taille fixée à l'avance. La décroissance rapide des exponentielles rend cette approximation raisonnable. Néanmoins la constante n'est plus de l'ordre de $1$, mais au moins de la dizaine voir plus. 
+
+\se{Algorithme amélioré : Le ripmap}
+
+Une des grandes faiblesses est l'anisotropie du mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
+
+Pour tenter de palier à ce problème on utilise un ripmap (cf. Akenine Moller reference needed). C'est en fait un mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+
+Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
+
+%un vrai ripmap, que je ferais moi
+
+%schéma d'interpolations pour le ripmap, avec 4 images est l'endroit ou le point tombe dans chacun
+
+Cela améliore certes la méthode, mais ne résouds pas par exemple le cas d'un rectangle fin en diagonale.
+
+\sse{Généralités}
+
+Le ripmap $M$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $M[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine.
+
+\sse{Pseudo-code pour le ripmap}
+
+La fonction principale, très similaire au ripmap.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{$mainFunction(img,H,I)$}
+\KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}
+$M = buildRipMap(img)$\;
+Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
+\For{$(x,y) \in \llb 1,m \rrb^2$}{
+Calculer $(d_1,d_2)=D(x,y)$ \;
+$I[x][y] = evalPixel(H^{-1}(x,y),d_1,d_2,M)$\;
+}
+\KwRet{I}
+\end{algorithm}
+
+\medbreak
+\medbreak
+
+L'interpolation bilinéaire entre les rectangles.
+Les $m_{ij}$ permettent de simplifier l'écriture des cas ou l'une des distances est trop grande ou trop petite :
+
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$evalPixel(u,v,d_1,d_2,M)$}
+\KwData{les coordonnées $(u,v) \in \mb{R}^2$, les distances $d_1,d_2 \in \mb{R}$, le ripmap $M$}
+\For{$i\in \llb 1,2\rrb$}{
+$x_i = \floor{\log_2(d_i)}$\;
+\uIf{$x_i \leq 1$}{$m_{i1}=m_{i2} = 1$\;}
+\uElseIf{$x_i\geq\log_2(w)$}{$m_{i1}=m_{i2}=\log_2(w)$\;}
+\Else{$m_{i1} = x_i -1$ \;$m_{i2} = x_i$\;}
+}
+
+$a=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{21}}},M[m_{11}+1][m_{21}+1])$\;
+$b=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{21}}},M[m_{12}+1][m_{21}+1])$\;$c=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{22}}},M[m_{12}+1][m_{22}+1])$\;
+$d=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{22}}},M[m_{12}+1][m_{22}+1])$\;
+
+$x = m_{12} - \log_2(d_1)$\;
+$y = m_{22} - \log_2(d_2)$\;
+
+\KwRet{$xy * a + (1-x)y * b + x(1-y) * c + (1-x)(1-y) * d$\;}
+\end{algorithm}
+
+
+\sse{La construction du ripmap}
+
+On présente un algorithme naïf de construction de ripmap.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{buildRipMap(img)}
+\KwData{une image $img[1..n][1..n]$, où $n = 2^d$}
+$M[1][1] = img$\;
+\For{$j\in\llb 2,d\rrb$}{
+	\For{$(u,v)\in \llb 1,n\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[1][j][u][v] = \frac{M[1][j-1][u][2v] + M[1][j-1][u][2v-1]}{2}$\;
+	}
+}
+
+\For{$j\in\llb 1,d\rrb$}{
+\For{$i\in\llb 2,d\rrb$}{
+\For{$(u,v)\in \llb 1,\frac{n}{2^{i-1}}\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[i-1][j][u][v] = \frac{M[i-1][j][2u][v] + M[i-1][j][2u-1][v]}{2}$\;
+	}}}
+\KwRet{$M$}
+\end{algorithm}
+\medbreak
+\medbreak
+Dans la pratique on a filtré à l'aide d'un filtre gaussien dans la direction où l'on compresse, et ce à chaque étape.
+
+\sse{Fonctions  de distance}
+
+On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est de :
+$$D(x,y) = \left( |\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|\right)$$
+On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
+
+\sse{Complexité}
+
+C'est un temps linéaire, à peu près deux fois plus long que le mipmap théoriquement (car on interpole de façon bilinéaire plutôt que linéaire entre les niveaux du ripmap). En pratique le grand nombre de cas ou l'une des deux variables est en dehors de la fenêtre voulue permet de réduire cette augmentation.
+
+\sse{Remarques sur le code C}
+
+On a fait un décalage pour que le rectangle soit bien placé. De plus on interpole par rapport aux centres des rectangles.
+
+\end{document}

@@ -1,0 +1,66 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{color}
+% \usepackage{fullpage}
+
+
+
+\newcommand{\affinite}[1]{\left(\begin{array}{c c|c} #1 \end{array}\right)}
+\newcommand{\pmatrice}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+
+\newcommand{\pgcd}{\wedge}
+\newcommand{\ppcm}{\vee}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+\newcommand{\Chi}{\raisebox{.40ex}{\ensuremath{\chi}}}
+
+\newcommand{\bloc}[2]{\ \\ \underline{#1 :}\\ #2 \ \\}
+
+
+
+\newenvironment{algorithme}{\begin{algorithm}[H]}{\end{algorithm}}
+
+
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{Pseudo-codes}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+	\include{Abstract}
+	\section*{Introduction}
+		\include{Introduction}
+	\section{/Exposition du problème/}
+		\subsection{Position du problème}
+			\include{PositionDuProbleme}
+		\subsection{Méthodes existantes}
+			\include{MipMap}
+		\subsection{Cas des affinités}
+			\include{Szeliski}
+	\section{/Exposition de la(des) solution(s)/}
+		\subsection{Décomposition d'une homographie en mouvement de caméra}
+			\include{DecompositionGeometrique}
+		\subsection{Traitement des homographies particulières}
+			\include{HomoboxRipmap}
+		\subsection{Traitement des rotations}
+			\include{YaroSzeli}
+	\section{Expériences}
+		\include{Expériences}
+	\appendix
+	\section{Algorithme}
+		\include{Pseudo-codes}
+\end{document}

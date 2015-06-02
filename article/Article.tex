@@ -48,29 +48,28 @@
 \begin{document}
    	\maketitle
 	\tableofcontents
-	\include{Abstract}
+	\input{Abstract}
 	\section*{Introduction}
-		\include{Introduction}
+		\input{Introduction}
 	\section{/Exposition du problème/}
 		\subsection{Position du problème}
-			\include{PositionDuProbleme}
+			\input{PositionDuProbleme}
 		\subsection{Méthodes existantes}
-			\include{MipMap}
+			\input{MipMap}
 		\subsection{Cas des affinités}
-			\include{Szeliski}%shmuel
+			\input{Szeliski}%shmuel
 	\section{/Exposition de la(des) solution(s)/}
 		\subsection{Décomposition d'une homographie en mouvement de caméra}
-			\include{DecompositionGeometrique}%simon
+			\input{DecompositionGeometrique}%simon
 		\subsection{Traitement des homographies particulières}
-			\include{HomoboxRipmap}
+			\input{HomoboxRipmap}
 		\subsection{Traitement des rotations}
-			\include{YaroSzeli}
+			\input{YaroSzeli}
 	\section{Expériences}
-		\include{Experiments}
+		\input{Experiments}
 	\appendix
 	\section{Algorithmes}
-		\include{Pseudo-codes}
-
+		\input{Pseudo-codes}
 	\nocite{*}
 	\bibliographystyle{plain}
 	\bibliography{biblio}

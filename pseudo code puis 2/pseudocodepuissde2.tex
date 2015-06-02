@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}  
+\usepackage[T1]{fontenc}    
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{stmaryrd}
+\usepackage{nccmath}
+\usepackage[french]{babel}
+\selectlanguage{french} 
+\newcommand{\A}[0]{{\cal A}}
+\newcommand{\C}[0]{{\cal C}}
+\newcommand{\se}[1]{\medbreak \medbreak \section*{#1}}
+\newcommand{\sse}[1]{\medbreak \subsection*{#1}}
+\newcommand{\ssse}[1]{\subsubsection*{#1}}
+\newcommand{\Def}[0]{\ssse{D�finition}}
+\newcommand{\The}[0]{\ssse{Th�or�me}}
+\newcommand{\Pro}[0]{\ssse{Propri�t�}}
+\newcommand{\mb}[1]{\mathbb{#1}}
+\newcommand{\Exo}[1]{\sse{Exercice #1}}
+\newcommand{\Que}[1]{\ssse{Question #1}}
+\newcommand{\ssi}[0]{\leftrightarrow}
+\newcommand{\ra}[0]{\rightarrow}
+\newcommand{\Ra}[0]{\Rightarrow}
+\newcommand{\la}[0]{\leftarrow}
+\newcommand{\La}[0]{\Leftarrow}
+\newcommand{\llb}[0]{\llbracket}
+\newcommand{\rrb}[0]{\rrbracket}
+\newcommand{\dd}[0]{\txt{d}}
+\newcommand{\dr}[0]{\partial}
+\newcommand{\txt}[1]{\textrm{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\iso}[0]{\simeq}
+\usepackage[french,onelanguage]{algorithm2e}
+
+\begin{document}
+
+\sse{Pseudo-code pour n'avoir que des images (carr\'e ou pas (au choix)) en puissance de 2}
+\begin{algorithm}
+\caption{Puissance de 2}
+\KwData{Une image $f[1..n][1..m]$ (n et m quelconque)}
+$f'$ une image des puissances de 2 sup\'erieures \`a m et n (les plus proches de n et m)\;
+km=0 \\
+kn=0\\
+\While{$2^km < m$}{
+$km = km+1$\;}
+\While{$2^kn < n$}{
+$kn = kn+1$\;} 
+ 
+\If{on veut une image carr\'e}{
+   km=max(km,kn)\;
+   kn=km\;
+   } 
+
+
+fftf=fftw(f) \\
+
+
+\For{$(i,j)\in \llb1,2^{km}\rrb \llb1,2^{kn}\rrb$}{
+$fftf'[i][j] = 0$;
+}
+
+\For{$(i,j)\in \llb1,m\rrb \llb1,n\rrb$}{
+$fftf'[i+2^{km-1}-m/2][j+2^{kn-1}-n/2] =fftf[i][j] $;
+}
+
+f'=invfftw(f) \\
+
+
+
+
+\KwRet{f'}
+\end{algorithm}
+
+Cette technique est nécessaire pour utiliser le mipmap ou le ripmap. Cela peut poser un problème si l'image de départ du code n'est pas carrée, l'image d'arrivée risque de ne pas avoir le même rapport entre largeur et longueur que celui de l'image de départ. Alors une autre idée pour utiliser le mipmap en gardant les bonnes proportions de largeur et de longeur serait de compléter l'image par des pixels de valeur la moyenne de l'image afin d'avoir une image en puissance de 2, puis d'utiliser la technique de périodisation qui permet d'utiliser un mipmap après un shear.
+
+
+
+
+
+
+
+\end{document}

@@ -1,1 +1,14 @@
 % contient une description du fonctionnement de Szeliski, pour préciser qu'on possède une méthode "parfaite" dans le cas des affinités
+Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape qui ne crée pratiquement aucun aliasing \cite{szeliski2010high}.
+
+Le principe de cette méthode est de d'abord se ramener à des \emph{shear}-\emph{tilt}-translations selon une direction (affinités de la forme
+$\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Ces opérations sont alors effectuées en trois étapes : un sur-échantillonnage dans la direction transverse, une opération \emph{shear}-\emph{tilt}-translation (modifié pour que l'opération soit celle voulue) effectuée de manière simple et un sous-échantillonnage dans la direction transverse.
+
+Le principe de la méthode est en fait d'augmenter suffisamment le facteur de sur-échantillonnage pour que l'opération entre les réchantillonnage se fasse sans aliasing, i.e. sans repliement du spectre.
+
+Les trois opérations sont faites via une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine}.
+
+On est ainsi capable d'effectuer toutes les affinités qui laissent inchangées une coordonnée (les \emph{shears}-\emph{tilts}-translations). Or une affinité se décompose toujours en deux de ces opérations, on peut donc toujours traiter une affinité de ce type, et ce sans aliasing.
+
+En pratique, bien que cette méthode semble décomposer une affinité en 6 opérations élémentaires (3 pour chacun des 2 \emph{shears}-\emph{tilts}-translations), il est possible de condenser certains réchantillonnage et \emph{shears}-\emph{tilts}-translations, s'ils sont dans la même direction. La décomposition se réduit donc à 4 opérations élémentaires.
+

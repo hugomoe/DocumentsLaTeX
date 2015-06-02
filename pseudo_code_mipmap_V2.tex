@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{stmaryrd}
@@ -35,7 +35,7 @@
  \newcommand{\BlockIf}[1]{\KwSty{Start If} \\ #1 \\ \KwSty{End If}}
  \newcommand{\BlockElseIf}[1]{\KwSty{Start Else If} \\ #1 \\ \KwSty{End Else If}}
  \newcommand{\BlockElse}[1]{\KwSty{Start Else} \\ #1 \\ \KwSty{End Else}}
-\usepackage[french,onelanguage]{algorithm2e}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
 \usepackage{algorithmique}
 \begin{document}
 \se{Algorithme de mip-mapping Version 2}
@@ -61,9 +61,10 @@ On appelle distance la taille d'un carré (car plus un pixel est "loin", plus le
 
 On suppose une formule nous donnant la distance d'un point quelconque, la géométrie du mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
--d'une part on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
-
--d'autre part dans chaque niveau du mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+\begin{itemize}
+\item d'une part on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
+\item d'autre part dans chaque niveau du mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+\end{itemize}
 
 %image de l'inter trilinéaire avec deux plans pour les profondeurs
 
@@ -86,9 +87,9 @@ Corps de la fonction : la fonction de distance et la construction du mipmap ne s
 \begin{algorithm}[H]
 \caption{$mainFunction(img,H,I)$}
 \KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}%préciser l'homographie
-$M=builtMipMap(img)$ \;%Faire le mip-mapping de $img$ noté $M$\;
+$M=buildMipMap(img)$ \;%Faire le mip-mapping de $img$ noté $M$\;
 Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
-\For{$(x,y) \in \llb 1,m \rrb^2$}{
+\For{$(x,y) \in \llb 1,n \rrb^2$}{
 Calculer $d=D(x,y)$ \;%préciser les équations
 $I[x][y] = evalPixel(H^{-1}(x,y),d,M)$\;
 }
@@ -103,7 +104,7 @@ L'interpolation trilinéaire :
 
 \begin{algorithm}[H]
 \caption{$evalPixel(u,v,d,M)$}
-\KwData{coordonnées $u,v \in \mb{R}$, la distance $d \in \mb{R}$, le mipmap $M$}
+\KwData{coordonnées $u,v \in \mb{R}$, la distance $d \in \mb{R}$, le mipmap $M[1..2n][1..2n]$}
 \If{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
 \If{$d>\txt{taille d'image}$}{\KwRet{$M[\log_2 (\txt{taille d'image})][1][1]$}}
 Trouver $m \in \mb{N}$ tels que $2^m \leq d < 2^{m+1}$ (ou m=0 sinon)\;
@@ -119,7 +120,7 @@ Ici l'interpolation bilinéaire, au niveau $d$.
 \medbreak
 
 \begin{algorithm}[H]
-\caption{$bilinearMipMap(u,v,M)$}
+\caption{$bilinearMipMap(u,v,I)$}
 \KwData{coordonnées $(u,v) \in \mb{R}^2$, l'image tirée du mipmap $I$}
 $u'=floor(u)$\;
 $v' = floor(v)$\;
@@ -258,7 +259,7 @@ La fonction principale, très similaire au ripmap.
 \KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}
 $M = buildRipMap(img)$\;
 Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
-\For{$(x,y) \in \llb 1,m \rrb^2$}{
+\For{$(x,y) \in \llb 1,n \rrb^2$}{
 Calculer $(d_1,d_2)=D(x,y)$ \;
 $I[x][y] = evalPixel(H^{-1}(x,y),d_1,d_2,M)$\;
 }

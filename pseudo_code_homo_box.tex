@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{stmaryrd}
@@ -35,7 +35,7 @@
  \newcommand{\BlockIf}[1]{\KwSty{Start If} \\ #1 \\ \KwSty{End If}}
  \newcommand{\BlockElseIf}[1]{\KwSty{Start Else If} \\ #1 \\ \KwSty{End Else If}}
  \newcommand{\BlockElse}[1]{\KwSty{Start Else} \\ #1 \\ \KwSty{End Else}}
-\usepackage[french,onelanguage]{algorithm2e}
+\usepackage[french,onelanguage,boxed]{algorithm2e}
 \usepackage{algorithmique}
 \begin{document}
 \se{Peudo-code pour l'homographie particulière}
@@ -47,30 +47,31 @@ Les images sont des matrices. On a ignoré les éventuelles multiples niveaux de
 Il y a en faites une origine sur les images (pour pouvoir faire des translations instantanées).
 
 \medbreak
-Les fonctions $Extraire$ se contente de renvoyer la n-ième ligne/colonne.
-Les fonctions $Integrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
+La fonction $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
+
+On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$.
 
 \sse{Corps de l'algorithme}
 
 \begin{algorithm}
-\caption{$ApplyHomo(img,imgf,H)$}
-\KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $imgf[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
+\caption{$applyHomography(img,imgf,H)$}
+\KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $img_f[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
 $f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
 $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
-\For{$j \leq h$}{
-	$iimgw = ExtraireVerticale(img,j)$ \;
-	\For{$i\leq w_f$}{
+\For{$j \in \llbracket 1, h \rrbracket$}{
+	$iimgw = imageIntegrale(j^e \text{ colonne de } img)$ \;
+	\For{$i \in \llbracket 1, w_f \rrbracket$}{
 		$x = f_1(i)$\;
 		$d = |f_1'(i)|$\;
-		$img1(i,j) = Interpole(iimgw,x,d)$\;
+		$img_{aux}(i,j) = interpole(iimgw,x,d)$\;
 	}
 }
-\For{$i\leq w$}{
-	$iimgh = ExtraireHorizontale(img,i)$\;
+\For{$i \in \llbracket 1, w \rrbracket$}{
+	$iimgh = imageIntegrale(i^e \text{ ligne de } img_{aux})$\;
 	$d=\frac{\dr}{\dr y} f_2(i,0)$ (indépendant de $j$)\;
-	\For{$j\leq h_f$}{
+	\For{$j \in \llbracket 1, h_f \rrbracket$}{
 		$y=f_2(i,j)$\;
-		$imgf(i,j)=Interpole(iimgh,y,d)$\;
+		$img_f(i,j)=interpole(iimgh,y,d)$\;
 	}
 }
 \end{algorithm}
@@ -80,25 +81,24 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 Une première version naive. Nous n'avons pas réglé les cas où $InterpoleInt$ n'est pas définie.
 
 \begin{algorithm}
-\caption{$Interpole(iimg,u,d)$}
-\KwData{Un vecteur $iimg$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+\caption{$interpole(imgint,u,d)$}
+\KwData{Une image intégrale $imgint$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
 $u=u-\frac{d}{2}$\;
-$iimgint = Integrale(iimg)$\;
 $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
 $y = u-iu$\;
-$a=InterpoleInt(iimgint,iu,id)$\;
-$b=InterpoleInt(iimgint,iu+1,id)$\;
-$c=InterpoleInt(iimgint,iu,id+1)$\;
-$d=InterpoleInt(iimgint,iu+1,id+1)$\;
+$a=interpoleInt(imgint,iu,id)$\;
+$b=interpoleInt(imgint,iu+1,id)$\;
+$c=interpoleInt(imgint,iu,id+1)$\;
+$d=interpoleInt(imgint,iu+1,id+1)$\;
 \KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
 \end{algorithm}
 
 \begin{algorithm}
-\caption{$InterpoleInt(iimgint,i,d)$}
-\KwData{Un vecteur $iimgint$, deux entiers $i,d$}
-\KwRet{$\frac{iimgint[i+d-1]-iimgint[i-1]}{d}$}
+\caption{$interpoleInt(imgint,i,d)$}
+\KwData{Un vecteur $imgint$, deux entiers $i,d$}
+\KwRet{$\frac{imgint[i+d-1]-imgint[i-1]}{d}$}
 \end{algorithm}
 
 
@@ -109,26 +109,25 @@ Ainsi en notant $F_2$ l'intégrale seconde de l'image, on a $\int f h_3 = \int F
 Ainsi on peut prendre plutôt : 
 
 \begin{algorithm}
-\caption{$Interpole(iimg,u,d)$}
-\KwData{Un vecteur $iimg$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+\caption{$interpole3(imgint,u,d)$}
+\KwData{Une image triple intégrale $imgint3$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
 $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
 $y = u-iu$\;
-$iimgint3 = Integrale(Integrale(Integrale(iimgint)))$\;
-$a=Interpole3(iimgint3,iu,id)$\;
-$b=Interpole3(iimgint3,iu+1,id)$\;
-$c=Interpole3(iimgint3,iu,id+1)$\;
-$d=Interpole3(iimgint3,iu+1,id+1)$\;
+$a=interpoleTripleInt(imgint3,iu,id)$\;
+$b=interpoleTripleInt(imgint3,iu+1,id)$\;
+$c=interpoleTripleInt(imgint3,iu,id+1)$\;
+$d=interpoleTripleInt(imgint3,iu+1,id+1)$\;
 \KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
 \end{algorithm}
 
 \begin{algorithm}
-\caption{$Interpole3(iimg,i,d)$}
-\KwData{Un vecteur $iimgint$, deux entiers $i,d$}
-$a=InterpoleInt(iimgint3,i-d,d)$\;
-$b=InterpoleInt(iimgint3,i,d)$\;
-$c=InterpoleInt(iimgint3,i+d,d)$\;
+\caption{$interpoleTripleInt(imgint3,i,d)$}
+\KwData{Un image triple intégrale $imgint3$ (1 dimension), deux entiers $i,d$}
+$a=interpoleInt(imgint3,i-d,d)$\;
+$b=interpoleInt(imgint3,i,d)$\;
+$c=interpoleInt(imgint3,i+d,d)$\;
 \KwRet{$\frac{a-2*b+c}{d^2}$}
 \end{algorithm}
 

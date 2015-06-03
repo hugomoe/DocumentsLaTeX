@@ -1,2 +1,191 @@
 %pseudo-code mipmap/ripmap
 %Hugo s'en charge
+\ssse{Conventions}
+
+Un mipmapping est un tableau à trois dimensions, avec les deux axes usuels et une profondeur $d$.
+Ainsi $M[3]$ est le carré $4$ fois moins haut que l'image d'origine. 
+
+Convention sur les profondeurs : $$D = 1 \ssi \txt{image d'origine et} \ D = \txt{taille d'origine} \ssi \txt{moyenne de tous les points}$$
+
+%ici mettre une image symbolique, schéma de la pyramide avec u,v et d
+
+En pratique, on a périodisé l'image.
+
+\ssse{Pseudo-code}
+
+Corps de la fonction : la fonction de distance et la construction du mipmap ne sont pas précisés, ils le sont dans les sections suivantes.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{$mainFunction(img,H,I)$}
+\KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}%préciser l'homographie
+$M=builtMipMap(img)$ \;%Faire le mip-mapping de $img$ noté $M$\;
+Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
+\For{$(x,y) \in \llb 1,m \rrb^2$}{
+Calculer $d=D(x,y)$ \;%préciser les équations
+$I[x][y] = evalPixel(H^{-1}(x,y),d,M)$\;
+}
+\KwRet{I}
+\end{algorithm}
+
+\medbreak
+\medbreak
+L'interpolation trilinéaire :
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$evalPixel(u,v,d,M)$}
+\KwData{coordonnées $u,v \in \mb{R}$, la distance $d \in \mb{R}$, le mipmap $M$}
+\If{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
+\If{$d>\txt{taille d'image}$}{\KwRet{$M[\log_2 (\txt{taille d'image})][1][1]$}}
+Trouver $m \in \mb{N}$ tels que $2^m \leq d < 2^{m+1}$ (ou m=0 sinon)\;
+$a=bilinearMipMap(\frac{u}{2^{m-1}}, \frac{v}{2^{m-1}},M[m])$\;
+$b= bilinearMipMap(\frac{u}{2^{m}}, \frac{v}{2^{m}},M[m+1])$\; 
+\KwRet{$ (m+1 - \log (d)) a + (\log (d) - m) b$}
+\end{algorithm}
+
+\medbreak
+\medbreak
+Ici l'interpolation bilinéaire, au niveau $d$.
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$bilinearMipMap(u,v,M)$}
+\KwData{coordonnées $(u,v) \in \mb{R}^2$, l'image tirée du mipmap $I$}
+$u'=floor(u)$\;
+$v' = floor(v)$\;
+$x=u-u'$\;
+$y = v-v'$\;
+\KwRet{$(1-x)(1-y)*I[u'][v'] + (1-x)y*I[u'][v'+1] + x(1-y)*I[u'+1][v']+xy*I[u'+1][v'+1]$}\;
+\end{algorithm}
+
+\medbreak
+\medbreak
+Ce n'est qu'un algorithme générique, nous allons maintenant voir comment le spécifier pour permettre une implémentation réelle. Il faut examiner la construction du mipmap et le choix de la fonction de distance.
+
+\ssse{Construction du mipmap}
+
+Voici un exemple naïf de construction d'un mipmap. On fait simplement la moyenne des quatre pixels concernés.
+ \medbreak
+  \medbreak
+ \begin{algorithm}[H]
+ \caption{$buildMipMap(*img)$}
+ \KwData{Une image $img[1..n][1..n]$ (où $n = 2^d$)}
+ \For{$(i,j)\in \llb1,n\rrb^2$}{
+ 	$M[1][i][j]=img[i][j]$\;
+ }
+ \For{$u \in \llb 2,d+1\rrb$}{
+ 	\For{$(i,j)\in \llb1,\frac{n}{2^{u-1}}\rrb^2$}{
+		$M[u][i][j]=\frac{M[u-1][2i][2j][u-1]+M[u-1][2i-1][2j]+M[u-1][2i][2j-1]+M[u-1][2i-1][2j-1]}{4}$\;
+	}
+ }
+ \end{algorithm}
+ \medbreak
+  \medbreak
+ Ce n'est pas une bonne méthode, en pratique on a fait précédé chaque moyennage par un filtrage gaussiens de l'image. On peut se permettre cela car l'algorithme écrit calcul le mipmap une bonne fois pour toute au début de son exécution, et il permet ensuite de déformer l'image en temps réel.  
+
+
+\ssse{Le ripmap}
+
+Le ripmap $M$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $M[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine.
+
+\ssse{Pseudo-code pour le ripmap}
+
+La fonction principale, très similaire au ripmap.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{$mainFunction(img,H,I)$}
+\KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $I[1..m][1..m]$}
+$M = buildRipMap(img)$\;
+Calculer l'homographie inverse $H^{-1}$ (et precalculer les fonctions $\frac{\dr u}{\dr x},\frac{\dr u}{\dr y},\frac{\dr v}{\dr x},\frac{\dr v}{\dr y}$ de $x,y$ en même temps)\;
+\For{$(x,y) \in \llb 1,m \rrb^2$}{
+Calculer $(d_1,d_2)=(|\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|)(x,y)$ \;
+Calculer $c_1 = \min(0,\frac{\dr u}{\dr x}(x,y))+\min(0,\frac{\dr u}{\dr y}(x,y))$\;
+Calculer $c_2 = \min(0,\frac{\dr v}{\dr x}(x,y))+\min(0,\frac{\dr v}{\dr y}(x,y))$\;
+$I[x][y] = evalPixel(H^{-1}(x,y)+(c_1,c_2),d_1,d_2,M)$\;
+}
+\KwRet{I}
+\end{algorithm}
+
+\medbreak
+\medbreak
+
+L'interpolation bilinéaire entre les rectangles.
+Les $m_{ij}$ permettent de simplifier l'écriture des cas ou l'une des distances est trop grande ou trop petite :
+
+\medbreak
+\medbreak
+
+\begin{algorithm}[H]
+\caption{$evalPixel(u,v,d_1,d_2,M)$}
+\KwData{les coordonnées $(u,v) \in \mb{R}^2$, les distances $d_1,d_2 \in \mb{R}$, le ripmap $M$}
+\For{$i\in \llb 1,2\rrb$}{
+$x_i = \floor{\log_2(d_i)}$\;
+\uIf{$x_i \leq 1$}{$m_{i1}=m_{i2} = 1$\;}
+\uElseIf{$x_i\geq\log_2(w)$}{$m_{i1}=m_{i2}=\log_2(w)$\;}
+\Else{$m_{i1} = x_i -1$ \;$m_{i2} = x_i$\;}
+}
+
+$a=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{21}}},M[m_{11}+1][m_{21}+1])$\;
+$b=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{21}}},M[m_{12}+1][m_{21}+1])$\;$c=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{22}}},M[m_{12}+1][m_{22}+1])$\;
+$d=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{22}}},M[m_{12}+1][m_{22}+1])$\;
+
+$x = m_{12} - \log_2(d_1)$\;
+$y = m_{22} - \log_2(d_2)$\;
+
+\KwRet{$xy * a + (1-x)y * b + x(1-y) * c + (1-x)(1-y) * d$\;}
+\end{algorithm}
+
+
+\ssse{La construction du ripmap}
+
+On présente un algorithme naïf de construction de ripmap.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{buildRipMap(img)}
+\KwData{une image $img[1..n][1..n]$, où $n = 2^d$}
+$M[1][1] = img$\;
+\For{$j\in\llb 2,d\rrb$}{
+	\For{$(u,v)\in \llb 1,n\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[1][j][u][v] = \frac{M[1][j-1][u][2v] + M[1][j-1][u][2v-1]}{2}$\;
+	}
+}
+
+\For{$j\in\llb 1,d\rrb$}{
+\For{$i\in\llb 2,d\rrb$}{
+\For{$(u,v)\in \llb 1,\frac{n}{2^{i-1}}\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[i-1][j][u][v] = \frac{M[i-1][j][2u][v] + M[i-1][j][2u-1][v]}{2}$\;
+	}}}
+\KwRet{$M$}
+\end{algorithm}
+\medbreak
+\medbreak
+Dans la pratique on a filtré à l'aide d'un filtre gaussien dans la direction où l'on compresse, et ce à chaque étape.
+\medbreak
+\medbreak
+\begin{algorithm}[H]
+\caption{buildRipMapGaussien(img)}
+\KwData{une image $img[1..n][1..n]$, où $n = 2^d$}
+$M[1][1] = img$\;
+\For{$j\in\llb 2,d\rrb$}{
+	\For{$(u,v)\in \llb 1,n\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[1][j][u][v] = convolutionHorizontale(M[1][j-1])[u][2v]$\;
+	}
+}
+
+\For{$j\in\llb 1,d\rrb$}{
+\For{$i\in\llb 2,d\rrb$}{
+\For{$(u,v)\in \llb 1,\frac{n}{2^{i-1}}\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
+		$M[i-1][j][u][v] = convolutionVerticale(M[i-1][j])[2u][v]$\;
+	}}}
+\KwRet{$M$}
+\end{algorithm}
+\medbreak
+\medbreak
+Où les fonctions $convolution$ convolent dans la direction indiquée par une gaussienne d'écart-type $1,4$ (se reporter à \cite{morel2011sift})
+
+

@@ -91,13 +91,17 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 
 Une des grandes faiblesses est l'anisotropie du mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de palier à ce problème on utilise un ripmap (cf. Akenine Moller reference needed). C'est en fait un mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+Pour tenter de palier à ce problème on utilise un ripmap \cite{akenine2008real}. C'est en fait un mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 
 Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
 
 %un vrai ripmap, que je ferais moi
 
 %schéma d'interpolations pour le ripmap, avec 4 images est l'endroit ou le point tombe dans chacun
+
+On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est de :
+$$D(x,y) = \left( |\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|\right)$$
+On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
 
 Cela améliore certes la méthode, mais ne résouds pas par exemple le cas d'un rectangle fin en diagonale.
 

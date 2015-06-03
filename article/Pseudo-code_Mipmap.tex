@@ -1,5 +1,7 @@
 %pseudo-code mipmap/ripmap
 %Hugo s'en charge
+\sse{Pseudo-code Mipmap}
+
 \ssse{Conventions}
 
 Un mipmapping est un tableau à trois dimensions, avec les deux axes usuels et une profondeur $d$.
@@ -87,7 +89,9 @@ Voici un exemple naïf de construction d'un mipmap. On fait simplement la moyenn
  Ce n'est pas une bonne méthode, en pratique on a fait précédé chaque moyennage par un filtrage gaussiens de l'image. On peut se permettre cela car l'algorithme écrit calcul le mipmap une bonne fois pour toute au début de son exécution, et il permet ensuite de déformer l'image en temps réel.  
 
 
-\ssse{Le ripmap}
+\sse{Le ripmap}
+
+\ssse{Conventions}
 
 Le ripmap $M$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $M[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine.
 

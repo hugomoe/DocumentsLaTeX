@@ -33,6 +33,48 @@
 \newcommand{\bloc}[2]{\ \\ \underline{#1 :}\\ #2 \ \\}
 
 
+%partieHugoraccourci
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{stmaryrd}
+\usepackage{nccmath}
+\usepackage[french]{babel}
+\selectlanguage{french} 
+\newcommand{\A}[0]{{\cal A}}
+\newcommand{\C}[0]{{\cal C}}
+\newcommand{\se}[1]{\medbreak \medbreak \section{#1}}
+\newcommand{\sse}[1]{\medbreak \subsection{#1}}
+\newcommand{\ssse}[1]{\subsubsection{#1}}
+\newcommand{\sssse}[1]{\paragraph{#1}}
+\newcommand{\Def}[0]{\ssse{Définition}}
+\newcommand{\The}[0]{\ssse{Théorème}}
+\newcommand{\Pro}[0]{\ssse{Propriété}}
+\newcommand{\Exo}[1]{\sse{Exercice #1}}
+\newcommand{\Que}[1]{\ssse{Question #1}}
+\newcommand{\llb}[0]{\llbracket}
+\newcommand{\rrb}[0]{\rrbracket}
+\newcommand{\dd}[0]{\txt{d}}
+\newcommand{\ssi}[0]{\Leftrightarrow}
+\newcommand{\ra}[0]{\rightarrow}
+\newcommand{\Ra}[0]{\Rightarrow}
+\newcommand{\la}[0]{\leftarrow}
+\newcommand{\La}[0]{\Leftarrow}
+\newcommand{\txt}[1]{\textrm{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\mb}[1]{\mathbb{#1}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\iso}[0]{\simeq}
+\newcommand{\dr}[0]{\partial}
+\newcommand{\floor}[1]{\lfloor #1\rfloor}
+ \newcommand{\BlockIf}[1]{\KwSty{Start If} \\ #1 \\ \KwSty{End If}}
+ \newcommand{\BlockElseIf}[1]{\KwSty{Start Else If} \\ #1 \\ \KwSty{End Else If}}
+ \newcommand{\BlockElse}[1]{\KwSty{Start Else} \\ #1 \\ \KwSty{End Else}}
+\usepackage[french,onelanguage]{algorithm2e}
+\usepackage{algorithmique}
+%finpartie
+
+
 
 \newenvironment{algorithme}{\begin{algorithm}[H]}{\end{algorithm}}
 

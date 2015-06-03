@@ -77,6 +77,7 @@ Le résultat est relativement satisfaisant.
 \sssse{Méthode du plus grand côté}
 $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
 On prend le plus grand côté du parallélogramme comme côté du carré. Le résultat est bon. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
+% On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
 
 Ce résultat est satisfaisant.
 
@@ -96,19 +97,19 @@ Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs pro
 
 Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
 
-Rq : On a une interprétation géométrique à l'aide d'une caméra de ces valeurs.
+Rq : On a une interprétation géométrique comme un mouvement de caméra de ces valeurs.
 
 \sssse{Conclusion}
 
-Les méthode du déterminant, du maximum des côtés et des valeurs singulières sont satisfaisantes.
+Les méthode du déterminant, du plus grand côté du parallélogramme et du maximum des valeurs singulières sont satisfaisantes.
 
 On a une préférence pour le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'aliasing. 
 
-\ssse{Algorithme amélioré : Le ripmap}
+\ssse{Algorithme amélioré : Le Ripmap}
 
 Une des grandes faiblesses est l'anisotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de palier à ce problème on utilise un ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+Pour tenter de pallier ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 
 Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
 
@@ -132,6 +133,6 @@ On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la
 $$D(x,y) = \left( |\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|\right)$$
 On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
 
-Cela améliore certes la méthode, mais ne résous pas par exemple le cas d'un rectangle fin en diagonale.
+Cela améliore certes la méthode, mais ne résout pas par exemple le cas d'un rectangle fin en diagonale.
 
 

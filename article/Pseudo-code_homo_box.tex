@@ -11,11 +11,11 @@ Il y a en faites une origine sur les images (pour pouvoir faire des translations
 \medbreak
 La fonction $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
 
-On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$.
+On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$. De plus il faut déclarer une image intégrale plus grande que celle de départ, en effet quand on intègre trois fois les valeurs au delà de la dernière ne sont plus nulles, ni même constantes.
 
 \ssse{Corps de l'algorithme}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{$applyHomography(img,imgf,H)$}
 \KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $img_f[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
 $f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
@@ -40,39 +40,48 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 
 \ssse{Interpolation à l'aide de l'image intégrale}
 
-Une première version naive. Nous n'avons pas réglé les cas où $InterpoleInt$ n'est pas définie.
+Une première version naive. La fonction $interpoleInt$ renvoie la moyenne sur un segment de longueur $d$ est d'origine $i$.
 
-\begin{algorithm}
+Nous n'avons pas réglé les cas où $interpoleInt$ n'est pas définie.
+
+\begin{algorithm}[H]
 \caption{$interpole(imgint,u,d)$}
-\KwData{Une image intégrale $imgint$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+\KwData{Une image intégrée une fois $imgint[1..n]$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
 $u=u-\frac{d}{2}$\;
 $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
 $y = u-iu$\;
-$a=interpoleInt(imgint,iu,id)$\;
+\uIf{$id\leq 0$}{
+$a=interpoleInt(imgint,iu,1)$\;
+$b=interpoleInt(imgint,iu+1,1)$\;
+\KwRet{$(1-y)*a + y*b$}
+}
+\Else{$a=interpoleInt(imgint,iu,id)$\;
 $b=interpoleInt(imgint,iu+1,id)$\;
 $c=interpoleInt(imgint,iu,id+1)$\;
 $d=interpoleInt(imgint,iu+1,id+1)$\;
-\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}}
 \end{algorithm}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{$interpoleInt(imgint,i,d)$}
-\KwData{Un vecteur $imgint$, deux entiers $i,d$}
-\KwRet{$\frac{imgint[i+d-1]-imgint[i-1]}{d}$}
+\KwData{Une image intégrée une fois $imgint[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
+\uIf{$i+d-1<0$}{\KwRet{$0$}}
+\uElseIf{$i<1$}{\KwRet{$\frac{imgint[i+d-1]}{d}$}}
+\Else{\KwRet{$\frac{imgint[i+d-1]-imgint[i-1]}{d}$}}
 \end{algorithm}
 
 
 \ssse{A l'aide de la convolé de trois portes}
 
-Notons $h_3$ la convolé de trois portes. On a $h_3'' = \mb{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mb{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mb{1}_{[\frac{1}{2},\frac{3}{2}]}$.
-Ainsi en notant $F_2$ l'intégrale seconde de l'image, on a $\int f h_3 = \int F h_3' = \int F_2 h_3''$.
+Notons $g_3$ la convolé de trois portes. On a $g_3'' = \mathds{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mathds{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mathds{1}_{[\frac{1}{2},\frac{3}{2}]}$.
+Ainsi en notant $F$ l'intégrale de l'image et $F_2$ l'intégrale seconde de l'image, on a $\int f g_3 = \int F g_3' = \int F_2 g_3''$.
 Ainsi on peut prendre plutôt : 
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{$interpole3(imgint,u,d)$}
-\KwData{Une image triple intégrale $imgint3$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+\KwData{Une image intégrée trois fois $imgint3[1..n]$, une position $u\in\mb{R}$, une distance $d\in\mb{R}$}
 $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
@@ -84,9 +93,9 @@ $d=interpoleTripleInt(imgint3,iu+1,id+1)$\;
 \KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
 \end{algorithm}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{$interpoleTripleInt(imgint3,i,d)$}
-\KwData{Un image triple intégrale $imgint3$ (1 dimension), deux entiers $i,d$}
+\KwData{Une image intégrée trois fois $imgint3[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
 $a=interpoleInt(imgint3,i-d,d)$\;
 $b=interpoleInt(imgint3,i,d)$\;
 $c=interpoleInt(imgint3,i+d,d)$\;

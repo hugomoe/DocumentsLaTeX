@@ -35,11 +35,12 @@ Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde
 
 On appelle distance la taille d'un carré (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
 
-On suppose une formule nous donnant la distance d'un point quelconque, la géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
+On suppose avoir une formule nous donnant la distance d'un point quelconque, la géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
--d'une part on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
-
--d'autre part dans chaque niveau du Mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+\begin{itemize}
+  \item d'une part, on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
+  \item d'autre part, dans chaque niveau du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+\end{itemize}
 
 %image de l'inter trilinéaire avec deux plans pour les profondeurs
 \begin{figure}[h!]
@@ -50,16 +51,16 @@ On suppose une formule nous donnant la distance d'un point quelconque, la géom�
 
 \ssse{La fonction de distance}
 
-Toutes les fonctions de distance proviennent de la différentielle de l'homographie inverse.
-On note $(u,v)$ les coordonnées de l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
+Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
+On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
 
 Il est aisé de calculer les coefficients des dérivées partielles. On note $H$ l'homographie inverse.
 
 %re image prgm, avec les dérivé partielle indiqués
 
-L'enjeu est que si $d$ est trop grand, l'image est inutilement floutée (on parle d'over-blurring), et si $d$ est trop petit l'image est aliasée.
+L'enjeu est que si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit l'image est aliasée.
 
-On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
+% On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
 
 On note $\dd_{(x,y)} H$ la différentielle de $H$ en $(x,y)$.
 

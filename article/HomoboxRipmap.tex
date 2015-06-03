@@ -24,10 +24,10 @@ g_1(t)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(t) ~~~~~~~g_{n+1}= g_n
 Grâce au théorème central limite on sait que cette suite de fonction est une bonne approximation d'une courbe gaussienne.\\
 Si $f$ est une fonction continue par intégration par partie comme les fonctions $g_n$ dont à support compact on obtient  :
 \begin{eqnarray*}
-(f * g_n )(y)&=&\frac{1}{d} \int_{\mathbb{R}} f(x)(g_{n-1} * \mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(y-x) dx\\
-                 &=& -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)(g_{n-1} * (-\delta_{\frac{d}{2}}+\delta_{-\frac{d}{2}}))(x-y) dx\\
-                 &=& \frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)g_{n-1}(x-y-\frac{d}{2} )dx -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)g_{n-1}\left(x-y+\frac{d}{2}\right)dx\\
-                 &=& \frac{(F^{(1)} * g_{n-1} )\left(y+\frac{d}{2}\right)-(F^{(1)} * g_{n-1} )\left(y-\frac{d}{2}\right)}{d}
+(f * g_n )(y)&=&\frac{1}{d} \int_{\mathbb{R}} f(x)~(g_{n-1} * \mathds{1}_{]-\frac{d}{2},\frac{d}{2}[})(y-x) dx\\
+                 &=& -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~(g_{n-1} * (-\delta_{\frac{d}{2}}+\delta_{-\frac{d}{2}}))(x-y) dx\\
+                 &=& \frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g_{n-1}(x-y-\frac{d}{2} )dx -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g_{n-1}(x-y+\frac{d}{2})dx\\
+                 &=& \frac{(F^{(1)} * g_{n-1})(y+\frac{d}{2})-(F^{(1)} * g_{n-1} )(y-\frac{d}{2})}{d}
 \end{eqnarray*}
 Où la fonction $F^{(1)}$ est une primitive de $f$, on peut par récurrence sur $n$ exprimer $(f*g_{n})(y)$ comme une combinaisons linéaire des des termes $\left(F^{(n)}\left(y+\frac{kd}{2}\right)\right)$, on obtient la formule
 \begin{equation*}

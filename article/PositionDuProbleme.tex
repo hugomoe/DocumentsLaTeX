@@ -1,1 +1,23 @@
 % contient une exposition du problème (description d'une homographie, source du problème, intérêt du problème, problématique, raison pour laquelle on se bat dans la vie, etc...)
+
+
+
+
+	Nous nous intéressons dans cet article a l'élabaration d'une méthode la plus exacte possible permettant de déformer une image par une fonction homographique. \\
+ 	Une fonction homographique est une déformation du plan qui transforme les lignes droites en lignes droites, et qui est déterminée par 8 paramètres et qui s'écrit sous la forme :
+	\[H : (x,y)\mapsto\left( \frac{ax+by+p}{rx+sy+t},\frac{cx+dy+q}{rx+sy+t}\right)\] 
+On peut voir l'effet d'un homographie figure \ref{effethom}.\\
+
+ \begin{figure}
+ 
+   \centering
+   \subfigPDP{I(x,y)}{hom_before.png}
+    \arrowPDP 
+   \subfigPDP{I(H(x,y))}{hom_after.png}
+   \caption{Effet d'une homographie}
+\label{effethom}
+ \end{figure}
+
+	Une homographie correspond en fait à un changement de perspective. Elles ont donc de nombreuses applications en traitement d'image comme par exemple le texturing (dans le jeux vidéo...), dans la constitution de panorama ou encore le recalage précis de suite d'images prises du même endroit (ce qui est la première étape de plusieurs méthodes de super-résolution).
+
+

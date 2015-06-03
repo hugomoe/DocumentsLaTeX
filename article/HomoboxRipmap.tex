@@ -1,2 +1,57 @@
 % contient la description des différentes possibilités pour traiter l'homographie particulière au centre de la décomposition
 
+\subsubsection{Séparation d'une homographie particulière }
+
+On considère une homographie $h$ de la forme 
+\begin{equation*}
+h:(x,y)\mapsto \left(\frac{-bx}{1-ax},\frac{-y}{1-ax}\right)
+\end{equation*}
+On peut décomposer cette homographie en deux application $h_1 , h_2$
+\begin{equation*}
+h_1:(x,y) \mapsto \left(\frac{-bx}{1-ax}    ,y\right)~~~~~~h_2:(x,y) \mapsto \left(x,\frac{-y}{1-ax}\right)
+\end{equation*}
+On obtient $h=h_1  \circ h_2$, ce qui nous donne le schéma suivant 
+\begin{equation*}
+f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
+\end{equation*}
+Chacune de ces deux transformations ne modifie l'image que dans une seule directions, cela permet d'effectuer des opérations sur des signaux unidimentionnels . Cette méthode n'est en revanche pas séparable.\\
+\paragraph{Méthode de convolution utilisant l'image  triple intégrale}
+Soit $d>0$ nous allons présenter ici une méthode permettant de convoler une fonction d'une variable par une approximation d'une gaussienne d'écart type $\delta$.\\
+On utilisera le noyau $g_n$ défini par 
+\begin{equation*}
+g_1(t)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(t) ~~~~~~~g_{n+1}= g_n * g_1
+\end{equation*}
+Grâce au théorème central limite on sait que cette suite de fonction est une bonne approximation d'une courbe gaussienne.\\
+Si $f$ est une fonction continue par intégration par partie comme les fonctions $g_n$ dont à support compact on obtient  :
+\begin{eqnarray*}
+(f * g_n )(y)&=&\frac{1}{d} \int_{\mathbb{R}} f(x)(g_{n-1} * \mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(y-x) dx\\
+                 &=& -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)(g_{n-1} * (-\delta_{\frac{d}{2}}+\delta_{-\frac{d}{2}}))(x-y) dx\\
+                 &=& \frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)g_{n-1}(x-y-\frac{d}{2} )dx -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)g_{n-1}\left(x-y+\frac{d}{2}\right)dx\\
+                 &=& \frac{(F^{(1)} * g_{n-1} )\left(y+\frac{d}{2}\right)-(F^{(1)} * g_{n-1} )\left(y-\frac{d}{2}\right)}{d}
+\end{eqnarray*}
+Où la fonction $F^{(1)}$ est une primitive de $f$, on peut par récurrence sur $n$ exprimer $(f*g_{n})(y)$ comme une combinaisons linéaire des des termes $\left(F^{(n)}\left(y+\frac{kd}{2}\right)\right)$, on obtient la formule
+\begin{equation*}
+(f*g_n)(y)=\frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+\end{equation*}
+Cette formule ce démontre par la formule du binôme de Newton.La fonction $F^{(k)}$ est une primitive de $F^{(k-1)}$.\\
+Dans nos algorithmes  on l'utilisera cette formule pour $n=3$ :
+\begin{equation*}
+(f*g_3)(y)=\frac{1}{d^3}(F^{(3)}(y+\frac{3d}{2})-3F^{(3)}(y+\frac{d}{2})+3F^{(3)}(y-\frac{d}{2})-F^{(3)}(y-\frac{3d}{2}))
+\end{equation*}
+On doit cependant calculer une valeur approchée des fonctions $F^{(k}}$ en utilisant des intégrales discrètes car on ne connait que les échantillons de la fonctions $f$.\\
+Si on connait la fonction sur les entiers on peut utiliser les formules
+\begin{equation*}
+F^{(n+1)}(y)=\underset{k\le y}{\sum}F^{(n)}(k)
+\end{equation*}
+Cette somme est finie car les fonctions utilisés sont à support compact.Il est possible d'utiliser d'autres procédés pour évaluer la fonction $F^{(3)}$ mais le volume des calculs devient plus important.\\
+
+\paragraph{Sous échantillonnage gaussien}
+Dans notre cas lorsque nous devons effectuer un sous échantillonnage nous évaluons la convolution $(f*g_3)$. Le but de ce paragraphe est déterminer la valeur du paramètre $d$ qui intervient dans la définition de $g_3$ en fonction du facteur de sous échantillonnage $z>1$.\\
+Dans le cas d'un d'un zoom gaussien on utilise la convolution $f*G_{d'}$ le paramètre $d'$ doit être choisi tel que 
+\begin{equation*}
+z^2 c^2=c^2 + d'^2     ~~~~~~~c\eq 0.8
+\end{equation*}
+On obtient donc la formule $d'=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cite{morel2011sift} pour les détails de ce raisonnement et une justification de la valeur expérimentale de c.\\
+Nous allons appliquer ces résultats à la fonction $g_3$ car c'est une bonne approximation d'une distribution normale,l'écart type de $g_1$ est $\sigma_1=\frac{d}{\sqrt{12}}$ donc l'écart type $\sigma_3$ est donné par la formule $\sigma_3=\sqrt{3}\sigma_1=\frac{d}{2}$
+donc $d=2c\sqrt{z^2 - 1}$.\\
+Dans la pratique on utilisera la formule $d=2\sqrt{(0.8)^2 z^2 - (0.7)^2}$.\\

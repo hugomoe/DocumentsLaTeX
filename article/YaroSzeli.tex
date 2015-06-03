@@ -1,1 +1,30 @@
 % contient la description des différentes méthodes pour traiter les rotations de la décomposition
+
+Pour les deux rotations dans la décomposition, nous avons testés plusieures méthodes : la méthodes de Yaroslavsky \cite{unser1995convolution} et la méthode de traitement des affinités multiétapes \cite{szeliski2010high}.
+
+\subsubsection{Méthode de Yaroslavsky}
+
+La méthode de Yaroslavsky consiste à décomposer une rotation en trois "shear".//
+
+Sous forme matricielle un rotation s'écrit de manière générale :
+\begin{equation*}
+	H=\begin{pmatrix}
+	cos \theta&-sin \theta\\sin \theta&cos \theta
+	\end{pmatrix}
+	\end{equation*}
+
+La décomposition en trois shear est la suivante :
+\begin{equation*}
+	H=\begin{pmatrix}
+	cos \theta&-sin \theta\\sin \theta&cos \theta
+	\end{pmatrix}=\begin{pmatrix}
+	1&-tan \frac{\theta}{2}\\0&1
+	\end{pmatrix}\begin{pmatrix}
+	1&0\\sin \theta&1
+	\end{pmatrix}\begin{pmatrix}
+	1&-tan \frac{\theta}{2}\\0&1
+	\end{pmatrix}
+	\end{equation*}
+
+	Pour faire la rotation complète on fait chaque shear par fourier et on recentre l'image après chaque shear.\\
+	En pratique on se ramène toujours à des rotations d'angle entre $[\frac{-\pi}{4},\frac{\pi}{4}]$ (on peut en effet faire des rotations d'angle $\pi$ et $\frac{\pi}{2}$ de manière exacte...)  

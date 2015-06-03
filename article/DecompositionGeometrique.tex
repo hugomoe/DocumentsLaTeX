@@ -4,6 +4,9 @@
 
 
 
+
+
+
 \subsubsection{Changement d'orientation de caméra :}
 On étudie ici un cas particulier d'homographie $h$   que l'on peut interpréter comme un changement d'angle de caméra.\\
 \begin{figure}[h!]
@@ -14,13 +17,11 @@ On étudie ici un cas particulier d'homographie $h$   que l'on peut interpréter
 
 \paragraph{Approche géométrique :}
 \subparagraph{Cas général :}
-
-
-On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une BOND $(x_{0},y_{0},z_{0})$, l'image de départ sera situé dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
-On doit maintenant positionner notre caméra par rapport à l'image de départ.\\
+On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une BOND $(x_{0},y_{0},z_{0})$,\\ l'image de départ sera situé dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
+On doit maintenant positionner notre caméra par rapport à l'image de départ.
 \begin{itemize}
-\item On note $F$ la position de l'objectif de la caméra, et $w$ le vecteur directeur unitaire de l'axe optique de la caméra. L'axe optique de la caméra est donc la droite passant par $F$ et dirigée par $w$.\\
-\item On note $\delta$ la distance entre l'objectif et l'écran.\\
+\item On note $F$ la position de l'objectif de la caméra, et $w$ le vecteur directeur unitaire de l'axe optique de la caméra. L'axe optique de la caméra est donc la droite passant par $F$ et dirigée par $w$.
+\item On note $\delta$ la distance entre l'objectif et l'écran.
 \item L'écran $P_{2}$ est alors le plan affine passant par $F+\delta w$ et perpendiculaire à l'axe optique de la caméra.
 \begin{equation*}
 P_{2}=\{Y\in \mathbb{R}^{3}|(Y-F-\delta w)\cdot w=0\}=\{Y\in \mathbb{R}^{3}|(Y-F)\cdot w=\delta\}
@@ -46,10 +47,11 @@ H(X)=Z+\delta w+\delta \frac{(F-X)-(F-X)\cdot w~ w}{w\cdot (F-X)}
 \end{equation*}
 
 \subparagraph{Introduction du point visé :}
-On se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$ dans se cas on peut définir $X_{v}$ le point de $P_{1}$ visé par la caméra ,c'est à dire le point d'intersection entre l' axe optique et le plan $P_{1}$. On obtient alors $X_{v}=F-\delta'w$ où $\delta'=\left|\frac{F \cdot z_{0}}{w\cdot z_{0}} \right|$.\\
-
-
-On peut alors en déduire que l'application $H$ est définit sur $P_{1}'=P_{1}\backslash \{Y\in P_{1}|\delta'+w\cdot(X_{v}-Y)=0\}$ et 
+On se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$ dans se cas on peut définir $X_{v}$ le point de $P_{1}$ visé par la caméra ,c'est à dire le point d'intersection entre l' axe optique et le plan $P_{1}$.On obtient alors 
+\begin{equation*}
+X_{v}=F-\delta'w~~~~~~\delta'=\small{\left|\frac{F \cdot z_{0}}{w\cdot z_{0}} \right|}
+\end{equation*}
+On peut alors en déduire que l'application $H$ est définit sur\\ $P_{1}'=P_{1}\backslash \{Y\in P_{1}|\delta'+w\cdot(X_{v}-Y)=0\}$ et 
 \begin{equation*}
 H(X)=X_{v}+(\delta+\delta')w+\delta_{2}\frac{(X_{v}-X)-(X_{v}-X)\cdot w~ w}{\delta'+w\cdot (X_{v}-X)}
 \end{equation*}
@@ -104,12 +106,9 @@ On obtient alors
 u=\cos(\psi)x_{2}+\sin(\psi)y_{2}~~~~~~~~~~v=-\sin(\psi)x_{2}+\cos(\psi)y_{2}
 \end{equation*}
 Si on pose $R_{s}$ la rotation d'angle $s$ et $\tau_{y}$ la translation du vecteur $-y$ on obtient alors 
-
-\begin{eqnarray*}
-(\tau_{c}^{-1} \circ h)(X) &=& \left(\frac{\delta (X_{v}-i(X))\cdot(\cos(\psi)x_{2}+\sin(\psi)y_{2}) }{w \cdot (X_{v}-i(X))+\delta'}~,~\frac{\delta (X_{v}-i(X))\cdot (-\sin(\psi)x_{2}+\cos(\psi)y_{2})}{w \cdot (X_{v}-i(X))+\delta'}  \right) \\
-                                &=& R_{\psi}\left(\frac{\delta (X_{v}-i(X))\cdot x_{2} }{w \cdot (X_{v}-i(X))+\delta'}~,~\frac{\delta (X_{v}-i(X))\cdot y_{2}}{w \cdot (X_{v}-i(X))+\delta'}  \right) 
-\end{eqnarray*}
-
+\begin{equation*}
+(\tau_{c}^{-1} \circ h)(X) = R_{\psi}\left(\frac{\delta (X_{v}-i(X))\cdot x_{2} }{w \cdot (X_{v}-i(X))+\delta'}~,~\frac{\delta (X_{v}-i(X))\cdot y_{2}}{w \cdot (X_{v}-i(X))+\delta'}  \right) 
+\end{equation*}
 On assimile $X_{v}$ et $i^{-1}(X_{v})$ on obtient 
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{c}^{-1}  \circ h)(X)=\left(\frac{-i(\tau_{x_{v}} (X))\cdot x_{2} }{-w \cdot i(\tau_{x_{v}} (X))+\delta'}~,~\frac{-i(\tau_{x_{v}} (X))\cdot y_{2}}{-w \cdot i(\tau_{x_{v}} (X))+\delta'}  \right) 
@@ -163,15 +162,13 @@ h=z_{\frac{\delta}{\delta'}} \circ \tau_{c} \circ R_{\psi} \circ h_{\theta,\delt
 Les applications affines sont un cas particulier d'homographie, si une homographie n'est pas une application affine alors elle est définie sur le plan privé d'une droite appelée horizon.\\	
   L'ensemble des homographies a une structure de groupe pour la loi de composition formelle des fractions rationnelles.\\
   On peut  associer à l'homographie $h$ la matrice $H$ définies par
+  
 	\begin{equation*}
 	H=\begin{pmatrix}
 	a&b&p\\c&d&q\\r&s&t
 	\end{pmatrix}
 	\end{equation*}
-	Cette matrice est inversible car $h$ est inversible, elle n'est pas unique car la matrice $\lambda H$ définit la même homographie $\forall \lambda \mathbb{R}_+$.\\
-	En posant $X=\begin{pmatrix}
-	x\\y\\1
-\end{pmatrix}$ on obtient alors $h(x,y)=\left(\frac{(HX)_{1}}{(HX)_{3}}	,\frac{(HX)_{2}}{(HX)_{3}}	\right)$.\\
+	Cette matrice est inversible car $h$ est inversible, elle n'est pas unique car la matrice $\lambda H$ définit la même homographie $\forall \lambda \in \mathbb{R}_+$.\\
 Cette notation rend compatible le produit matriciel et la composition des homographies. On obtient un morphisme de groupe de $GL_{3}(\mathbb{R})$ dans le groupe des homographies du plan. Ce morphisme n'est pas injectif la matrice d'une homographie est définie à constante près mais il se factorise à travers $SL_{3}(\mathbb{R})$ en un isomorphisme.\\
 Dans la suite on notera $\sim$ la relation d'équivalence  sur $GL_{3}(\mathbb{R})$ définie par $A\sim B \iff \exists \lambda\in \mathbb{R}^{*} , A=\lambda B$, c'est à dire si $A$ et $B$ définissent la même homographie.\\
 \underline{Remarque :} Dans certains cas une homographie peut être définie par ses valeurs prises en quatres points du plan.\\
@@ -198,6 +195,8 @@ R_{s}=\begin{pmatrix}
 ~~~~H_{\theta,\delta'}=\begin{pmatrix}
 -\cos(\theta)&0&0\\0&-1&0\\-\frac{\sin(\theta)}{\delta'}&0&1
 \end{pmatrix}
+\end{equation*}
+\begin{equation*}
 ~~~~Z_{\lambda}=\begin{pmatrix}
 \lambda&0&0\\0&\lambda&0\\0&0&1
 \end{pmatrix}
@@ -205,14 +204,14 @@ R_{s}=\begin{pmatrix}
 1&0&-x_{v}\\0&1&-y_{v}\\0&0&1
 \end{pmatrix}
 \end{equation*}
- On cherche dans un premier temps à déterminer les translations. Soient $X_1 = (x_1 , y_1 )$ et $X_2 = (x_2 , y_2 )$ deux vecteurs que l' on suppose tel que la matrice $H_t$ défine par $H_t = T_{-X_2}  \cdot H \cdot T_{X_1}$ admette une décomposition de la forme  $H_t=R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$ .\\
+ On cherche dans un premier temps à déterminer les translations. Soient $X_1 = (x_1 , y_1 )$ et $X_2 = (x_2 , y_2 )$ deux vecteurs que l' on suppose tel que la matrice $H_t$ définie par $H_t = T_{-X_2}  \cdot H \cdot T_{X_1}$ admette une décomposition de la forme  $H_t=R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$ .\\
  On pose 
  \begin{equation*}
  H^{-1}=\begin{pmatrix} A&B&P\\C&D&Q\\R&S&T \end{pmatrix}
  \end{equation*}
- Par un calcul on obtient : 
+ Par un calcul on obtient que la matrice $R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$ est égale à : 
   \begin{equation*}
-R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi} =\begin{pmatrix}
+\begin{pmatrix}
  -\frac{\delta}{\delta'}\cos(\psi)\cos(\theta)\cos(\phi)+\frac{\delta}{\delta'}\sin(psi)\sin(\phi)& -\frac{\delta}{\delta'}\cos(\psi)\cos(\theta)\sin(\phi)-\frac{\delta}{\delta'}\sin(\psi)\cos(\phi)&0\\
   \frac{\delta}{\delta'}\sin(\psi)\cos(\theta)\cos(\phi)+\frac{\delta}{\delta'}\cos(\psi)\sin(\phi)& \frac{\delta}{\delta'}\sin(\psi)\cos(\theta)\sin(\phi)-\frac{\delta}{\delta'}\cos(\psi)\cos(\phi)&0\\ -\frac{\sin(\theta)}{\delta'}\cos(\phi)&-\frac{\sin(\theta)}{\delta'}\sin(\phi)& 1
  \end{pmatrix}
@@ -232,11 +231,7 @@ R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi} =\begin{pmatrix}
  On pose $(x_1,y_1)=h^{-1}(x_2,y_2)$ car les calculs intermédiaires sont moins fastidieux, on suppose $(x_2,y_2)$ tels que $R x_2 +S y_2 + T \ne 0$.\\
 On obtient alors
 \begin{equation*}
-H_t=\begin{pmatrix}
- a-x_2 r&b-x_2 s& 0\\
-  c-y_2 r&d-y_2 s& 0\\
-  r & s &\frac{1}{R x_2 + S y_2 +T} 
-  \end{pmatrix} 
+H_t
   \sim 
   \begin{pmatrix}
  (a-x_2 r)(R x_2 + S y_2 +T)&(b-x_2 s)(R x_2 + S y_2 +T)& 0\\
@@ -249,13 +244,17 @@ On obtient alors
  -\frac{\sin(\theta)}{\delta'}\cos(\phi)=r(R x_2 + S y_2 +T)~~~~~~ -\frac{\sin(\theta)}{\delta'}\sin(\phi)=s(R x_2 + S y_2 +T)
  \end{equation*}
  On sait que $r^{2}+s^{2}=0$ ssi l'homographie associée à H est une affinité ce cas ci sera traité de façon indépendante, on suppose ici que l'homographie $h$  n'est pas une affinité on peut donc écrire :
- 
- \begin{equation*}
- \cos(\psi)=\sgn\left(-\frac{\sin(\theta)}{ \delta'}\right)\sgn(R x_2 + S y_2 +T)\frac{r}{\sqrt{r^{2}+s^{2}}}~~~~\sin(\psi)=\sgn\left(-\frac{\sin(\theta)}{ \delta'}\right)\sgn(R x_2 + S y_2 +T)\frac{s}{\sqrt{r^{2}+s^{2}}}
- \end{equation*}
+ \begin{eqnarray*}
+ \cos(\psi) &=& \sgn\left(-\frac{\sin(\theta)}{ \delta'}\right)\sgn(R x_2 + S y_2 +T)\frac{r}{\sqrt{r^{2}+s^{2}}}\\
+ \sin(\psi) &=& \sgn\left(-\frac{\sin(\theta)}{ \delta'}\right)\sgn(R x_2 + S y_2 +T)\frac{s}{\sqrt{r^{2}+s^{2}}}
+ \end{eqnarray*}
  On peut se restreindre au cas $\frac{\sin(\theta)}{\delta'}>0$ :\\
  \begin{itemize}
- \item En effet si $\frac{\sin(\theta)}{\delta'}<0$ on obtient alors $\cdot R_{\psi} \cdot H_{\theta,\delta'} \cdot R_{\phi}=R_{\psi} \cdot Z_{-1}\cdot H_{\theta,-\delta'}\cdot Z_{-1} \cdot R_{\phi}= R_{\psi+\pi} \cdot H_{\theta,-\delta'}\cdot R_{\phi+\pi}$ et on a $-\frac{\sin(\theta)}{\delta'}>0$.\\
+ \item En effet si $\frac{\sin(\theta)}{\delta'}<0$ on obtient alors
+ \begin{equation*}
+ R_{\psi} \cdot H_{\theta,\delta'} \cdot R_{\phi}=R_{\psi} \cdot Z_{-1}\cdot H_{\theta,-\delta'}\cdot Z_{-1} \cdot R_{\phi}= R_{\psi+\pi} \cdot H_{\theta,-\delta'}\cdot R_{\phi+\pi}
+ \end{equation*}
+ et on a $-\frac{\sin(\theta)}{\delta'}>0$.\\
  \end{itemize}
 
 

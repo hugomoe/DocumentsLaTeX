@@ -3,13 +3,14 @@
 
 
 
-\ssse{Methode naive}
+\ssse{Méthode naïve}
 
 %petite explication de la méthode naive, puis :
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{imagereciproque.jpg}
+\caption{Image réciproque d'un pixel}
 \end{figure}
 
 En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983.
@@ -18,14 +19,14 @@ En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en textur
 
 Le principe est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
 
-Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quittes à faire un premier zoom). On calcul ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
-Le mipmap est donc représenté par une suite d'image chacune deux fois plus petite que la précédente, qui sont des "zoom-out" de l'image d'origine de facteur une puissance de 2.
+Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
+Le Mipmap est donc représenté par une suite d'image chacune deux fois plus petite que la précédente, qui sont des "zoom-out" de l'image d'origine de facteur une puissance de 2.
 
 %image d'un vrai mipmap, que je ferais moi
 \begin{figure}[h!]
 \centering
 \caption{Un exemple de Mipmap}
-\includegraphics[scale=0.4]{MipMap_real}
+\includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
 \end{figure}
 
 Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors approximativement un parallélogramme, qu'on essaye d'approximer par des carrés.
@@ -34,11 +35,11 @@ Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde
 
 On appelle distance la taille d'un carré (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
 
-On suppose une formule nous donnant la distance d'un point quelconque, la géométrie du mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
+On suppose une formule nous donnant la distance d'un point quelconque, la géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
 -d'une part on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
 
--d'autre part dans chaque niveau du mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+-d'autre part dans chaque niveau du Mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
 
 %image de l'inter trilinéaire avec deux plans pour les profondeurs
 \begin{figure}[h!]
@@ -104,9 +105,9 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 
 \ssse{Algorithme amélioré : Le ripmap}
 
-Une des grandes faiblesses est l'anisotropie du mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
+Une des grandes faiblesses est l'anisotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de palier à ce problème on utilise un ripmap \cite{akenine2008real}. C'est en fait un mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+Pour tenter de palier à ce problème on utilise un ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 
 Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
 

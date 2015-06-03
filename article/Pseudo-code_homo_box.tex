@@ -1,1 +1,94 @@
 %contient le pseudo-code de homo-box, simple et avec triple intégrale
+
+\sse{Traitement de l'homographie particulière}
+
+\ssse{Conventions}
+
+Les images sont des matrices. On a ignoré les éventuelles multiples niveaux de couleurs (qui seront traités indépendamment).
+
+Il y a en faites une origine sur les images (pour pouvoir faire des translations instantanées).
+
+\medbreak
+La fonction $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
+
+On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$.
+
+\ssse{Corps de l'algorithme}
+
+\begin{algorithm}
+\caption{$applyHomography(img,imgf,H)$}
+\KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $img_f[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
+$f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
+$f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
+\For{$j \in \llbracket 1, h \rrbracket$}{
+	$iimgw = imageIntegrale(j^e \text{ colonne de } img)$ \;
+	\For{$i \in \llbracket 1, w_f \rrbracket$}{
+		$x = f_1(i)$\;
+		$d = |f_1'(i)|$\;
+		$img_{aux}(i,j) = interpole(iimgw,x,d)$\;
+	}
+}
+\For{$i \in \llbracket 1, w \rrbracket$}{
+	$iimgh = imageIntegrale(i^e \text{ ligne de } img_{aux})$\;
+	$d=\frac{\dr}{\dr y} f_2(i,0)$ (indépendant de $j$)\;
+	\For{$j \in \llbracket 1, h_f \rrbracket$}{
+		$y=f_2(i,j)$\;
+		$img_f(i,j)=interpole(iimgh,y,d)$\;
+	}
+}
+\end{algorithm}
+
+\ssse{Interpolation à l'aide de l'image intégrale}
+
+Une première version naive. Nous n'avons pas réglé les cas où $InterpoleInt$ n'est pas définie.
+
+\begin{algorithm}
+\caption{$interpole(imgint,u,d)$}
+\KwData{Une image intégrale $imgint$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+$u=u-\frac{d}{2}$\;
+$id=floor(d)$\;
+$iu=floor(u)$\;
+$x = d-id$\;
+$y = u-iu$\;
+$a=interpoleInt(imgint,iu,id)$\;
+$b=interpoleInt(imgint,iu+1,id)$\;
+$c=interpoleInt(imgint,iu,id+1)$\;
+$d=interpoleInt(imgint,iu+1,id+1)$\;
+\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$interpoleInt(imgint,i,d)$}
+\KwData{Un vecteur $imgint$, deux entiers $i,d$}
+\KwRet{$\frac{imgint[i+d-1]-imgint[i-1]}{d}$}
+\end{algorithm}
+
+
+\ssse{A l'aide de la convolé de trois portes}
+
+Notons $h_3$ la convolé de trois portes. On a $h_3'' = \mb{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mb{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mb{1}_{[\frac{1}{2},\frac{3}{2}]}$.
+Ainsi en notant $F_2$ l'intégrale seconde de l'image, on a $\int f h_3 = \int F h_3' = \int F_2 h_3''$.
+Ainsi on peut prendre plutôt : 
+
+\begin{algorithm}
+\caption{$interpole3(imgint,u,d)$}
+\KwData{Une image triple intégrale $imgint3$ (1 dimension), une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
+$id=floor(d)$\;
+$iu=floor(u)$\;
+$x = d-id$\;
+$y = u-iu$\;
+$a=interpoleTripleInt(imgint3,iu,id)$\;
+$b=interpoleTripleInt(imgint3,iu+1,id)$\;
+$c=interpoleTripleInt(imgint3,iu,id+1)$\;
+$d=interpoleTripleInt(imgint3,iu+1,id+1)$\;
+\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$interpoleTripleInt(imgint3,i,d)$}
+\KwData{Un image triple intégrale $imgint3$ (1 dimension), deux entiers $i,d$}
+$a=interpoleInt(imgint3,i-d,d)$\;
+$b=interpoleInt(imgint3,i,d)$\;
+$c=interpoleInt(imgint3,i+d,d)$\;
+\KwRet{$\frac{a-2*b+c}{d^2}$}
+\end{algorithm}

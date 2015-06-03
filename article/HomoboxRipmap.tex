@@ -49,7 +49,7 @@ Cette somme est finie car les fonctions utilisés sont à support compact.Il est
 Dans notre cas lorsque nous devons effectuer un sous échantillonnage nous évaluons la convolution $(f*g_3)$. Le but de ce paragraphe est déterminer la valeur du paramètre $d$ qui intervient dans la définition de $g_3$ en fonction du facteur de sous échantillonnage $z>1$.\\
 Dans le cas d'un d'un zoom gaussien on utilise la convolution $f*G_{d'}$ le paramètre $d'$ doit être choisi tel que 
 \begin{equation*}
-z^2 c^2=c^2 + d'^2     ~~~~~~~c\eq 0.8
+z^2 c^2=c^2 + d'^2     ~~~~~~~c= 0.8
 \end{equation*}
 On obtient donc la formule $d'=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cite{morel2011sift} pour les détails de ce raisonnement et une justification de la valeur expérimentale de c.\\
 Nous allons appliquer ces résultats à la fonction $g_3$ car c'est une bonne approximation d'une distribution normale,l'écart type de $g_1$ est $\sigma_1=\frac{d}{\sqrt{12}}$ donc l'écart type $\sigma_3$ est donné par la formule $\sigma_3=\sqrt{3}\sigma_1=\frac{d}{2}$

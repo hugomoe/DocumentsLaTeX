@@ -7,6 +7,11 @@
 
 %petite explication de la méthode naive, puis :
 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{imagereciproque.jpg}
+\end{figure}
+
 En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983.
 
 \ssse{Principe}
@@ -17,6 +22,11 @@ Pour cela on choisit de supposer que l'image est carrée de taille une puissance
 Le mipmap est donc représenté par une suite d'image chacune deux fois plus petite que la précédente, qui sont des "zoom-out" de l'image d'origine de facteur une puissance de 2.
 
 %image d'un vrai mipmap, que je ferais moi
+\begin{figure}[h!]
+\centering
+\caption{Un exemple de Mipmap}
+\includegraphics[scale=0.4]{MipMap_real}
+\end{figure}
 
 Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors approximativement un parallélogramme, qu'on essaye d'approximer par des carrés.
 
@@ -31,6 +41,11 @@ On suppose une formule nous donnant la distance d'un point quelconque, la géom�
 -d'autre part dans chaque niveau du mipmap on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
 
 %image de l'inter trilinéaire avec deux plans pour les profondeurs
+\begin{figure}[h!]
+\centering
+\caption{Schéma d'interpolation trilinéaire}
+\includegraphics[scale=0.5]{intertrilineaire.jpg}
+\end{figure}
 
 \ssse{La fonction de distance}
 
@@ -58,7 +73,7 @@ Le résultat est relativement satisfaisant.
 %schéma avec un ârallélogramme et le carré correspondant
 
 \sssse{Méthode du plus grand côté}
-$$ D(x,y) = \max (\sqrt{(\frac{\dr u}{\dr x})^2 + (\frac{\dr v}{\dr x})^2},\sqrt{(\frac{\dr u}{\dr y})^2 + (\frac{\dr v}{\dr y})^2})$$
+$$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
 On prend le plus grand côté du parallélogramme comme côté du carré. Le résultat est bon. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
 
 Ce résultat est satisfaisant.
@@ -66,18 +81,18 @@ Ce résultat est satisfaisant.
 %schéma avec un ârallélogramme et le carré correspondant
 
 \sssse{Méthode des diagonales}
-$$D(x,y) = \max \left( \sqrt{(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x})^2+(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y})^2}, \sqrt{(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x})^2+(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y})^2} \right)$$
+$$D(x,y) = \max \left( \sqrt{\left(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x}\right)^2+\left(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y}\right)^2}, \sqrt{\left(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x}\right)^2+\left(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y}\right)^2} \right)$$
 On prend la plus grande diagonale du parallélogramme. Ici l'image est trop flou.
 
-%schéma avec un ârallélogramme et le carré correspondant
+%schéma avec un parallélogramme et le carré correspondant
 
 \sssse{Méthode des valeurs singulières}
 
-On peut décomposer toute matrice $A$ en trois matrices $A = PDQ^{-1}$
+On peut décomposer toute matrice $A$ en trois matrices $A = PDQ^{-1}$ où $P$ et $Q$ sont orthogonales et $D$ est diagonale.
 
 Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs propres normalisés de ces matrices, et $D$ la racine de leur diagonalisée. Il faut veiller à ce que $P$ et $Q$ correspondent bien \cite{abdi2007singular}.
 
-Ainsi $P$ et $Q$ sont orthogonales et $D$ est diagonale, ses coefficients sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
+Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
 
 Rq : On a une interprétation géométrique à l'aide d'une caméra de ces valeurs.
 
@@ -96,13 +111,25 @@ Pour tenter de palier à ce problème on utilise un ripmap \cite{akenine2008real
 Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
 
 %un vrai ripmap, que je ferais moi
+\begin{figure}[h!]
+\centering
+\caption{Un exemple de Ripmap}
+\includegraphics[scale=0.4]{Ripmap_real}
+\end{figure}
+
 
 %schéma d'interpolations pour le ripmap, avec 4 images est l'endroit ou le point tombe dans chacun
+\begin{figure}[h!]
+\centering
+\caption{Schéma d'interpolation bi-bi-linéaire}
+\includegraphics[scale=0.5]{interbibilineaire.jpg}
+\end{figure}
+
 
 On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est de :
 $$D(x,y) = \left( |\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|\right)$$
 On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
 
-Cela améliore certes la méthode, mais ne résouds pas par exemple le cas d'un rectangle fin en diagonale.
+Cela améliore certes la méthode, mais ne résous pas par exemple le cas d'un rectangle fin en diagonale.
 
 

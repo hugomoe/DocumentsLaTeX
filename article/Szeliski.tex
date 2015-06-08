@@ -5,8 +5,25 @@
 	
 	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse d'une composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translations, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} effectué de manière plus simple et un sous-échantillonnage dans la direction transverse.
 	
-	Le principe de la méthode est en fait d'augmenter suffisamment le facteur de sur-échantillonnage pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre.
-	\red{(insérer une figure explicative)}
+	Le principe de la méthode est en fait d'augmenter suffisamment le facteur de sur-échantillonnage pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski})
+		
+	\begin{figure}
+		\centering
+		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{szeliski_naiveEntree.png}}
+		\subfigure[Spectre de l'image de sortie : repliement du spectre]{\includegraphics[scale=0.5]{szeliski_naiveSortie.png}}
+		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la méthode naïve)}
+		\label{szeliski_decompoNaive}
+	\end{figure}
+		
+	\begin{figure}
+		\centering
+		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{szeliski_szeliskiEntree.png}}
+		\subfigure[Spectre de l'image après sur-échantillonnage]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
+		\subfigure[Spectre de l'image après sur-échantillonnage et \emph{shear}]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
+		\subfigure[Spectre de l'image de sortie (après sur-échantillonnage, \emph{shear} et sous-échantillonnage)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
+		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la décomposition en plusieurs étapes)}
+		\label{szeliski_decompoSzeliski}
+	\end{figure}
 	
 	Ces trois opérations sont toutes des \emph{shear} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangé) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine}.
 	\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
@@ -17,7 +34,7 @@
 	Cette méthode semble donc décomposer une affinité en 6 opérations $\mathcal R$ (3 pour chacun des 2 \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à 4 opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	
 \subsubsection{Étapes de l'algorithme}
-	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (\red{référence à ajouter}).
+	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (algorithmes \ref{szeliski_rh}, \ref{szeliski_rv} et \ref{szeliski_affine}).
 	
 	On suppose avoir reçu en entrée une image à modifier et la matrice $A$ correspondant à l'affinité inverse que celle à effectuer : l'antécédent du point $(i,j)$ de l'image de sortie se situe donc en $A(i,j)$ sur l'image d'entrée.
 	
@@ -41,19 +58,27 @@
 		
 		\begin{figure}
 		\centering
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[width=37mm]{uMax_vMax_spectreEntree.png}}
-		\subfigure[Spectre de l'image de sortie]{\includegraphics[width=37mm]{uMax_vMax_spectreSortie.png}}
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[width=47mm]{uMax_vMax_spectreUtile.png}}
+		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{uMax_vMax_spectreEntree.png}}
+		\subfigure[Spectre de l'image de sortie]{\includegraphics[scale=0.5]{uMax_vMax_spectreSortie.png}}
+		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{uMax_vMax_spectreUtile.png}}
 		\caption{Fréquences conservées par l'affinité. Les zones noires sont les fréquences qui ne seront pas conservées par l'application de l'affinité}
 		\label{uMax_vMax}
 		\end{figure}
 		
 		En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image).
 		
-		À partir des coefficients de $A$ et des valeurs de $u_{max}$ et $v_{max}$, on peut en déduire les coefficients de sur-échantillonnage verticaux et horizontaux nécessaires :
+		À partir des coefficients de $A$ et des valeurs de $u_{max}$ et $v_{max}$, on peut en déduire les coefficients de sur-échantillonnage verticaux et horizontaux nécessaires \cite{szeliski2010high} :
 		\[r_v \geq \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))\]
 		\[r_h \geq \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))\]
-		Pour des raisons géométriques, on peut toujours réduire les sur-échantillonnages à $r_h \leq 3$ et $r_v \leq 3$ (au delà, on \red{insère un schéma explicatif du pourquoi du comment}).
+		Pour des raisons géométriques, on peut toujours réduire les sur-échantillonnages à $r_h \leq 3$ et $r_v \leq 3$. En effet, pour chacune des deux opérations unidirectionnelles (celles qui seront décomposées en trois $\mathcal R$), le $r_h$ (respectivement $r_v$) peut être réduit à 3, grâce au filtrage qui atténue les fréquences au delà de $u_{max}$ (respectivement $v_{max}$). La figure \ref{rvleq3} présente ce raisonnement géométrique pour une opération sur les colonnes (qui se traduit par une opération sur les lignes dans le domaine de Fourier).
+		
+		\begin{figure}
+		\centering
+		\subfigure[$r_v$ non majoré]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
+		\subfigure[$r_v$ majoré par 3 ; on utilise le fait que les distances horizontales sont inchangées]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
+		\caption{Réduction de $r_v$ jusqu'à $r_v \leq 3$. Au-delà de $v_{max}$, le filtre efface (atténue) les fréquences, permettant la réduction de $r_v$. $r_v$ est le quotient de la longueur du rectangle pointillé (spectre après suréchantillonnage) par celle du carré (spectre initial)}
+		\label{rvleq3}
+		\end{figure}
 		
 		On décompose alors $A$ en :
 		\[

@@ -5,7 +5,11 @@
 
 \ssse{Méthode naïve}
 
-%petite explication de la méthode naive, puis :
+On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivé, on peut calculer l'endroit de l'image de départ correspondant. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
+
+On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisé par des points ont visuellement une certaine épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone.
+
+%image aliasé à fond
 
 \begin{figure}[h!]
 \centering
@@ -13,36 +17,34 @@
 \caption{Image réciproque d'un pixel}
 \end{figure}
 
-En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983.
+En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983 \cite{williams1983pyramidal}.
 
-\ssse{Principe}
+\ssse{Présentation du Mipmap}
 
 Le principe est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
 
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
-Le Mipmap est donc représenté par une suite d'image chacune deux fois plus petite que la précédente, qui sont des "zoom-out" de l'image d'origine de facteur une puissance de 2.
+Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2.
 
-%image d'un vrai mipmap, que je ferais moi
 \begin{figure}[h!]
 \centering
 \caption{Un exemple de Mipmap}
 \includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
 \end{figure}
 
-Ensuite, quand on cherche la valeur d'un pixel de l'image d'arrivée, on regarde la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors approximativement un parallélogramme, qu'on essaye d'approximer par des carrés.
+Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approxime la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approximer avec des carrés.
 
 %image de parallélogramme avec les différentielles, avec au mieux schéma image de départ / arrivé qui explique la correspondance entre un pixel est un parallélogramme
 
-On appelle distance d'un pixel la taille d'un carré dans lequel il se trouve (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
+On appelle distance d'un pixel la taille du carré choisi pour l'approximation (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
 
-On suppose avoir une formule nous donnant la distance d'un point quelconque, la géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
+On suppose avoir une formule qui nous donne la distance d'un point quelconque. La géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
 \begin{itemize}
-  \item d'une part, on fait une interpolation linéaire entre deux niveaux de profondeur qui encadrent la distance.
-  \item d'autre part, dans chaque niveau du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés où tombe le pixel.
+  \item d'une part, on fait une interpolation linéaire entre deux étages dont les profondeurs encadrent la distance.
+  \item d'autre part, dans chaque étage du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés qui encadrent le pixel.
 \end{itemize}
 
-%image de l'inter trilinéaire avec deux plans pour les profondeurs
 \begin{figure}[h!]
 \centering
 \caption{Schéma d'interpolation trilinéaire}
@@ -54,11 +56,11 @@ On suppose avoir une formule nous donnant la distance d'un point quelconque, la 
 Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
 On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
 
+Le choix de la distance est crucial car si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit l'image est aliasée.
+
 Il est aisé de calculer les coefficients des dérivées partielles. On note $H$ l'homographie inverse.
 
 %re image prgm, avec les dérivé partielle indiqués
-
-L'enjeu est que si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit l'image est aliasée.
 
 % On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
 
@@ -68,7 +70,7 @@ On note $(u,v)=H(x,y)$.
 
 \sssse{Méthode du déterminant}
 $$D(x,y) = \sqrt{\det \txt{d}_{(x,y)} H}$$
-En effet le déterminant est l'aire du parallélogramme, donc prendre un carré de coté la racine donne un carré de même aire.
+Cette formule est justifiée car le déterminant de $\txt{d}_{(x,y)} H$ est l'aire du parallélogramme, donc un carré de côté $\sqrt{\det \txt{d}_{(x,y)} H}$ est de même aire que le parallélogramme qu'il approxime.
 
 Le résultat est relativement satisfaisant.
 
@@ -76,7 +78,7 @@ Le résultat est relativement satisfaisant.
 
 \sssse{Méthode du plus grand côté}
 $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
-On prend le plus grand côté du parallélogramme comme côté du carré. Le résultat est bon. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
+On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
 % On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
 
 Ce résultat est satisfaisant.
@@ -85,7 +87,7 @@ Ce résultat est satisfaisant.
 
 \sssse{Méthode des diagonales}
 $$D(x,y) = \max \left( \sqrt{\left(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x}\right)^2+\left(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y}\right)^2}, \sqrt{\left(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x}\right)^2+\left(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y}\right)^2} \right)$$
-On prend la plus grande diagonale du parallélogramme. Ici l'image est trop flou.
+On prend la plus grande diagonale du parallélogramme. Ici l'image est trop floue.
 
 %schéma avec un parallélogramme et le carré correspondant
 
@@ -97,21 +99,23 @@ Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs pro
 
 Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
 
-Rq : On a une interprétation géométrique comme un mouvement de caméra de ces valeurs.
+On a une interprétation géométrique comme un mouvement de caméra de ces valeurs \cite{morel2009asift}.
 
 \sssse{Conclusion}
 
-Les méthode du déterminant, du plus grand côté du parallélogramme et du maximum des valeurs singulières sont satisfaisantes.
+Les méthodes du déterminant, du plus grand côté du parallélogramme et du maximum des valeurs singulières sont satisfaisantes.
 
-On a une préférence pour le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'aliasing. 
+On a une préférence pour le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'\emph{aliasing}.
 
 \ssse{Algorithme amélioré : Le Ripmap}
 
-Une des grandes faiblesses est l'anisotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer et en fait un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
+Une des grandes faiblesses est l'anisotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de pallier ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 
-Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les niveaux et bilinéaire dans chacun d'eux).
+Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux).%bibilinéaire ? sérieusement ?
+
+
 
 %un vrai ripmap, que je ferais moi
 \begin{figure}[h!]
@@ -130,9 +134,7 @@ Ainsi la fonction de distance ne renvoie plus une valeur mais deux, une pour cha
 
 
 On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est de :
-$$D(x,y) = \left( |\frac{\dr u}{\dr x}|+|\frac{\dr u}{\dr y}|,|\frac{\dr v}{\dr x}|+|\frac{\dr v}{\dr y}|\right)$$
+$$D(x,y) = \left( \left|\frac{\dr u}{\dr x}\right|+\left|\frac{\dr u}{\dr y}\right|,\left|\frac{\dr v}{\dr x}\right|+\left|\frac{\dr v}{\dr y}\right|\right)$$
 On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
 
 Cela améliore certes la méthode, mais ne résout pas par exemple le cas d'un rectangle fin en diagonale.
-
-

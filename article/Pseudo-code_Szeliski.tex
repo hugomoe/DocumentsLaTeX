@@ -5,7 +5,7 @@
  \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
  \end{itemize}
  
- \subsection*{Traitement des affinités : High-Quality Multi-Pass Resampling}
+ \subsection*{Traitement des affinités multi-étape}
   
   Dans les algorithmes $\mathcal{R}_h$ et $\mathcal{R}_v$, on considère que l'image est prolongée par symétrie (par exemple, si on appelle $img[k][j]$ avec $k > m$ ($m$ le nombre de lignes de $img$), on obtient la valeur $img[2m-k][j]$). Cette condition au bord symétrique permet d'éviter des artefacts aux bords (dits effet Gibbs), car on convole ici par une fonction qui ressemble à un \emph{sinc}.
   
@@ -246,7 +246,7 @@
   \end{algorithme}
   
   
-  \subsection*{Traitement des affinités pour les homographies}
+  \subsection*{Traitement des affinités multi-étape, adapté pour les homographies}
   Les trois algorithmes qui suivent (algorithmes \ref{algoUniqueEnSonGenre}, \ref{algoToutAussiUnique} et \ref{algoPresqueAussiUniqueQueLesDeuxAutres}) fonctionnent de la même manière que leurs analogues vus plus haut. La seule différence est qu'ils changent la taille de l'image de sorte à ne pas perdre l'information en la faisant sortir de l'image. Pour cela, les \emph{shear} élémentaires $\mathcal R$ doivent connaitre sur quelle partie du plan ils travaillent (quelle partie du plan ils reçoivent en entrée, quelle partie du plan ils doivent renvoyer en sortie). Chaque image étant un rectangle, possédant un centre, on peut situer ce rectangle dans le plan par la coordonnée de ce centre, non entière. On donne donc en argument les coordonnées du centre du rectangle d'entrée ($x_i,y_i$) et de sortie ($x_f,y_f$). Les translations (qui feraient sortir l'information de l'image) sont prises en compte de cette manière (en translatant la partie du plan observée).
   
   Ainsi, si on veut appliquer une homographie à la sortie de $applyAffinity$, il faut considérer que le point $img_a[0][0]$ a pour coordonnées $\mu',\nu'$ dans le plan.

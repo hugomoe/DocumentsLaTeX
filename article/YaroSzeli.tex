@@ -4,7 +4,7 @@ Pour les deux rotations dans la décomposition, nous avons testés plusieures m�
 
 \subsubsection{Méthode de Yaroslavsky}
 
-La méthode de Yaroslavsky consiste à décomposer une rotation en trois "shear".//
+La méthode de Yaroslavsky consiste à décomposer une rotation en trois "shear".
 
 Sous forme matricielle un rotation s'écrit de manière générale :
 \begin{equation*}
@@ -26,5 +26,22 @@ La décomposition en trois shear est la suivante :
 	\end{pmatrix}
 	\end{equation*}
 
-	Pour faire la rotation complète on fait chaque shear par fourier et on recentre l'image après chaque shear.\\
+	Pour faire la rotation complète on fait chaque shear par fourier et on recentre l'image après chaque shear.
 	En pratique on se ramène toujours à des rotations d'angle entre $[\frac{-\pi}{4},\frac{\pi}{4}]$ (on peut en effet faire des rotations d'angle $\pi$ et $\frac{\pi}{2}$ de manière exacte...)  
+
+
+\subsubsection{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multiétapes}
+
+Afin de choisir la méthode de rotation nous avons fait 10 rotations de l'image "Lena" de $\frac{\pi}{5}$. Les résultats sont sur la figure \ref{rotalena}. Visuellement les rotations semblent parfaites (mais si on observe bien il y a un peu plus d'effet Gibbs pour la méthode de traitement des affinités multiétapes que pour Yaroslavsky). Si on fait la différence entre l'image orignal et l'image qui a subie dix rotations par la méthode de traitement des affinités multiétapes on a en une RMS=5.979119, une norme L1=3.624343, et une norme sup=72.128845. Entre l'image initiale et l'image qui à subie dix rotations par la méthode de Yaroslavsky on a une RMS=12.817376, une norme L1=7.374875, et une norme sup=159.840759. \\
+
+En terme de complexité, la méthode de Yaroslavsky est en $n^2 log(n)$ (où n est la largeur ou la longueur maximale de l'image), tandis que la méthode de traitement des affinités multiétapes est en $n^2$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multiétapes.
+
+ \begin{figure}
+ 
+   \centering
+   \subfigPDP{Lena originale}{lena.png}
+   \subfigPDP{Lena après dix rotations par Szeliski}{lena_10_rotations_szeli.png}
+   \subfigPDP{Lena après dix rotations par Yaroslasky}{lena_10_rotations_yaro.png}
+   \caption{Effet de dix rotations}
+\label{rotalena}
+ \end{figure}

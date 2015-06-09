@@ -22,7 +22,7 @@ Ici on a juste le corps de la fonction, ainsi la fonction de distance et la cons
 \medbreak
 \medbreak
 \begin{algorithm}[H]
-\caption{$mainFunction(img,H,I)$}
+\caption{$mainFunction(img,H,img_f)$}
 \KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $img_f[1..m][1..m]$}
 $M=builtMipMap(img)$ \;%Faire le mip-mapping de $img$ noté $M$\;
 Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)\;
@@ -40,7 +40,7 @@ L'interpolation trilinéaire :
 \medbreak
 
 \begin{algorithm}[H]
-\caption{$evalPixel(u,v,d,M)$}
+\caption{$evalPixel((u,v),d,M)$}
 \KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une distance $d \in \mb{R}$, un mipmap $M[1..l]$ où chaque élément est un image}
 \uIf{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
 \uElseIf{$d>l$}{\KwRet{$M[l][1][1]$}}
@@ -58,7 +58,7 @@ Ici l'interpolation bilinéaire, au niveau $d$.
 \medbreak
 
 \begin{algorithm}[H]
-\caption{$bilinearMipMap(u,v,M)$}
+\caption{$bilinearMipMap((u,v),M)$}
 \KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une image tirée du mipmap $img[1..k][1..k]$}
 $u'=floor(u)$\;
 $v' = floor(v)$\;
@@ -77,7 +77,7 @@ Voici un exemple naïf de construction d'un mipmap. On fait simplement la moyenn
  \medbreak
   \medbreak
  \begin{algorithm}[H]
- \caption{$buildMipMap(*img)$}
+ \caption{$buildMipMap(img)$}
  \KwData{Une image $img[1..n][1..n]$ (où $n = 2^l$)}
  \For{$(i,j)\in \llb1,n\rrb^2$}{
  	$M[1][i][j]=img[i][j]$\;
@@ -105,7 +105,7 @@ La fonction principale, très similaire au ripmap.
 \medbreak
 \medbreak
 \begin{algorithm}[H]
-\caption{$mainFunction(img,H,I)$}
+\caption{$mainFunction(img,H,img_f)$}
 \KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $img_f[1..m][1..m]$}
 $R = buildRipMap(img)$\;
 Calculer l'homographie inverse $H^{-1}$ (et précalculer les fonctions $\frac{\dr u}{\dr x},\frac{\dr u}{\dr y},\frac{\dr v}{\dr x},\frac{\dr v}{\dr y}$ de $x,y$ en même temps)\;
@@ -156,16 +156,16 @@ On présente un algorithme naïf de construction de ripmap.
 \medbreak
 \begin{algorithm}[H]
 \caption{buildRipMap(img)}
-\KwData{une image $img[1..n][1..n]$, où $n = 2^d$}
+\KwData{une image $img[1..n][1..n]$, où $n = 2^l$}
 $R[1][1] = img$\;
-\For{$j\in\llb 2,d\rrb$}{
+\For{$j\in\llb 2,l\rrb$}{
 	\For{$(u,v)\in \llb 1,n\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
 		$R[1][j][u][v] = \frac{R[1][j-1][u][2v] + R[1][j-1][u][2v-1]}{2}$\;
 	}
 }
 
-\For{$j\in\llb 1,d\rrb$}{
-\For{$i\in\llb 2,d\rrb$}{
+\For{$j\in\llb 1,l\rrb$}{
+\For{$i\in\llb 2,l\rrb$}{
 \For{$(u,v)\in \llb 1,\frac{n}{2^{i-1}}\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
 		$R[i-1][j][u][v] = \frac{R[i-1][j][2u][v] + R[i-1][j][2u-1][v]}{2}$\;
 	}}}
@@ -180,14 +180,14 @@ Dans la pratique on a filtré à l'aide d'un filtre gaussien dans la direction o
 \caption{buildRipMapGaussien(img)}
 \KwData{une image $img[1..n][1..n]$, où $n = 2^l$}
 $R[1][1] = img$\;
-\For{$j\in\llb 2,d\rrb$}{
+\For{$j\in\llb 2,l\rrb$}{
 	\For{$(u,v)\in \llb 1,n\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
 		$R[1][j][u][v] = convolutionHorizontale(R[1][j-1])[u][2v]$\;
 	}
 }
 
-\For{$j\in\llb 1,d\rrb$}{
-\For{$i\in\llb 2,d\rrb$}{
+\For{$j\in\llb 1,l\rrb$}{
+\For{$i\in\llb 2,l\rrb$}{
 \For{$(u,v)\in \llb 1,\frac{n}{2^{i-1}}\rrb \times \llb1,\frac{n}{2^{j-1}}\rrb$}{
 		$R[i-1][j][u][v] = convolutionVerticale(R[i-1][j])[2u][v]$\;
 	}}}

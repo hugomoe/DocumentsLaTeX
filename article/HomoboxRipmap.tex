@@ -14,44 +14,130 @@ On obtient $h=h_1  \circ h_2$, ce qui nous donne le schéma suivant
 \begin{equation*}
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
 \end{equation*}
-Chacune de ces deux transformations ne modifie l'image que dans une seule directions, cela permet d'effectuer des opérations sur des signaux unidimentionnels . Cette méthode n'est en revanche pas séparable.\\
-\paragraph{Méthode de convolution utilisant l'image  triple intégrale}
+Chacune de ces deux transformations ne modifie l'image que dans une seule directions, cela permet d'effectuer des opérations sur des signaux unidimentionnels . Cette méthode n'est en revanche pas séparable.\\ 
+la première transformation est une homographie en un dimension que l'on doit réaliser sur chaques lignes.\\
+La seconde est un zoom d'un facteur différent sur chaques colonnes.
+
+\paragraph{Différentes méthodes de réechantillonage naif :}
+%peut etre inutile
+Le but ici est de présenter plusieurs méthodes permettant réaliser l'homographie par séparation.
+
+\subparagraph{Méthode du point le plus proche :}
+Il s'agit de la méthode la plus basique pour effectuer un réechantillonnage on interpole l'image  par une fonction constante par morceau et on réévalue l'image $F\circ h $  . Cette méthode est séparable ,c'est à dire qu'il revient d'effectuer l'homographie $h$ et les deux applications $h_1 , h_2$ successivement.
+\subparagraph{Méthode d'interpolation bilinéaire}
+Cette méthode permet de réduire l'alliasing comparée à la méthode du point le plus proche, on interpole l'image en utilisant une fonction affine par morceaux $F$ et on évalue ensuite $F\circ h$. Cette méthode est aussi séparable.
+
+\paragraph{Sous échantillonnage gaussien :}
+Dans le cas d'un zoom gaussien on utilise la convolution $f*G_{d}$ le paramètre $d$ doit être choisi tel que 
+\begin{equation*}
+z^2 c^2=c^2 + d^2     ~~~~~~~c= 0.8
+\end{equation*}
+On obtient donc la formule $d=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cite{morel2011sift} pour les détails de ce raisonnement et une justification de la valeur expérimentale de c.\\
+
+\paragraph{Sous échantillonnage utilisant les images intégrale }
 Soit $d>0$ nous allons présenter ici une méthode permettant de convoler une fonction d'une variable par une approximation d'une gaussienne d'écart type $\delta$.\\
-On utilisera le noyau $g_n$ défini par 
+On utilisera le noyau $g_n^d$ défini par 
 \begin{equation*}
-g_1(t)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(t) ~~~~~~~g_{n+1}= g_n * g_1
+g_1^d(t)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(t) ~~~~~~~g_{n+1}^d= g_n^d * g_1^d
 \end{equation*}
-Grâce au théorème central limite on sait que cette suite de fonction est une bonne approximation d'une courbe gaussienne.\\
-Si $f$ est une fonction continue par intégration par partie comme les fonctions $g_n$ dont à support compact on obtient  :
+Si on pose $G_n^d(x)=\sqrt{n}g_n^d(\sqrt{n} x)$ on peut montrer que 
+\begin{equation*}
+\widehat{G_n^d}(\omega)\underset{n\rightarrow\infty}{\rightarrow} \exp\left(-\frac{\omega^2 d^2}{12}\right)
+\end{equation*}
+\begin{proof}
+On à $\widehat{g_1^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)~~$  donc $~~\widehat{g_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)^n~~$ et 
+$~~\widehat{G_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2\sqrt{n}}\right)^n~~$\\
+on obtient le résultat voulu en réalisant un développement limité de cette fonction 
+\end{proof}
+Si $f,g$ sont deux fonctions continues à support compact et $d>0$ on à le résultat suivant
+\begin{equation*}
+(f*(g*g_1^d))(y)=\frac{(F^{(1)}*g)(y+\frac{d}{2})-(F^{(1)}*g)(y-\frac{d}{2})}{d}~~~~~~F^{(1)}(x)=\int_{-\infty}^{x}f(y) dy
+\end{equation*}
+\begin{proof}
+par intégration par partie (au sens des distributions) comme les fonctions $g,f$ sont à support compact on obtient  :
 \begin{eqnarray*}
-(f * g_n )(y)&=&\frac{1}{d} \int_{\mathbb{R}} f(x)~(g_{n-1} * \mathds{1}_{]-\frac{d}{2},\frac{d}{2}[})(y-x) dx\\
-                 &=& -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~(g_{n-1} * (-\delta_{\frac{d}{2}}+\delta_{-\frac{d}{2}}))(x-y) dx\\
-                 &=& \frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g_{n-1}(x-y-\frac{d}{2} )dx -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g_{n-1}(x-y+\frac{d}{2})dx\\
-                 &=& \frac{(F^{(1)} * g_{n-1})(y+\frac{d}{2})-(F^{(1)} * g_{n-1} )(y-\frac{d}{2})}{d}
+(f * g *g_1^d )(y)&=&\frac{1}{d} \int_{\mathbb{R}} f(x)~(g * \mathds{1}_{]-\frac{d}{2},\frac{d}{2}[})(y-x) dx\\
+                 &=& -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~(g * (-\delta_{\frac{d}{2}}+\delta_{-\frac{d}{2}}))(x-y) dx\\
+                 &=& \frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g(x-y-\frac{d}{2} )dx -\frac{1}{d} \int_{\mathbb{R}} F^{(1)}(x)~g(x-y+\frac{d}{2})dx\\
+                 &=& \frac{(F^{(1)} * g)(y+\frac{d}{2})-(F^{(1)} * g )(y-\frac{d}{2})}{d}
 \end{eqnarray*}
-Où la fonction $F^{(1)}$ est une primitive de $f$, on peut par récurrence sur $n$ exprimer $(f*g_{n})(y)$ comme une combinaisons linéaire des des termes $\left(F^{(n)}\left(y+\frac{kd}{2}\right)\right)$, on obtient la formule
+\end{proof}
+On peut poser $D_d$ l'opérateur de "dérivation discrète" définit par $D_d f=f*\frac{f(.+\frac{d}{2})-f(.-\frac{d}{2})}{d}$ et réécrire la formule précédente 
 \begin{equation*}
-(f*g_n)(y)=\frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+f * g *g_1^d =D_d (F^{(1)}*g)
 \end{equation*}
-Cette formule ce démontre par la formule du binôme de Newton.La fonction $F^{(k)}$ est une primitive de $F^{(k-1)}$.\\
+On en déduit par récurrence la formule 
+\begin{equation*}
+(f*g_n^d)(y)=D_d ^n F^{(n)}= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+\end{equation*}
+La fonction $F^{(k)}$ est la somme de la fonction  $F^{(k-1)}$, la seconde égalité se démontre en dévellopant l'opérateur $D_d ^n$ par la formule du binome de Newton.\\
 Dans nos algorithmes  on l'utilisera cette formule pour $n=3$ :
 \begin{equation*}
 (f*g_3)(y)=\frac{1}{d^3}(F^{(3)}(y+\frac{3d}{2})-3F^{(3)}(y+\frac{d}{2})+3F^{(3)}(y-\frac{d}{2})-F^{(3)}(y-\frac{3d}{2}))
 \end{equation*}
-On doit cependant calculer une valeur approchée des fonctions $F^{(k)}$ en utilisant des intégrales discrètes car on ne connait que les échantillons de la fonctions $f$.\\
-Si on connait la fonction sur les entiers on peut utiliser les formules
+On doit cependant calculer une valeur approchée des fonctions $F^{(k)}$  car on ne connait que les échantillons de la fonctions $f$.\\
+On peut utiliser la méthode suivante on pose par récurrence
 \begin{equation*}
-F^{(n+1)}(y)=\underset{k\le y}{\sum}F^{(n)}(k)
+F^{(n+1)}(k)=\underset{l\le k-1}{\sum}F^{(n)}(l)
 \end{equation*}
-Cette somme est finie car les fonctions utilisés sont à support compact.Il est possible d'utiliser d'autres procédés pour évaluer la fonction $F^{(3)}$ mais le volume des calculs devient plus important.\\
+On utilise ensuite une méthode d'interpolation par splines cubiques afin de pouvoir évaluer cette fonction en des valeurs non entière.\\
+Une autre méthode consiste à poser 
 
-\paragraph{Sous échantillonnage gaussien}
-Dans notre cas lorsque nous devons effectuer un sous échantillonnage nous évaluons la convolution $(f*g_3)$. Le but de ce paragraphe est déterminer la valeur du paramètre $d$ qui intervient dans la définition de $g_3$ en fonction du facteur de sous échantillonnage $z>1$.\\
-Dans le cas d'un d'un zoom gaussien on utilise la convolution $f*G_{d'}$ le paramètre $d'$ doit être choisi tel que 
 \begin{equation*}
-z^2 c^2=c^2 + d'^2     ~~~~~~~c= 0.8
+F^{(0)} (x) =\underset{0\le k \le m-1}{\sum}f_{k} \mathds{1}_{[k,k+1[}(x)
 \end{equation*}
-On obtient donc la formule $d'=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cite{morel2011sift} pour les détails de ce raisonnement et une justification de la valeur expérimentale de c.\\
-Nous allons appliquer ces résultats à la fonction $g_3$ car c'est une bonne approximation d'une distribution normale,l'écart type de $g_1$ est $\sigma_1=\frac{d}{\sqrt{12}}$ donc l'écart type $\sigma_3$ est donné par la formule $\sigma_3=\sqrt{3}\sigma_1=\frac{d}{2}$
+$(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F^{(n)}(x)=\int_{-\infty}^{x}F^{(n-1)}(y)dx$ on à par exemple
+\begin{equation*}
+F^{(1)}(x)=\underset{k\le \lfloor x\rfloor \wedge m~-1}{\sum}f_{k}~~+ f_{\lfloor x\rfloor}
+(x-\lfloor x\rfloor)
+\end{equation*}
+Cette fonction est affine par morceau on peut démontrer la formule suivante par récurrence \begin{equation*}
+F^{(n)}(x)=F^{(n)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F^{(k)}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}~~+\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F^{(k)}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
+\end{equation*}
+Où la valeur de $F^{(n)}$ se calcule par récurrence on a la relation $\forall k\le m$
+\begin{equation*}
+F^{(n)}(k+1)=F^{(n)}(k)+\underset{0\le l < n}{\sum} \frac{F^{(l)}(k)}{(n-l)!}
+\end{equation*}
+Comme dans la méthode précédente on doit calculer une composante constante par morceau afin d'avoir la valeur de $F^{(n)}$ aux entiers  ainsi qu'un terme polynomial de degrès $n$ pour effectuer l'interpolation sur des valeurs non entières.\\
+Dans le cas $n=3$ on obtient les formules
+\begin{eqnarray*}
+F^{(3)}(x)&=&F^{(3)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x)(x-\lfloor x \rfloor) \left(F^{(2)}(\lfloor x \rfloor)+ \frac{(x-\lfloor x \rfloor)}{2}\left(F^{(1)}(\lfloor x \rfloor)+\frac{(x-\lfloor x \rfloor)}{3} f_{\lfloor x \rfloor}\right)\right)\\
+          &+&\mathds{1}_{[m,+\infty[}(x)(x-\lfloor x \rfloor) \left(F^{(2)}(m)+ \frac{(x-\lfloor x \rfloor)}{2}F^{(1)}(m)\right) \\
+F^{(3)}(k)&=&  \underset{0\le l<k}{\sum}\left(F^{(2)}(l)+\frac{F^{(1)}(l)}{2}+\frac{f_{l}}{6} \right)  \\
+F^{(2)}(k)&=&  \underset{0\le l<k}{\sum}\left(F^{(1)}(l)+\frac{f_{l}}{2} \right)  \\
+F^{(1)}(k)&=&  \underset{0\le l<k}{\sum}f_{l} 
+\end{eqnarray*}
+Si on fixe $0\le l\le m-1$ et on pose
+\begin{equation*}
+P_l (x)=F^{3}(l) +(x-l) \left(F^{(2)}(l)+ \frac{(x-l)}{2}\left(F^{(1)}(l)+\frac{(x-l)}{3} f_{l}\right)\right)
+\end{equation*}
+On obtient alors
+\begin{eqnarray*}
+P_l (l) &=& F^{(3)}(l) \\
+P_l (l+1) &=& F^{(3)}(l+1) \\
+P_l '(l) &=& F^{(2)}(l) \\
+P_l '(l+1) &=& F^{(2)}(l+1)
+\end{eqnarray*}
+On peut donc obtenir ces formules en utilisant utilisant une méthode d'interpolation de Hermite.La fonction $F^{(3)}$ est la spline de cubique passant par le point $F^{(3)}(k)$ en $k$ avec une dérivé égale à $F^{(2)}(k)$, elle est $\mathcal{C}^2$.\\
+Cette méthode à cependant un défaut, l'image est initialement interpolé par une fonction constante par morceau, on donc utiliser une interpolation linéaire du signal de départ 
+\begin{equation*}
+F_1 ^{(0)}(x)=\underset{0\le k \le m-1}{\sum} f_k g_2^1 (x-k-\frac{1}{2})=(F_0^{(0)} *g_1^1 )(x)
+\end{equation*}
+On obtient alors 
+\begin{equation*}
+F_1 ^{(0)}*g_n^d=(F_0 ^{(0)}*g_1^1)*g_n^d=(F_0 ^{(0)}*g_n^d)*g_1^1=(D_d^n F_0 ^{(n)})*g_1^1=D_1 D_d^n F_0^{(n+1)}
+\end{equation*}
+L'interpolation supplémentaire peut donc être obtenue en évaluant $F_0^{(n+1)}$ la méthode de calcul est donc la même que dans le cas précédent.\\
+Il est possible d'utiliser cette méthode pour obtenir une représentation $F_n^{(0)}$ plus régulière du signal de départ mais la courbe n'est pas  interpolante si $2\le n$.\\
+%à faire mieux 
+Afin d'implémenter cette méthode nous devons déterminer la valeur du paramètre $d$ en fonction du facteur de zoom local. Nous allons réutiliser les résultats du paragraphe précédant, car la fonction $g_3$ est une bonne approximation d'une gaussienne. L'écart type de $g_1$ est $\sigma_1=\frac{d}{\sqrt{12}}$ donc l'écart type $\sigma_3$ est donné par la formule $\sigma_3=\sqrt{3}\sigma_1=\frac{d}{2}$
 donc $d=2c\sqrt{z^2 - 1}$.\\
-Dans la pratique on utilisera la formule $d=2\sqrt{(0.8)^2 z^2 - (0.7)^2}$.\\
+Dans la pratique on utilisera la formule $d=2\sqrt{(0.8)^2 z^2 - (0.7)^2}$ car les images utilisées ne sont en général pas parfaites.\\
+
+\paragraph{Suréchantillonage par splines :}
+%Pas encore fait
+\subparagraph{Splines cubiques de Hermite :}
+Si $(x_0,x_1,x_2,x_3)$ et $(y_0,y_1,y_2,y_3)$  permet de construire un polynôme $P$ de degrès 3 tel que  
+\begin{equation*}
+P(x_1)=y_1~~~~P(x_2)=y_2~~~~P'(x_1)= \frac{y_2-y_0}{x_2 -x_0}~~~~P'(x_2)= \frac{y_3-y_1}{x_3 -x_1}
+\end{equation*}

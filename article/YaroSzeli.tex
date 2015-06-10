@@ -1,19 +1,19 @@
 % contient la description des différentes méthodes pour traiter les rotations de la décomposition
 
-Pour les deux rotations dans la décomposition, nous avons testés plusieures méthodes : la méthodes de Yaroslavsky \cite{unser1995convolution} et la méthode de traitement des affinités multiétapes \cite{szeliski2010high}.
+Pour les deux rotations dans la décomposition, plusieures méthodes sont possibles : la méthode de Yaroslavsky \cite{unser1995convolution} et la méthode de traitement des affinités multi-étapes \cite{szeliski2010high}.
 
 \subsubsection{Méthode de Yaroslavsky}
 
-La méthode de Yaroslavsky consiste à décomposer une rotation en trois "shear".
+La méthode de Yaroslavsky consiste à décomposer une rotation en trois \emph{shears}.
 
-Sous forme matricielle un rotation s'écrit de manière générale :
+Sous forme matricielle une rotation s'écrit de manière générale :
 \begin{equation*}
 	H=\begin{pmatrix}
 	cos \theta&-sin \theta\\sin \theta&cos \theta
 	\end{pmatrix}
 	\end{equation*}
 
-La décomposition en trois shear est la suivante :
+La décomposition en trois \emph{shears} est la suivante :
 \begin{equation*}
 	H=\begin{pmatrix}
 	cos \theta&-sin \theta\\sin \theta&cos \theta
@@ -26,15 +26,16 @@ La décomposition en trois shear est la suivante :
 	\end{pmatrix}
 	\end{equation*}
 
-	Pour faire la rotation complète on fait chaque shear par fourier et on recentre l'image après chaque shear.
-	En pratique on se ramène toujours à des rotations d'angle entre $[\frac{-\pi}{4},\frac{\pi}{4}]$ (on peut en effet faire des rotations d'angle $\pi$ et $\frac{\pi}{2}$ de manière exacte...)  
+	Pour faire la rotation complète on fait chaque \emph{shear} par Fourier et on recentre l'image à chaque étape.
+	En pratique on se ramène toujours à des rotations d'angle dans $[\frac{-\pi}{4},\frac{\pi}{4}]$ (on peut en effet faire des rotations d'angle $\pi$ et $\frac{\pi}{2}$ de manière exacte...)  
 
 
-\subsubsection{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multiétapes}
+\subsubsection{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
 
-Afin de choisir la méthode de rotation nous avons fait 10 rotations de l'image "Lena" de $\frac{\pi}{5}$. Les résultats sont sur la figure \ref{rotalena}. Visuellement les rotations semblent parfaites (mais si on observe bien il y a un peu plus d'effet Gibbs pour la méthode de traitement des affinités multiétapes que pour Yaroslavsky). Si on fait la différence entre l'image orignal et l'image qui a subie dix rotations par la méthode de traitement des affinités multiétapes on a en une RMS=5.979119, une norme L1=3.624343, et une norme sup=72.128845. Entre l'image initiale et l'image qui à subie dix rotations par la méthode de Yaroslavsky on a une RMS=12.817376, une norme L1=7.374875, et une norme sup=159.840759. \\
+%A voir peut être dans les expériences ?
+Afin de choisir la méthode de rotation on fait 10 rotations de l'image "Lena" de $\frac{\pi}{5}$. Les résultats sont sur la figure \ref{rotalena}. Visuellement les rotations semblent parfaites (mais si on observe bien il y a un peu plus d'effet Gibbs pour la méthode de traitement des affinités multi-étapes que pour Yaroslavsky). Si on fait la différence entre l'image orignal et l'image qui a subie dix rotations par la méthode de traitement des affinités multi-étapes on a en une $RMS=5.979119$, une norme $L1=3.624343$, et une norme $sup=72.128845$. Entre l'image initiale et l'image qui à subie dix rotations par la méthode de Yaroslavsky on a une $RMS=12.817376$, une norme $L1=7.374875$, et une norme $sup=159.840759$. \\
 
-En terme de complexité, la méthode de Yaroslavsky est en $n^2 log(n)$ (où n est la largeur ou la longueur maximale de l'image), tandis que la méthode de traitement des affinités multiétapes est en $n^2$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multiétapes.
+En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.
 
  \begin{figure}
  

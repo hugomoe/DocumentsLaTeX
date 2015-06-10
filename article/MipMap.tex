@@ -5,9 +5,9 @@
 
 \ssse{Méthode naïve}
 
-On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivé, on peut calculer l'endroit de l'image de départ correspondant. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
+On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer l'endroit de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
 
-On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisé par des points ont visuellement une certaine épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone.
+On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone.
 
 %image aliasé à fond
 

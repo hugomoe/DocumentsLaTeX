@@ -36,14 +36,14 @@
 \subsubsection{Étapes de l'algorithme}
 	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (algorithmes \ref{szeliski_rh}, \ref{szeliski_rv} et \ref{szeliski_affine}).
 	
-	On suppose avoir reçu en entrée une image à modifier et la matrice $A$ correspondant à l'affinité inverse que celle à effectuer : l'antécédent du point $(i,j)$ de l'image de sortie se situe donc en $A(i,j)$ sur l'image d'entrée.
+	On suppose avoir reçu en entrée une image à modifier et la matrice $A$ correspondant à l'affinité inverse de celle à effectuer : l'antécédent du point $(i,j)$ de l'image de sortie se situe donc en $A(i,j)$ sur l'image d'entrée.
 	
 	On notera
 	\[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
 	
 	\paragraph{Éventuelle transposition}
 		
-		Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peut de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} (faut-il le traduire \red{problème d'embouteillage} ?) déjà connu \cite{wolberg1990digital}.
+		Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} (faut-il le traduire \red{problème d'embouteillage} ?) déjà connu \cite{wolberg1990digital}.
 		
 		On effectue donc éventuellement une transposition (de l'image et de la matrice) pour éviter cet effet : en notant
 		\[\hat a_{00} = \frac{a_{00}}{\sqrt{a_{00}^2+a_{11}^2}}\]
@@ -76,7 +76,7 @@
 		\centering
 		\subfigure[$r_v$ non majoré]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
 		\subfigure[$r_v$ majoré par 3 ; on utilise le fait que les distances horizontales sont inchangées]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
-		\caption{Réduction de $r_v$ jusqu'à $r_v \leq 3$. Au-delà de $v_{max}$, le filtre efface (atténue) les fréquences, permettant la réduction de $r_v$. $r_v$ est le quotient de la longueur du rectangle pointillé (spectre après suréchantillonnage) par celle du carré (spectre initial)}
+		\caption{Réduction de $r_v$ jusqu'à $r_v \leq 3$. Au-delà de $v_{max}$, le filtre efface (atténue) les fréquences, permettant la réduction de $r_v$. $r_v$ est le quotient de la longueur du rectangle pointillé (spectre après sur-échantillonnage) par celle du carré (spectre initial)}
 		\label{rvleq3}
 		\end{figure}
 		
@@ -96,6 +96,6 @@
 		Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où
 		\begin{itemize}
 		\item $\varphi$ parcourt $2^b$ nombres rationnels de $[0,1]$ avec $b$ le nombre de bit de précision voulu
-		\item $k$ parcourt les entiers tels que $\frac{k}{s}$ soit dans le support de $h$ ($h(x)$ étant presque nul $|x|$ assez grand, on suppose $h$ à support compact)
+		\item $k$ parcourt les entiers tels que $\frac{k}{s}$ soit dans le support de $h$ ($h(x)$ étant presque nul quand $|x|$ est assez grand, on suppose $h$ à support compact)
 		\end{itemize}
 		On a ainsi accès rapidement à toutes les valeurs de $h$ qui peuvent être nécessaires à la convolution.

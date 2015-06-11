@@ -9,7 +9,7 @@ Les images sont des matrices. On a ignoré les éventuelles multiples niveaux de
 Il y a en faites une origine sur les images (pour pouvoir faire des translations instantanées).
 
 \medbreak
-La fonction $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
+Les fonctions $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
 
 On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$. De plus il faut déclarer une image intégrale plus grande que celle de départ, en effet quand on intègre trois fois les valeurs au delà de la dernière ne sont plus nulles, ni même constantes.
 
@@ -80,8 +80,8 @@ Ainsi en notant $F$ l'intégrale de l'image et $F_2$ l'intégrale seconde de l'i
 Ainsi on peut prendre plutôt : 
 
 \begin{algorithm}[H]
-\caption{$interpole3(imgint,u,d)$}
-\KwData{Une image intégrée trois fois $imgint3[1..n]$, une position $u\in\mb{R}$, une distance $d\in\mb{R}$}
+\caption{$interpole3(imgint3,u,d)$}
+\KwData{Une colonne/ligne d'une image intégrée trois fois $imgint3[1..n]$, une position $u\in\mb{R}$, une distance $d\in\mb{R}$}
 $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
@@ -95,7 +95,7 @@ $d=interpoleTripleInt(imgint3,iu+1,id+1)$\;
 
 \begin{algorithm}[H]
 \caption{$interpoleTripleInt(imgint3,i,d)$}
-\KwData{Une image intégrée trois fois $imgint3[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
+\KwData{Une colonne/ligne d'une image intégrée trois fois $imgint3[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
 $a=interpoleInt(imgint3,i-d,d)$\;
 $b=interpoleInt(imgint3,i,d)$\;
 $c=interpoleInt(imgint3,i+d,d)$\;

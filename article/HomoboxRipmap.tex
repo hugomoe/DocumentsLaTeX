@@ -97,7 +97,7 @@ Cette fonction est affine par morceau on peut démontrer la formule suivante par
 \begin{eqnarray*}
 F^{(n)}(x) &=& F^{(n)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F^{(k)}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}\\
           &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F^{(k)}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
-\end{equation*}
+\end{eqnarray*}
 Où la valeur de $F^{(n)}$ se calcule par récurrence on a la relation $\forall k\le m$
 \begin{equation*}
 F^{(n)}(k+1)=F^{(n)}(k)+\underset{0\le l < n}{\sum} \frac{F^{(l)}(k)}{(n-l)!}

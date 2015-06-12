@@ -93,8 +93,10 @@ $(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F^{(n)}(x)=\i
 F^{(1)}(x)=\underset{k\le \lfloor x\rfloor \wedge m~-1}{\sum}f_{k}~~+ f_{\lfloor x\rfloor}
 (x-\lfloor x\rfloor)
 \end{equation*}
-Cette fonction est affine par morceau on peut démontrer la formule suivante par récurrence \begin{equation*}
-F^{(n)}(x)=F^{(n)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F^{(k)}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}~~+\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F^{(k)}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
+Cette fonction est affine par morceau on peut démontrer la formule suivante par récurrence
+\begin{eqnarray*}
+F^{(n)}(x) &=& F^{(n)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F^{(k)}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}\\
+          &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F^{(k)}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
 \end{equation*}
 Où la valeur de $F^{(n)}$ se calcule par récurrence on a la relation $\forall k\le m$
 \begin{equation*}

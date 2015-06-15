@@ -146,9 +146,9 @@ z_{\lambda}:X\rightarrow \lambda X
 \end{equation*}
 
 On obtient la formule générale pour les changements d'angle de caméra
-\begin{prop}  $h$ est un changement d'angle de caméra si et seulement si existe des param $(\delta,\delta',\theta,\phi,\psi,C,X_v)$ tels que :
+\begin{prop}  $h$ est un changement d'angle de caméra si et seulement si existe des paramètres $(\delta,\delta',\theta,\phi,\psi,C,X_v)$ tels que :
 \begin{equation}
-h=z_{\frac{\delta}{\delta'}} \circ \tau_{c} \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
+h= \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
 \label{formul_decomp}
 \end{equation}
 \end{prop
@@ -177,7 +177,7 @@ Dans la suite on notera $\sim$ la relation d'équivalence  sur $GL_{3}(\mathbb{R
 
 \paragraph{Décomposition matricielle :}
 \begin{prop}
-Toute homographie s'indentifie à un mouvement de caméra, dans le cas où $h$ n'est pas une affinité  la décomposition \ref{formul_decomp} n'est pas unique.
+Toute homographie est un mouvement de caméra où une application affine. Dans le premier cas la décomposition \ref{formul_decomp} n'est pas unique possède un degrés de liberté.
 \end{prop}
 %la ref n'apparait pas bien
 On fixe $h$ une homographie et $H$ une matrice qui lui est associée. On conserve ici les notations de la partie précédente, on suppose sans perte de généralité que $\det (H)=1$. On suppose de plus que $h$ peut s'écrire sous la forme $\ref{formul_decomp}$, on cherche à montrer que cette hypothèse n'impose aucune condition supplémentaire sur la matrice $H$, en déterminant les paramètres intervenants dans la décomposition en fonction des coefficients de $H$ .\\

@@ -11,6 +11,8 @@ Il y a en faites une origine sur les images (pour pouvoir faire des translations
 \medbreak
 Les fonctions $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
 
+On suppose qu'on dispose d'une fonction $cubicInterpolation$ qui réalise l'interpolation à l'aide de la valeur en quatre points et de la position à interpoler.
+
 On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$. De plus il faut déclarer une image intégrale plus grande que celle de départ, en effet quand on intègre trois fois les valeurs au delà de la dernière ne sont plus nulles, ni même constantes.
 
 \ssse{Corps de l'algorithme}
@@ -28,7 +30,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 		$img_{aux}(i,j) = interpole(iimgw,x,d)$\;
 	}
 }
-\For{$i \in \llbracket 1, w \rrbracket$}{
+\For{$i \in \llbracket 1, w_f \rrbracket$}{
 	$iimgh = imageIntegrale(i^e \text{ ligne de } img_{aux})$\;
 	$d=\frac{\dr}{\dr y} f_2(i,0)$ (indépendant de $j$)\;
 	\For{$j \in \llbracket 1, h_f \rrbracket$}{
@@ -77,6 +79,7 @@ $d=interpoleInt(imgint,iu+1,id+1)$\;
 
 Notons $g_3$ la convolé de trois portes. On a $g_3'' = \mathds{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mathds{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mathds{1}_{[\frac{1}{2},\frac{3}{2}]}$.
 Ainsi en notant $F$ l'intégrale de l'image et $F_2$ l'intégrale seconde de l'image, on a $\int f g_3 = \int F g_3' = \int F_2 g_3''$.
+
 Ainsi on peut prendre plutôt : 
 
 \begin{algorithm}[H]
@@ -86,11 +89,14 @@ $id=floor(d)$\;
 $iu=floor(u)$\;
 $x = d-id$\;
 $y = u-iu$\;
-$a=interpoleTripleInt(imgint3,iu,id)$\;
-$b=interpoleTripleInt(imgint3,iu+1,id)$\;
-$c=interpoleTripleInt(imgint3,iu,id+1)$\;
-$d=interpoleTripleInt(imgint3,iu+1,id+1)$\;
-\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}
+On déclare deux tableaux $Y1[1..4],Y2[1..4]$\;
+\For{$i\in\llb-1,2\rrb$}{
+$Y1[i+2]=interpoleTripleInt(imgint3,iu+i,id)$\;
+$Y2[i+2]=interpoleTripleInt(imgint3,iu+i,id+1)$\;
+}
+$a=cubicInterpolation(Y1,y)$\;
+$b=cubicInterpolation(Y2,y)$\;
+\KwRet{$(1-x)*a+x*b$}
 \end{algorithm}
 
 \begin{algorithm}[H]
@@ -101,3 +107,11 @@ $b=interpoleInt(imgint3,i,d)$\;
 $c=interpoleInt(imgint3,i+d,d)$\;
 \KwRet{$\frac{a-2*b+c}{d^2}$}
 \end{algorithm}
+
+\ssse{Complexité}
+
+La fonction $interpoleInt$ est clairement en temps constant. Ainsi on en conclu sans problème que $interpole$ et $interpole3$ le sont aussi. Dans $applyHomography$ on a ainsi des boucles sur des fonctions constantes et des intégrations. Ainsi la première boucle est en $O(h(w+w_f))$ car l'appel de $imageIntegrale$ se fait sur une colonne de taille $w$. De même la deuxième boucle est en $O(w_f(h_f+h))$.
+\medbreak
+%a verifier
+Ainsi en admettant que le rapport largeur sur longueur est borné, l'algorithme est en $O(n_1+n_2)$ où $n_1$ est la taille de l'image de départ et $n_2$ celle de l'image d'arrivée. On remarque que cela ne dépend pas des coefficients de l'homographie.
+

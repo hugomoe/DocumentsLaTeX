@@ -14,7 +14,7 @@
   
    \begin{algorithme}
     \caption{$\mathcal{R}_h(f,s,a_0,a_1,t)$ (\textit{shear} horizontal : $y$ constant, $x$ variable)}
-    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul $b$ en bits}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul $b$ en bits}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     \bloc{Stockage des valeurs prises par $h$}{
@@ -52,7 +52,7 @@
 
    \begin{algorithme}
     \caption{$\mathcal{R}_v(f,s,a_0,a_1,t)$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
-    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     \bloc{Stockage des valeurs prises par $h$}{
@@ -258,7 +258,7 @@
    \begin{algorithme}
     \label{algoUniqueEnSonGenre}
     \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} horizontal, $x$ variable, $y$ constant)}
-    \KwData{Une image d'entrée $img[1..m][1..n]$, des coefficients $s, a_0, a_1 \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    \KwData{Une image d'entrée $img[1..m][1..n]$, des coefficients $s, a_0, a_1 \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     Stockage dans $H$ des valeurs prises par $h$\;\ \\
@@ -287,7 +287,7 @@
    \begin{algorithme}
     \label{algoToutAussiUnique}
     \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
-    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $[-M,M]\subset \supp h$, une précision de calcul en bits $b$}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     Stockage dans $H$ des valeurs prises par $h$\;\ \\
@@ -342,3 +342,15 @@
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,(x_i,y_i),(x_f,y_f))$\;
 	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n']$}
    \end{algorithme}
+   
+   
+   
+   \sse{Complexité}
+   
+   $TranspoOpt$ est clairement linéaire en l'image d'entrée. $frequenceMax$ a une entré de taille constante, et n'a pas de boucle, elle s'évalue donc en temps constant. En supposons le rapport hauteur/largeur borné, $img_0$ se déclare en $O(n_1+n_2)$ où $n_1$ est la taille de l'image d'entrée et $n_2$ celle de l'image de sortie.
+   
+   Pour ${\mathcal R}_v$ par exemple, chaque pixel s'évalue en $O(N)$, c'est-à-dire en $O(s)$. Ainsi la fonction est a première vue en $O(mns)$, mais dans l'algorithme $s$ vaut soit $r_v$ qui est borné par $3$, ou $\frac{1}{v_{max}}$. Dans le second cas on n'évalue qu'un nombre proportionnel à $v_{max}$ de pixels. Ainsi les ${\mathcal R}_v$ et ${\mathcal R}_h$ sont linéaire en leur image d'entrée dans cet algorithme.
+   
+   Or on voit que les $img_i$ sont de taille $O(n_1+n_2)$.
+   \medbreak
+   Finalement l'algorithme est donc en $O(n_1+n_2)$ où $n_1$ est la taille de l'image d'entrée et $n_2$ celle de l'image de sortie.

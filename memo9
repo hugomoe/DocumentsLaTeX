@@ -1,0 +1,67 @@
+Article au propre :
+	Intro / Abstract
+	Partie Experience
+	Page de garde
+
+
+
+Pour Homo_box :
+	code_homobox final
+		-simon interpole avant (merci shmuel)
+		-b-spline hugo (effet de bande)
+		-gaussienne jean thomas (trop long)
+	pseudo_code qui va avec 
+	partie dans l’article homo_box (éventuellement une partie sur spline)
+lhermite
+	freaking decalage de homo_box
+
+Trouver un nom bien pour bibilinéaire ( -> quadrilinéaire ?)
+
+Complexité : une analyse (szeliski subtil + dépend pas de l’homo).
+
+
+
+
+
+Compte-rendu première relecture
+
+Spectre des images intermédiaire : verifier que cela fonctionne pour szeliski
+expérience rotation avec plus de rotation
+
+Figure : Cadre pour la décomposition géométrique
+	Joli image  : image + paramètre + schémas
+
+
+Inclure des propositions (eg décompositions affine/homo) avec def qui nomme par exemple l’homo particulière.
+	szeliski spectre conservé.
+	bruit blanc pour formule écart-type
+	regarder à quoi cela correspond pour un zoom avant / arrière / suite qui tend vers une affinité
+	la taille de l’image intermédiaire homo est bornée (+szeliski ?)
+	image intégrale : calculer cela ssi convolé ceci
+
+
+
+image pour les distances
+
+
+
+Pour ipol exemple amusant
+Pendre des photos de tapis
+pendre chose rectangulaire avec clic qui la rectifie
+
+
+
+
+
+
+
+
+
+Code parallélisé ! #pragma omp parallel for
+
+
+Expériences:
+image comparative, et image bien.
+
+
+

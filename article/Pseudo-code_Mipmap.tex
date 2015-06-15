@@ -133,14 +133,19 @@ Les $m_{ij}$ permettent de simplifier l'écriture des cas ou l'une des distances
 \KwData{Des coordonnées $(u,v) \in \mb{R}^2$, des distances $d_1,d_2 \in \mb{R}$, un Ripmap $R[1..l][1..l]$ constitué d'images}
 \For{$i\in \llb 1,2\rrb$}{
 $x_i = \floor{\log_2(d_i)}$\;
-\uIf{$x_i \leq 1$}{$m_{i1}=m_{i2} = 1$\;}
-\uElseIf{$x_i\geq l$}{$m_{i1}=m_{i2}=l$\;}
+\uIf{$x_i \leq 0$}{$m_{i1}=m_{i2} = 0$\;}
+\uElseIf{$x_i\geq l-1$}{$m_{i1}=m_{i2}=l-1$\;}
 \Else{$m_{i1} = x_i -1$ \;$m_{i2} = x_i$\;}
 }
+$u_1=\frac{u-(2^{m_{11}}-1)/2}{2^{m_{11}}}$\;
+$u_2=\frac{u-(2^{m_{12}}-1)/2}{2^{m_{12}}}$\;
+$v_1=\frac{v-(2^{m_{21}}-1)/2}{2^{m_{21}}}$\;
+$v_2=\frac{v-(2^{m_{22}}-1)/2}{2^{m_{22}}}$\;
 
-$a=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{21}}},R[m_{11}+1][m_{21}+1])$\;
-$b=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{21}}},R[m_{12}+1][m_{21}+1])$\;$c=bilinearMipMap(\frac{u}{2^{m_{11}}},\frac{v}{2^{m_{22}}},R[m_{12}+1][m_{22}+1])$\;
-$d=bilinearMipMap(\frac{u}{2^{m_{12}}},\frac{v}{2^{m_{22}}},R[m_{12}+1][m_{22}+1])$\;
+$a=bilinearMipMap(u_1,v_1,R[m_{11}+1][m_{21}+1])$\;
+$b=bilinearMipMap(u_2,v_1,R[m_{12}+1][m_{21}+1])$\;
+$c=bilinearMipMap(u_1,v_2,R[m_{12}+1][m_{22}+1])$\;
+$d=bilinearMipMap(u_2,v_2,R[m_{12}+1][m_{22}+1])$\;
 
 $x = m_{12} - \log_2(d_1)$\;
 $y = m_{22} - \log_2(d_2)$\;
@@ -195,6 +200,15 @@ $R[1][1] = img$\;
 \end{algorithm}
 \medbreak
 \medbreak
-Où les fonctions $convolution$ convolent dans la direction indiquée par une gaussienne d'écart-type $1,4$ (se reporter à \cite{morel2011sift})
+Où les fonctions $convolution$ convolent dans la direction indiquée par une gaussienne d'écart-type $1,4$ (se reporter à \cite{morel2011sift}) (on vise un flou de $0,8$, en supposant celui de l'image de départ de $0,7$.
+
+\ssse{Complexité}
+
+Pour l'évaluation d'un pixel de l'image d'arrivée, on effectue un nombre constant de calcul pour les $d_i$ et $c_i$, puis on fait au plus 4 appels à $bilinearMipmap$, qui est elle même en temps constant. Ainsi le calcul d'une homographie est en temps linéaire en l'image d'arrivée.
+
+Pour le précalcul, l'inversion de $H$ et le calcul des coefficients des dérivées partielles sont clairement négligeables. La construction d'un étage du Ripmap à partir du précédent se fait en temps linéaire, en prenant une approximation de filtre gaussien avec un nombre fini fixe de coefficients non-nuls. Cette approximation est raisonnable car l'écart-type est constant. De plus chaque étage est quatre fois plus petit que le précédent, ainsi on a une somme géométrique et finalement un temps linéaire en l'image d'entrée.
+
+L'algorithme est donc en $O(k n_1 + n_2)$ où $k$ est le nombre d'homographie, $n_1$ la taille de l'image d'arrivée et $n_2$ celle de l'image de départ.
+
 
 

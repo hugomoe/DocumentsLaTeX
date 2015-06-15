@@ -93,7 +93,7 @@ Voici un exemple naïf de construction d'un mipmap. On fait simplement la moyenn
  Ce n'est pas une bonne méthode, en pratique on a fait précédé chaque moyennage par un filtrage gaussien de l'image. C'est une phase de précalcul, on tolère le fait qu'elle soit relativement coûteuse.  
 
 
-\sse{Le ripmap}
+\sse{Le Ripmap}
 
 \ssse{Conventions}
 
@@ -200,13 +200,15 @@ $R[1][1] = img$\;
 \end{algorithm}
 \medbreak
 \medbreak
-Où les fonctions $convolution$ convolent dans la direction indiquée par une gaussienne d'écart-type $1,4$ (se reporter à \cite{morel2011sift}) (on vise un flou de $0,8$, en supposant celui de l'image de départ de $0,7$).
+Où les fonctions $convolution$ convolent dans la direction indiquée par une gaussienne d'écart-type $1,4$ (se reporter à \cite{morel2011sift}) (on vise un flou de $0,8$, en supposant celui de l'image de départ de $0,7$.
 
-\ssse{Complexité}
+\sse{Complexité}
 
-Pour l'évaluation d'un pixel de l'image d'arrivée, on effectue un nombre constant de calcul pour les $d_i$ et $c_i$, puis on fait au plus 4 appels à $bilinearMipmap$, qui est elle même en temps constant. Ainsi le calcul d'une homographie est en temps linéaire en l'image d'arrivée.
+On étudie la complexité du Mipmap et du Ripmap
 
-Pour le précalcul, l'inversion de $H$ et le calcul des coefficients des dérivées partielles sont clairement négligeables. La construction d'un étage du Ripmap à partir du précédent se fait en temps linéaire, en prenant une approximation de filtre gaussien avec un nombre fini fixe de coefficients non-nuls. Cette approximation est raisonnable car l'écart-type est constant. De plus chaque étage est quatre fois plus petit que le précédent, ainsi on a une somme géométrique et finalement un temps linéaire en l'image d'entrée.
+Pour l'évaluation d'un pixel de l'image d'arrivée, on effectue un nombre constant de calcul pour les $d_i$ et $c_i$ ou juste de $d$, puis on fait au plus 4 appels à $bilinearMipmap$, qui est elle même en temps constant. Ainsi le calcul d'une homographie est en temps linéaire en l'image d'arrivée.
+
+Pour le précalcul, l'inversion de $H$ et le calcul des coefficients des dérivées partielles sont clairement négligeables. La construction d'un étage du Mipmap / Ripmap à partir du précédent se fait en temps linéaire, en prenant une approximation de filtre gaussien avec un nombre fini fixe de coefficients non-nuls. Cette approximation est raisonnable car l'écart-type est constant. De plus chaque étage est deux fois plus petit que le précédent, ainsi on a une somme géométrique et finalement un temps linéaire en l'image d'entrée.
 
 L'algorithme est donc en $O(k n_1 + n_2)$ où $k$ est le nombre d'homographie, $n_1$ la taille de l'image d'arrivée et $n_2$ celle de l'image de départ.
 

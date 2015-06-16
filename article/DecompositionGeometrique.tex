@@ -8,11 +8,11 @@
 
 
 \ssse{Changement d'orientation de caméra :}
-On étudie ici un cas particulier d'homographie $h$   que l'on peut interpréter comme un changement d'angle de caméra.\\
+On étudie ici un cas particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
-\caption{Illustration d'un changement d'angle de caméra $(X_v =0)$}
+\caption{Illustration d'un mouvement de caméra $(X_v =0)$}
 \end{figure}
 
 \paragraph{Approche géométrique :}
@@ -60,7 +60,7 @@ H(X)=X_{v}+(\delta+\delta')w+\delta_{2}\frac{(X_{v}-X)-(X_{v}-X)\cdot w~ w}{\del
 
 \subparagraph{Formulation analytique :}
 
-L'application $H$ est une application de $P_{1}'$ dans $P_{2}$. Pour construire une expression analytique du changement d'angle de caméra on peut munir le plan $P_{1}$ de la base $(x_{0},y_{0})$, de même le plan affine $P_{2}$ peut être munit d'un repère orthonormé $(C,u,v)$ tel la famille $(u,v,w)$ soit un base orthonormale directe de $\mathbb{R}^{3}$, et que le point $C$ soit un point quelconque de l'écran qui servira d'origine.\\
+L'application $H$ est une application de $P_{1}'$ dans $P_{2}$. Pour construire une expression analytique du mouvement de caméra on peut munir le plan $P_{1}$ de la base $(x_{0},y_{0})$, de même le plan affine $P_{2}$ peut être munit d'un repère orthonormé $(C,u,v)$ tel la famille $(u,v,w)$ soit un base orthonormale directe de $\mathbb{R}^{3}$, et que le point $C$ soit un point quelconque de l'écran qui servira d'origine.\\
 On peut repérer le point $C$ par rapport au centre de l'écran $C_{0}$ c'est-à-dire la projection orthogonale de l'objectif sur l'écran $C_{0}=Z+\delta w$ et $C=C_{0}+c_{u}u+c_{v}v$.\\
 On peut alors définir les applications $i$ et $k$
 \begin{itemize}
@@ -145,8 +145,8 @@ Si
 z_{\lambda}:X\rightarrow \lambda X
 \end{equation*}
 
-On obtient la formule générale pour les changements d'angle de caméra
-\begin{prop}  $h$ est un changement d'angle de caméra si et seulement si existe des paramètres $(\delta,\delta',\theta,\phi,\psi,C,X_v)$ tels que :
+On obtient la formule générale pour les mouvements de caméra
+\begin{prop}  $h$ est un mouvement de caméra si et seulement si existe des paramètres $(\delta,\delta',\theta,\phi,\psi,C,X_v)$ tels que :
 \begin{equation}
 h= \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
 \label{formul_decomp}
@@ -177,7 +177,7 @@ Dans la suite on notera $\sim$ la relation d'équivalence  sur $GL_{3}(\mathbb{R
 
 \paragraph{Décomposition matricielle :}
 \begin{prop}
-Toute homographie est un mouvement de caméra où une application affine. Dans le premier cas la décomposition \ref{formul_decomp} n'est pas unique possède un degrés de liberté.
+Toute homographie est un mouvement de caméra où une application affine. Dans le premier cas la décomposition \ref{formul_decomp} n'est pas unique possède un degré de liberté.
 \end{prop}
 %la ref n'apparait pas bien
 On fixe $h$ une homographie et $H$ une matrice qui lui est associée. On conserve ici les notations de la partie précédente, on suppose sans perte de généralité que $\det (H)=1$. On suppose de plus que $h$ peut s'écrire sous la forme $\ref{formul_decomp}$, on cherche à montrer que cette hypothèse n'impose aucune condition supplémentaire sur la matrice $H$, en déterminant les paramètres intervenants dans la décomposition en fonction des coefficients de $H$ .\\
@@ -352,17 +352,67 @@ Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\phi}^{-1} \cdot H_t \cdot R_{\psi}^{-1
  \begin{equation*}
  \lambda^2 + \lambda^2 \delta'^2 \frac{(R^2 + S^2)^2}{r^2 + s^2}=1 ~~~~\iff \delta'^2 = (r^2 + s^2) \frac{1-\lambda^2}{\lambda^2 (R^2+S^2)^2}
  \end{equation*}
- 
- \paragraph{Synthèse et optimisation :}
- On a montré dans la section précédente que toute homographie qui n'est pas une application affine est un changement d'angle de caméra. On a de plus que pour tout $\lambda \in ]0,1[$ %pas certain que c'est ce que tu veux dire
+
+ %\paragraph{Synthèse et optimisation :}
+ %On a montré dans la section précédente que toute homographie qui n'est pas une application affine est un mouvement de caméra. On a de plus que pour tout $\lambda \in ]0,1[$ %pas certain que c'est ce que tu veux dire
+ %\begin{equation*}
+%x_2=\frac{ar+sb+R \lambda}{r^2 +s^2}~~~~y_2=\frac{cr+sd+S \lambda}{r^2 +s^2}~~~~(x_1 , y_1) = h^{-1}(x_{2},y_{2})
+%\end{equation*}
+ %\begin{equation*}
+ %\cos( \phi )= - \frac{r}{\sqrt{r^2 + s^2}}~~~~ \sin( \phi )= - \frac{s}{\sqrt{r^2 + s^2}}~~~~\cos( \psi ) =- \frac{R}{\sqrt{R^2 + S^2}}~~~~ \sin( \psi ) = \frac{S}{\sqrt{R^2 + S^2}}
+ %\end{equation*}
+ %\begin{equation*}
+ %\frac{\delta}{\delta'}=|\lambda|\sqrt{\frac{R^2 + S^2}{r^2 + s^2}}^{3}~~~~\cos(\theta)=\lambda~~~~\sin(\theta)=\sqrt{1-\lambda^2}~~~~\delta'=  \frac{\sqrt{(r^2 + s^2)(1-\lambda^2)}}{|\lambda| (R^2+S^2)}
+ %\end{equation*}
+ %Le degré de liberté correspond à une translation en sortie dans une direction perpendiculaire à l'horizon de $H^{-1}$.\\
+ %Une décomposition plus générale autorise $\lambda \in \mathbb{R}^{*}$.
+%
+
+ \paragraph{Synthèse et utilisation :}
+  On a donc montré que toute homographie (autre qu'une affinité) peut s'identifier à un mouvement de caméra. Plus précisément, pour tout $\lambda \in ]0,1[$,
+
+  \begin{equation*}
+H \sim T_{c} Z_{\frac{\delta}{\delta'}}  R_{\psi}  H_{\theta,\delta'} R_{\phi}  T_{x_{v}}
+  \end{equation*}
+  avec $T_c$ translation de vecteur $(x_2,y_2$, $T_{x_v}$ translation envoyant $(0,0)$ sur le point visé $X_v$, et
  \begin{equation*}
 x_2=\frac{ar+sb+R \lambda}{r^2 +s^2}~~~~y_2=\frac{cr+sd+S \lambda}{r^2 +s^2}~~~~(x_1 , y_1) = h^{-1}(x_{2},y_{2})
-\end{equation*}
+  \end{equation*}
  \begin{equation*}
  \cos( \phi )= - \frac{r}{\sqrt{r^2 + s^2}}~~~~ \sin( \phi )= - \frac{s}{\sqrt{r^2 + s^2}}~~~~\cos( \psi ) =- \frac{R}{\sqrt{R^2 + S^2}}~~~~ \sin( \psi ) = \frac{S}{\sqrt{R^2 + S^2}}
  \end{equation*}
  \begin{equation*}
  \frac{\delta}{\delta'}=|\lambda|\sqrt{\frac{R^2 + S^2}{r^2 + s^2}}^{3}~~~~\cos(\theta)=\lambda~~~~\sin(\theta)=\sqrt{1-\lambda^2}~~~~\delta'=  \frac{\sqrt{(r^2 + s^2)(1-\lambda^2)}}{|\lambda| (R^2+S^2)}
  \end{equation*}
- Le degré de liberté correspond à une translation en sortie dans une direction perpendiculaire à l'horizon de $H^{-1}$.\\
- Une décomposition plus générale autorise $\lambda \in \mathbb{R}^{*}$.
+ Le degré de liberté $\lambda$ correspond à une translation en sortie dans une direction perpendiculaire à l'horizon de $H^{-1}$.
+ 
+ On peut commuter $Z_{\frac{\delta}{\delta'}}$ et $R_{\psi}$, et introduire une translation $T'$ telle que $R_{\phi}  T_{x_{v}} = T' R_\phi$. On arrive donc à une décomposition
+   \begin{equation*}
+H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
+  \end{equation*}
+  Les affinités $T_{c} R_{\psi}$ et $R_{\phi}$ sont des isométries, et même principalement des rotations (la translation pouvant être prise en compte en considérant qu'on change l'endroit du plan traité). Il existe donc déjà des manières efficaces de les traiter (étudiée à \ref{YaroSzeli}).
+  
+  L'homographie $\tilde H$ est une homographie de la forme
+  \[\tilde H = \pmatrice{*&0&*\\0&*&*\\*&0&*}\]
+  qui est une forme particulière permettant d'être plus facilement qu'une partie quelconque (voir \ref{HomoboxRipmap}).
+  
+ Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$.
+ 
+ On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie particulière, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
+		
+	\begin{figure}
+		\centering
+		\subfigure[Vue de départ]{
+		{\includegraphics[width=60mm]{vue_fps_identity.jpg}}
+		{\includegraphics[scale=0.5]{vue_tps_identity.png}}}\\
+		\subfigure[Vue après une première rotation (d'angle $\phi$)]{
+		{\includegraphics[width=60mm]{vue_fps_rotation_phi.jpg}}
+		{\includegraphics[scale=0.5]{vue_tps_rotation_phi.png}}}\\
+		\subfigure[Vue après l'homographie particulière]{
+		{\includegraphics[width=60mm]{vue_fps_hom_part.jpg}}
+		{\includegraphics[scale=0.5]{vue_tps_hom_part.png}}}\\
+		\subfigure[Vue finale (après rotation d'angle $\psi$)]{
+		{\includegraphics[width=60mm]{vue_fps_rotation_psi.jpg}}
+		{\includegraphics[scale=0.5]{vue_tps_rotation_psi.png}}}
+		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra (à gauche la vue de la caméra, à droite une vue extérieure immobile). Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra}
+	\end{figure}

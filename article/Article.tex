@@ -111,14 +111,14 @@
 			\emph{Auteurs:}\\
 			Simon Barazer,\\
 			Jean-Thomas De La Roche Saint-André,\\
-			Hugo Moeneclaey, \\
+			Hugo Moeneclaey \\
 			Shmuel Rakotonirina--Ricquebourg
 		\end{flushleft}
 	\end{minipage}%
 	\begin{minipage}[t]{0.4\textwidth}
 		\begin{flushright} \large
 			\emph{Sous la direction de:}\\ 
-			Jean-Michel Morel, \\
+			Jean-Michel Morel \\
 			Enric Meinhardt
 		\end{flushright}
 	\end{minipage}
@@ -143,8 +143,10 @@
 		\subsection{Décomposition d'une homographie en mouvement de caméra}
 			\input{DecompositionGeometrique}%simon
 		\subsection{Traitement des homographies particulières}
+			\label{HomoboxRipmap}
 			\input{HomoboxRipmap}%simon
 		\subsection{Traitement des rotations}
+			\label{YaroSzeli}
 			\input{YaroSzeli} %Jean-Thomas à fait une partie sur Yaroslavsky...
 	\section{Expériences}
 		\input{Experiments}
@@ -152,6 +154,8 @@
 	\section{Pseudo-code pour le Mipmap et le Ripmap}
 		\input{Pseudo-code_Mipmap}%hugo
 	\section{Pseudo-code pour la décomposition géométrique}
+		\label{pseudoCodeDecompo}
+		%\input{Pseudo-code_decompo}
 		\input{Pseudo-code_homo_box}%hugo
 		\input{Pseudo-code_Szeliski}%shmuel
 	\nocite{*}

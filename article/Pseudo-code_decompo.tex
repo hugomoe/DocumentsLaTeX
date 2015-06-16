@@ -1,0 +1,35 @@
+\subsection{Pseudo-code pour la décomposition d'une homographie}
+ 
+ On rappelle que dans les algorithmes qui suivent, on prend la convention suivante : $H = \pmatrice{a&b&p\\c&d&q\\r&s&t}$ est la matrice carrée de taille $3*3$ (ou l'application homographique) telle que si $img$ est l'image d'entrée et $img_f$ est l'image de sortie, $img_f(x) = img(H(x))$. Ainsi, la décomposition $H \sim T_{c} R_{\psi}  \tilde H R_{\phi}$ est exécutée de gauche à droite. On notera cette décomposition $A \tilde H B$, et ces trois matrices seront les objets renvoyés par $decomposition$.
+ 
+ Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Comme précisé plus haut, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ ; on utilise pour cela un discriminant $\Delta(H) = (as-br)(ar+bs)+(cs-dr)(cr+ds)$ qui correspond à une quantité qui s'annule si et seulement si on peut choisir $\lambda$ de sorte que $T_c = 0$ (si $\Delta(H)=0$, il suffit de prendre pour $A$, $\tilde H$ et $B$ les valeurs données par l'algorithme \ref{pseudoCodeDecompo} ; si $H$ est décomposable avec $T_c=0$, alors les paramètres $\theta$, $\phi$, $\psi$, etc... sont déterminés de manière quasi-unique (éventuellement double, car on peut ajouter $pi$ à $\phi^$ et $\psi$) \red{trouver une preuve soit plus concise, soit plus explicite. Toujours est-il qu'on peut justifier ce choix de t_0,t_1}.
+ 
+   \begin{algorithme}
+     \label{pseudoCodeDecompo}
+     \caption{$decomposition(H)$}
+     \KwData{Une matrice d'homographie $H \in \mathcal M_{3,3}$}
+     \eIf{$as-br\neq0$}{
+      $t_0 = -\frac{\Delta(H)}{(r^2+s^2)(as-br)}$\;
+      $t_1 = 0$\;
+     }{
+      $t_0 = 0$\;
+      $t_1 = -\frac{\Delta(H)}{(r^2+s^2)(cs-dr)}$\;
+     }
+     $N_\phi = \sqrt{r^2+s^2}$\;
+     $R_\phi = \pmatrice{
+      \frac{r}{N_\phi} & \frac{s}{N_\phi} & 0\\
+      -\frac{s}{N_\phi} & \frac{r}{N_\phi} & 0\\
+      0 & 0 & 1}$\;
+     $N_\psi = \sqrt{((a+t_0r)s-(b+t_0s)r)^2+((c+t_1r)s-(d+t_1s)r)^2}$\;
+     $R_\psi = \pmatrice{
+      \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & \frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & 0\\
+      -\frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & 0\\
+      0 & 0 & 1}$\;
+     $A = T^{-1}R_\psi$\;
+     $\tilde H = \pmatrice{
+      -\frac{((a+t_0r)(d+t_1s)-(b+t_0s)(c+t_1r))N_\phi}{N_\psi} & 0 & \frac{p'((c+t_1r)s-(d+t_1s)r)-q'((a+t_0r)s-(b+t_0s)r)}{N_\psi}\\
+      0 & -\frac{N_\psi}{N_\phi} & \frac{p'((a+t_0r)s-(b+t_0s)r)+q'((c+t_1r)s-(d+t_1s)r)}{N_\psi}\\
+      N_\phi & 0 & t'}$\;
+     $B = R_\phi$\;
+     \KwRet{$A,\tilde H,B$}
+   \end{algorithme}

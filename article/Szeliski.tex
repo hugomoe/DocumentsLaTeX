@@ -25,8 +25,11 @@
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
 	
-	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine}.
+	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}.
 	\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
+	La période $T$ est prise égale à 1 (taille d'un pixel).
+	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus 9 termes.
+	
 	On modifie éventuellement, selon les coefficients du \emph{shear}, la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$). Cela permet, en cas de sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
 	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears}, on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing}.
@@ -82,7 +85,7 @@
 		
 		On décompose alors $A$ en :
 		\[
-			A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\0&0&1}
+			A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ \hline 0&0&1} = 
 			\pmatrice{1 & 0 & 0\\ 0 & \frac{a_{11}}{r_v} & 0\\ \hline 0 & 0 & 1}
 			\pmatrice{\frac{b_{0}}{r_h} & \frac{a_{01}}{r_v} & t_2\\ 0 & 1 & 0\\ \hline 0 & 0 & 1}
 			\pmatrice{1 & 0 & 0\\ \frac{a_{10}r_v}{a_{11}r_h} & r_v & \frac{t_1r_v}{a_{11}}\\ \hline 0 & 0 & 1}

@@ -72,6 +72,12 @@ On note $(u,v)=H(x,y)$.
 $$D(x,y) = \sqrt{\det \txt{d}_{(x,y)} H}$$
 Cette formule est justifiée car le déterminant de $\txt{d}_{(x,y)} H$ est l'aire du parallélogramme, donc un carré de côté $\sqrt{\det \txt{d}_{(x,y)} H}$ est de même aire que le parallélogramme qu'il approxime.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{methode_determinant.jpg}
+\end{figure}
+
+
 Le résultat est relativement satisfaisant.
 
 %schéma avec un ârallélogramme et le carré correspondant
@@ -81,6 +87,12 @@ $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\d
 On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
 % On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{methode_plus_grand_cote.jpg}
+\end{figure}
+
+
 Ce résultat est satisfaisant.
 
 %schéma avec un ârallélogramme et le carré correspondant
@@ -88,6 +100,11 @@ Ce résultat est satisfaisant.
 \sssse{Méthode des diagonales}
 $$D(x,y) = \max \left( \sqrt{\left(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x}\right)^2+\left(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y}\right)^2}, \sqrt{\left(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x}\right)^2+\left(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y}\right)^2} \right)$$
 On prend la plus grande diagonale du parallélogramme. Ici l'image est trop floue.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{methode_grande_diagonale.jpg}
+\end{figure}
 
 %schéma avec un parallélogramme et le carré correspondant
 
@@ -98,6 +115,12 @@ On peut décomposer toute matrice $A$ en trois matrices $A = PDQ^{-1}$ où $P$ e
 Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs propres normalisés de ces matrices, et $D$ la racine de leur diagonalisée. Il faut veiller à ce que $P$ et $Q$ correspondent bien \cite{abdi2007singular}.
 
 Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{methode_valeur_singuliere.jpg}
+\end{figure}
 
 On a une interprétation géométrique comme un mouvement de caméra de ces valeurs \cite{morel2009asift}.
 
@@ -136,5 +159,10 @@ Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour cha
 On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est :
 $$D(x,y) = \left( \left|\frac{\dr u}{\dr x}\right|+\left|\frac{\dr u}{\dr y}\right|,\left|\frac{\dr v}{\dr x}\right|+\left|\frac{\dr v}{\dr y}\right|\right)$$
 On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{methode_distance_ripmap.jpg}
+\end{figure}
 
 Cela améliore certes la méthode, mais ne résout pas par exemple le cas d'un rectangle fin en diagonale.

@@ -39,3 +39,18 @@
  \[\frac{\Delta_H(0,0)}{(r^2+s^2)S} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(as-br)}\]
  \[\frac{\Delta_H(0,0)}{(r^2+s^2)R} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(cs-dr)}\]
  De plus, en pratique, la condition $as-br=0$ n'est jamais vérifiée, on préfère donc la remplacer par une condition $as-br<cs-dr$.
+
+\subsection{Traitement d'une homographie quelconque}
+ 
+ À partir de la décomposition, en utilisant les algorithmes de traitement d'homographie et d'affinités des sections suivantes, on peut donc traiter une homographie quelconque :
+ 
+ On crée des images intermédiaires pour entre chaque étape (entre affinité et homographie et entre homographie et affinité) d'une taille suffisamment grande pour contenir toute l'image entre les transformations. Chaque image intermédiaire représente un rectangle du plan qui peut être caractérisé par ses tailles (largeur, hauteur) et les coordonnées $(\mu,\nu)$ de son origine (son premier pixel supérieur gauche). Cela permet de ne conserver que la portion du plan qui contient l'information, et donc de ne traiter les translations qu'en changeant les paramètres $\mu$ et $\nu$.
+ 
+ Ainsi, la première image intermédiaire sera le plus petit rectangle du plan contenant le résultat de la première affinité. L'homographie unidirectionnelle pouvant être effectuée de n'importe quelle rectangle du plan vers n'importe quel autre, elle ne rentre pas en compte pour déterminer les tailles intermédiaires. La seconde image intermédiaire sera le plus petit rectangle du plan contenant l'antécédent de la fenêtre de sortie par la dernière rotation.
+ 
+ On a donc deux images intermédiaires ; leurs tailles et les coordonnées de leurs origines sont déterminées en calculant le plus petit rectangle contenant $A^{-1}(rect_i)$ et le plus petit rectangle contenant $B(rect_f)$ (où $rect_i$ est le rectangle du plan où est stockée l'image initiale (sa taille est celle de l'image d'entrée, son origine a pour coordonnées $(\mu,\nu)=(0,0)$), et$rect_f$ est le rectangle du plan où sera stockée l'image finale (sa taille est celle de la fenêtre de sortie, son origine a pour coordonnées $(\mu,\nu)=(0,0)$)).
+ 
+ \begin{prop}
+  La taille des images intermédiaires est bornée indépendamment de l'homographie traitée.
+ \end{prop}
+ En effet, la composante de translation de $A$ et $B$ est prise en compte en changeant $(\mu,\nu)$ ; le changement de taille ne tient donc plus compte que de leur partie linéaire, qui est une rotation. Si les tailles initiales et finales sont fixées (par l'image d'entrée et la fenêtre de sortie), la taille d'une image intermédiaire est au plus $\sqrt{2}$ fois plus grande (à 1 pixel près) que la plus grande des dimensions initiales et finales.

@@ -15,8 +15,6 @@ Pour Homo_box :
 lhermite (hermite, nn ?)
 	freaking decalage de homo_box
 
-Trouver un nom bien pour bibilinéaire ( -> quadrilinéaire ?)
-
 Complexité : une analyse (szeliski subtil + dépend pas de l’homo).
 
 
@@ -28,9 +26,6 @@ Compte-rendu première relecture
 Spectre des images intermédiaire : verifier que cela fonctionne pour szeliski
 expérience rotation avec plus de rotation
 
-Figure : Cadre pour la décomposition géométrique
-	Joli image  : image + paramètre + schémas
-
 
 Inclure des propositions (eg décompositions affine/homo) avec def qui nomme par exemple l’homo particulière.
 	szeliski spectre conservé.
@@ -38,10 +33,6 @@ Inclure des propositions (eg décompositions affine/homo) avec def qui nomme par
 	regarder à quoi cela correspond pour un zoom avant / arrière / suite qui tend vers une affinité
 	la taille de l’image intermédiaire homo est bornée (+szeliski ?)
 	image intégrale : calculer cela ssi convolé ceci
-
-
-
-image pour les distances
 
 
 

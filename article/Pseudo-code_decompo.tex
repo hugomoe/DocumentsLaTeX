@@ -1,19 +1,21 @@
 \subsection{Pseudo-code pour la décomposition d'une homographie}
  
- On rappelle que dans les algorithmes qui suivent, on prend la convention suivante : $H = \pmatrice{a&b&p\\c&d&q\\r&s&t}$ est la matrice carrée de taille $3*3$ (ou l'application homographique) telle que si $img$ est l'image d'entrée et $img_f$ est l'image de sortie, $img_f(x) = img(H(x))$. Ainsi, la décomposition $H \sim T_{c} R_{\psi}  \tilde H R_{\phi}$ est exécutée de gauche à droite. On notera cette décomposition $A \tilde H B$, et ces trois matrices seront les objets renvoyés par $decomposition$.
+ On rappelle que dans les algorithmes qui suivent, on prend la convention suivante : $H = \pmatrice{a&b&p\\c&d&q\\r&s&t}$ est la matrice carrée de taille 3 (ou l'application homographique) telle que si $img$ est l'image d'entrée et $img_f$ est l'image de sortie, $img_f(x) = img(H(x))$. Ainsi, la décomposition $H \sim T_{c} R_{\psi}  \tilde H R_{\phi}$ est exécutée de gauche à droite. On notera cette décomposition $A \tilde H B$, et ces trois matrices seront les objets renvoyés par $decomposition$.
  
- Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Comme précisé plus haut, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ ; on utilise pour cela un discriminant $\Delta(H) = (as-br)(ar+bs)+(cs-dr)(cr+ds)$ qui correspond à une quantité qui s'annule si et seulement si on peut choisir $\lambda$ de sorte que $T_c = 0$ (si $\Delta(H)=0$, il suffit de prendre pour $A$, $\tilde H$ et $B$ les valeurs données par l'algorithme \ref{pseudoCodeDecompo} ; si $H$ est décomposable avec $T_c=0$, alors les paramètres $\theta$, $\phi$, $\psi$, etc... sont déterminés de manière quasi-unique (éventuellement double, car on peut ajouter $pi$ à $\phi^$ et $\psi$) \red{trouver une preuve soit plus concise, soit plus explicite. Toujours est-il qu'on peut justifier ce choix de t_0,t_1}.
+ Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Arbitrairement, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ : pour cela, on rappelle que $(x_2,y_2)$ (nommés $t_0,t_1$ dans l'algorithme) doivent vérifier
+ \[\Delta_H(x_2 , y_2 ) \stackrel{\text{déf}}{=} R ((rc+sd)-(r^2 + s^2)y_2) - S ((ar+sb)-(r^2 + s^2 )x_2) = 0 \]
+ On prend donc $t_0 = x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)S}, t_1 = y_2 = 0$ ou $t_0 = x_2 = 0, t_1 = y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)R}$, en choisissant de sorte à ne pas diviser par zéro.
  
    \begin{algorithme}
      \label{pseudoCodeDecompo}
      \caption{$decomposition(H)$}
      \KwData{Une matrice d'homographie $H \in \mathcal M_{3,3}$}
      \eIf{$as-br\neq0$}{
-      $t_0 = -\frac{\Delta(H)}{(r^2+s^2)(as-br)}$\;
+      $t_0 = -\frac{\Delta_H(0,0)}{(r^2+s^2)S}$\;
       $t_1 = 0$\;
      }{
       $t_0 = 0$\;
-      $t_1 = -\frac{\Delta(H)}{(r^2+s^2)(cs-dr)}$\;
+      $t_1 = -\frac{\Delta_H(0,0)}{(r^2+s^2)R}$\;
      }
      $N_\phi = \sqrt{r^2+s^2}$\;
      $R_\phi = \pmatrice{
@@ -33,3 +35,7 @@
      $B = R_\phi$\;
      \KwRet{$A,\tilde H,B$}
    \end{algorithme}
+   Dans une implémentation pratique, on n'inverse pas la matrice $H$ pour obtenir les valeurs de $t_0$ et $t_1$, car les quantités susmentionnées se simplifient en
+ \[\frac{\Delta_H(0,0)}{(r^2+s^2)S} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(as-br)}\]
+ \[\frac{\Delta_H(0,0)}{(r^2+s^2)R} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(cs-dr)}\]
+ De plus, en pratique, la condition $as-br=0$ n'est jamais vérifiée, on préfère donc la remplacer par une condition $as-br<cs-dr$.

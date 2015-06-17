@@ -308,25 +308,23 @@ Et donc
 R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1} \sim 
  \begin{pmatrix}
  -|R x_2 +S y_2 +T|(R x_2 +S y_2 +T)\sqrt{\frac{r^2 + s^2}{R^2 + S^2}}&0&0\\
- |R x_2 +S y_2 +T|\frac{\Delta(x_2 , y_2)}{\sqrt{r^2 + s^2}\sqrt{R^2 + S^2}}&-|R x_2 +S y_2 +T|\sqrt{\frac{R^2 + S^2}{r^2 + s^2}}&0\\
+ |R x_2 +S y_2 +T|\frac{\Delta_H(x_2 , y_2)}{\sqrt{r^2 + s^2}\sqrt{R^2 + S^2}}&-|R x_2 +S y_2 +T|\sqrt{\frac{R^2 + S^2}{r^2 + s^2}}&0\\
  -|R x_2 +S y_2 +T|\sqrt{r^2 + s^2}&0&1
  \end{pmatrix}
 \end{equation*}
 Où l'on a posé 
 \begin{equation*}
-\Delta(x_2 , y_2 ) =R ((rc+sd)-(r^2 + s^2)y_2) - S ((ar+sb)-(r^2 + s^2 )x_2)
+\Delta_H(x_2 , y_2 ) =R ((rc+sd)-(r^2 + s^2)y_2) - S ((ar+sb)-(r^2 + s^2 )x_2)
 \end{equation*}
-On obtient alors $\Delta(x_2 , y_2 )=0$ si et le seulement il existe $\lambda$ tel que  %j'aime pas le il existe comme ça...
-\begin{equation*}
-x_2=\frac{ar+sb+R \lambda}{r^2 +s^2}~~~~y_2=\frac{cr+sd+S \lambda}{r^2 +s^2}
-\end{equation*}
-On a de plus 
+Les solutions de $\Delta_H(x_2 , y_2 )=0$ sont
+\[\left\lbrace \left(x_2=\frac{ar+sb+R \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+S \lambda}{r^2 +s^2}\right), \lambda \in \mathbb R\right\rbrace\]
+On a dans ce cas
 \begin{equation*}
 R x_2 +S y_2 +T = \frac{R^2 +S^2}{r^2 + s^2} \lambda
 \end{equation*}
-Le paramètre $\lambda$ doit donc être pris différent de zéros 
+Le paramètre $\lambda$ doit donc être pris différent de zéro car 
 \begin{equation*}
-R_{\phi}^{-1} \cdot H_t \cdot R_{\psi}^{-1} \sim 
+R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1} \sim 
  \begin{pmatrix}
  -| \lambda | \lambda \sqrt{\frac{R^2 + S^2}{s^2 + r^2}}^{3}&0&0\\
 0&-| \lambda | \sqrt{\frac{R^2 + S^2}{r^2 + s^2}}^{3}&0\\
@@ -341,16 +339,20 @@ R_{\phi}^{-1} \cdot H_t \cdot R_{\psi}^{-1} \sim
  \end{equation*}
 On obtient finalement
 \begin{equation*}
-Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\phi}^{-1} \cdot H_t \cdot R_{\psi}^{-1} \sim 
+Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1} \sim 
  \begin{pmatrix}
  -\lambda&0&0\\
 0&-1&0\\
  -|\lambda|\frac{R^2 + S^2}{\sqrt{r^2 + s^2}}&0&1
  \end{pmatrix}
  \end{equation*}
- Cette matrice doit être de la forme $H_{\theta,\delta'}$ on doit avoir 
+ Cette matrice doit être de la forme $H_{\theta,\delta'}$. Pour qu'elle le soit, on doit avoir 
  \begin{equation*}
- \lambda^2 + \lambda^2 \delta'^2 \frac{(R^2 + S^2)^2}{r^2 + s^2}=1 ~~~~\iff \delta'^2 = (r^2 + s^2) \frac{1-\lambda^2}{\lambda^2 (R^2+S^2)^2}
+  \lambda^2 + \lambda^2 \delta'^2 \frac{(R^2 + S^2)^2}{r^2 + s^2}=1
+ \end{equation*}
+ C'est-à-dire
+ \begin{equation*}
+  \delta'^2 = (r^2 + s^2) \frac{1-\lambda^2}{\lambda^2 (R^2+S^2)^2}
  \end{equation*}
 
  %\paragraph{Synthèse et optimisation :}
@@ -396,7 +398,7 @@ H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
   \[\tilde H = \pmatrice{*&0&*\\ 0&*&*\\ *&0&*}\]
   qui est une forme particulière permettant d'être plus facilement qu'une partie quelconque (voir \ref{HomoboxRipmap}).
   
- Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$. En pratique, on ne se souciera donc pas du risque de prendre $(-\cos(\phi),-\sin(\phi))$ au lieu de $(\cos(\phi),\sin(\phi))$ ; de plus on choisira (arbitrairement) un $\lambda$ tel que la translation verticale ou horizontale de $T_c$ soit annulée.
+ Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$.
  
  On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie particulière, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
 		
@@ -415,5 +417,4 @@ H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
 		{\includegraphics[width=60mm]{vue_fps_rotation_psi.jpg}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_psi.png}}}
 		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra (à gauche la vue de la caméra, à droite une vue extérieure immobile). Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra}
-		\label{SchemaEtapesDecompoGeometrique}
 	\end{figure}

@@ -125,7 +125,7 @@ Ainsi en admettant que le rapport largeur sur longueur est borné, l'algorithme 
  \For{$i\in \llb 0,3 \rrb $}{
  $Img[i(wh+1)]=0$\;
  }
- \For{i\in \llb 1,wh \rrb $ }{
+ \For{$i\in \llb 1,wh \rrb $ }{
  $Img[i]=Img[i-1]+img[i-1]$ image 1-intégrale\; \\
  $Img[wh+i+1]=Img[wh+i]+Img[i-1]+\frac{img[i-1]}{2}$\; image 2-intégrale \\
  $Img[2 wh+i+2]=Img[2*wh+i+1]+Img[wh+i]+\frac{Img[i-1]}{2}+\frac{img[i-1]}{6}$ image 3-intégrale\\

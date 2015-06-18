@@ -51,6 +51,13 @@ On a $\widehat{g_1^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)~~$  don
 $~~\widehat{G_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2\sqrt{n}}\right)^n~~$\\
 on obtient le résultat voulu en réalisant un développement limité de cette fonction 
 \end{proof}
+Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f=f*\frac{f(.+\frac{d}{2})-f(.-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x), on à alors le lemme suivant 
+\begin{prop}
+\begin{equation*}
+(f*g_n^d)(y)=D_d ^n F^{(n)}= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+\end{equation*}
+\end{prop}
+\begin{proof}
 Si $f,g$ sont deux fonctions continues à support compact et $d>0$ on a le résultat suivant
 \begin{equation*}
 (f*(g*g_1^d))(y)=\frac{(F^{(1)}*g)(y+\frac{d}{2})-(F^{(1)}*g)(y-\frac{d}{2})}{d}~~~~~~F^{(1)}(x)=\int_{-\infty}^{x}f(y) dy
@@ -64,7 +71,7 @@ Par intégration par partie (au sens des distributions), comme les fonctions $f$
                  &=& \frac{(F^{(1)} * g)(y+\frac{d}{2})-(F^{(1)} * g )(y-\frac{d}{2})}{d}
 \end{eqnarray*}
 \end{proof}
-On peut poser $D_d$ l'opérateur de "dérivation discrète" définit par $D_d f=f*\frac{f(.+\frac{d}{2})-f(.-\frac{d}{2})}{d}$ et réécrire la formule précédente 
+On peut réécrire la formule précédente 
 \begin{equation*}
 f * g *g_1^d =D_d (F^{(1)}*g)
 \end{equation*}
@@ -72,7 +79,8 @@ On en déduit par récurrence la formule
 \begin{equation*}
 (f*g_n^d)(y)=D_d ^n F^{(n)}= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
 \end{equation*}
-La fonction $F^{(k)}$ est la somme de la fonction  $F^{(k-1)}$, la seconde égalité se démontre en développant l'opérateur $D_d ^n$ par la formule du binome de Newton.\\
+La fonction $F^{(k)}$ est la somme de la fonction  $F^{(k-1)}$, la seconde égalité se démontre en développant l'opérateur $D_d ^n$ par la formule du binome de Newton.
+\end{proof}
 Dans nos algorithmes  on utilisera cette formule pour $n=3$ :
 \begin{equation*}
 (f*g_3)(y)=\frac{1}{d^3}(F^{(3)}(y+\frac{3d}{2})-3F^{(3)}(y+\frac{d}{2})+3F^{(3)}(y-\frac{d}{2})-F^{(3)}(y-\frac{3d}{2}))

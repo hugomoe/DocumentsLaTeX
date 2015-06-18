@@ -32,11 +32,11 @@ Le Mipmap est donc représenté par une suite d'images chacune deux fois plus pe
 \includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
 \end{figure}
 
-Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approxime la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approximer avec des carrés.
+Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approcher avec des carrés. %ou qui s'approxime par des carrés
 
 %image de parallélogramme avec les différentielles, avec au mieux schéma image de départ / arrivé qui explique la correspondance entre un pixel est un parallélogramme
 
-On appelle distance d'un pixel la taille du carré choisi pour l'approximation (car plus un pixel est "loin", plus les carrés qui l'approximent sont grands). 
+On appelle distance d'un pixel la taille du carré choisi pour l'approximation (car plus un pixel est "loin", plus les carrés qui l'approchent sont grands). 
 
 On suppose avoir une formule qui nous donne la distance d'un point quelconque. La géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
@@ -70,7 +70,7 @@ On note $(u,v)=H(x,y)$.
 
 \sssse{Méthode du déterminant}
 $$D(x,y) = \sqrt{\det \txt{d}_{(x,y)} H}$$
-Cette formule est justifiée car le déterminant de $\txt{d}_{(x,y)} H$ est l'aire du parallélogramme, donc un carré de côté $\sqrt{\det \txt{d}_{(x,y)} H}$ est de même aire que le parallélogramme qu'il approxime.
+Cette formule est justifiée car le déterminant de $\txt{d}_{(x,y)} H$ est l'aire du parallélogramme, donc un carré de côté $\sqrt{\det \txt{d}_{(x,y)} H}$ est de même aire que le parallélogramme qu'il approche.
 
 \begin{figure}[h!]
 \centering
@@ -132,7 +132,7 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 
 \ssse{Algorithme amélioré : Le Ripmap}
 
-Une des grandes faiblesses est l'isotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
+Une des grandes faiblesses est l'isotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
 Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 

@@ -51,7 +51,7 @@ On a $\widehat{g_1^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)~~$  don
 $~~\widehat{G_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2\sqrt{n}}\right)^n~~$\\
 on obtient le résultat voulu en réalisant un développement limité de cette fonction 
 \end{proof}
-Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f=f*\frac{f(.+\frac{d}{2})-f(.-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x), on à alors le lemme suivant 
+Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f=f*\frac{f(.+\frac{d}{2})-f(.-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x)$, on à alors le lemme suivant 
 \begin{prop} Pour toute fonction $f$ continue par morceau à support compact :
 \begin{equation*}
 (f*g_n^d)(y)=D_d ^n F^{(n)}= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
@@ -128,8 +128,8 @@ Cette méthode a cependant un défaut, l'image est initialement interpolée par 
 \begin{prop} Si on pose $F_1$  est la spline d'ordre $1$ continue, telle que $F_{1}(k+\frac{1}{2})=f_k$ alors 
 \begin{equation*}
 ( F_1 * g_n^d ) (y) = D_d^{(n)}D_1 F^{(n+1)}(y)
-\begin{equation*}
-Où $F$ est l'interpolation contante par morceau de $(f)$
+\end{equation*}
+Où $F$ est l'interpolation constante par morceau de $(f)$
 \end{prop}
 \begin{proof}
 On a

@@ -2,8 +2,13 @@
 \subsubsection{Principe général}
 	
 	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape qui ne crée pratiquement aucun \emph{aliasing} \cite{szeliski2010high}.
-	
-	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse.
+
+\begin{thm}
+Le méthode multi-étapes\cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre
+\end{thm}
+	Ce théorème est expliqué figure \ref{szeliski_decompoSzeliski}  et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}
+
+	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
 	
 	Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
 		
@@ -21,7 +26,7 @@
 		\subfigure[Spectre de l'image après sur-échantillonnage]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
 		\subfigure[Spectre de l'image après sur-échantillonnage et \emph{shear}]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
 		\subfigure[Spectre de l'image de sortie (après sur-échantillonnage, \emph{shear} et sous-échantillonnage)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
-		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la décomposition en plusieurs étapes)}
+		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par le traitement multi-étapes). Mise en pratique figure\ref{experiments_decompoSzeliski_sinc}}
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
 	

@@ -21,7 +21,7 @@ En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en textur
 
 \ssse{Présentation du Mipmap}
 
-Le principe est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
+Le principe du Mipmap est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
 
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
 Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2.

@@ -5,7 +5,7 @@
 
 \ssse{Méthode naïve}
 
-On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer l'endroit de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
+On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer la zone de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
 
 On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone.
 
@@ -132,11 +132,11 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 
 \ssse{Algorithme amélioré : Le Ripmap}
 
-Une des grandes faiblesses est l'anisotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
+Une des grandes faiblesses est l'isotropie du Mipmap : il ne privilégie aucune direction. Ainsi si le parallélogramme à approximer est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
 Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
 
-Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation bi-bi-linéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux).%bibilinéaire ? sérieusement ?
+Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux).%bibilinéaire ? sérieusement ?
 
 
 
@@ -151,7 +151,7 @@ Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour cha
 %schéma d'interpolations pour le ripmap, avec 4 images est l'endroit ou le point tombe dans chacun
 \begin{figure}[h!]
 \centering
-\caption{Schéma d'interpolation bi-bi-linéaire}
+\caption{Schéma d'interpolation quadrilinéaire}
 \includegraphics[scale=0.5]{interbibilineaire.jpg}
 \end{figure}
 

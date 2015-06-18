@@ -140,7 +140,7 @@ $c=InterpoleInt(iimgint3,i+d,d)$\;
  \caption{$build4Integrale(img,Img)$}
  \KwData{img,Img}
  \For{$i=0$ to $3$}{
- $Img[i*(wh+1)]=0$
+ $Img[i(wh+1)]=0$
  }
  \For{$i=1$ to $wh$}{
  $Img[i]=Img[i-1]+img[i-1]$ image 1-intégrale\\
@@ -181,8 +181,8 @@ $c=InterpoleInt(iimgint3,i+d,d)$\;
  $xy_{4}  = xy - \frac{3D}{2}$\\
  On réalise une première convolution pour lisser l'interpolation\\
  \For{$i=1...4$}{
- $a_{2*i-1}=eval4Integrale(img,Img,xy_i+\frac{1}{2})$\\
- $a_{2*i}=eval4Integrale(img,Img,xy_i-\frac{1}{2})$\\
+ $a_{2i-1}=eval4Integrale(img,Img,xy_i+\frac{1}{2})$\\
+ $a_{2i}=eval4Integrale(img,Img,xy_i-\frac{1}{2})$\\
  $b_i = a_{2i-1} - a_{2i}$ 
  }
  On réalise la dérivé discrète $3$ième pour convoler avec le filtre $g_3$\\

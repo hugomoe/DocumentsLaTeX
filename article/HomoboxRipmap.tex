@@ -40,7 +40,7 @@ On obtient donc la formule $d=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cit
 Soit $d>0$, on veut convoler une fonction d'une variable par une approximation d'une gaussienne d'écart type $\delta$.\\
 Soit $g_n^d$ le noyau défini par 
 \begin{equation*}
-g_1^d(t)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(t) ~~~~~~~g_{n+1}^d= g_n^d * g_1^d
+g_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) ~~~~~~~g_{n+1}^d= g_n^d * g_1^d
 \end{equation*}
 Si on pose $G_n^d(x)=\sqrt{n}g_n^d(\sqrt{n} x)$ on peut montrer que 
 \begin{equation*}
@@ -66,11 +66,11 @@ Pour toute fonction $f$ continue par morceau à support compact on a
 \end{eqnarray*}
 On en déduit alors 
 \begin{equation*}
-(f*g_{n+1}^{d})=(f*g_1^d * g_{n}^{d})= ((D_d F^{(1)})*g_n )(y)
+(f*g_{n+1}^{d})=(f*g_1^d * g_{n}^{d})= ((D_d F^{(1)})*g_n )
 \end{equation*}
 Par récurrence on obtient la formule 
 \begin{equation*}
-(f*g_n^d)(y)=D_d ^n F^{(n)}= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+(f*g_n^d)(y)=D_d ^n F^{(n)}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
 \end{equation*}
 
 \end{proof}

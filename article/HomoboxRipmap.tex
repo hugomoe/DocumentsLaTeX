@@ -41,7 +41,7 @@ On a $\widehat{g_1^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)~~$  don
 $~~\widehat{G_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2\sqrt{n}}\right)^n~~$\\
 on obtient le résultat voulu en réalisant un développement limité de cette fonction 
 \end{proof}
-Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x)$, on à alors le lemme suivant 
+Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x)$, on a alors le lemme suivant 
 \begin{prop} Pour toute fonction $f$ continue par morceau à support compact :
 \begin{equation*}
 (f*g_n^d)(y)=D_d ^n F^{(n)}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
@@ -79,7 +79,7 @@ Une autre méthode consiste à poser
 \begin{equation*}
 F^{(0)} (x) =\underset{0\le k \le m-1}{\sum}f_{k} \mathds{1}_{[k,k+1[}(x)
 \end{equation*}
-$(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F^{(n)}(x)=\int_{-\infty}^{x}F^{(n-1)}(y)dx$ on à par exemple
+$(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F^{(n)}(x)=\int_{-\infty}^{x}F^{(n-1)}(y)dx$ on a par exemple
 \begin{equation*}
 F^{(1)}(x)=\underset{k\le \lfloor x\rfloor \wedge m~-1}{\sum}f_{k}~~+ f_{\lfloor x\rfloor}
 (x-\lfloor x\rfloor)
@@ -128,7 +128,7 @@ F_1(x)=\underset{0\le k \le m-1}{\sum} f_k g_2^1 (x-k-\frac{1}{2})=(F^{(0)} *g_1
 \end{equation*}
 On obtient alors 
 \begin{equation*}
-F_1*g_n^d=(F_0 ^{(0)}*g_1^1)*g_n^d=(F_0 ^{(0)}*g_n^d)*g_1^1=(D_d^n F_0 ^{(n)})*g_1^1= D_d^n D_1 F_0^{(n+1)}
+F_1*g_n^d=(F ^{(0)}*g_1^1)*g_n^d=(F ^{(0)}*g_n^d)*g_1^1=(D_d^n F ^{(n)})*g_1^1= D_d^n D_1 F^{(n+1)}
 \end{equation*}
 \end{proof}
 L'interpolation supplémentaire peut donc être obtenue en évaluant $F^{(n+1)}$. La méthode de calcul est donc la même que dans le cas précédent, mais il faut utiliser l'intégrale quatrième de l'image dans la pratique.\\

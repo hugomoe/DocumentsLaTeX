@@ -1,11 +1,13 @@
-% contient la description des différentes possibilités pour traiter l'homographie particulière au centre de la décomposition
+% contient la description des différentes possibilités pour traiter l'homographie unidirectionnelle au centre de la décomposition
 %simon
-\subsubsection{Séparation d'une homographie particulière }
+\subsubsection{Séparation d'une homographie unidirectionelle}
 \label{homobox_paragraph}
 On considère une homographie $h$ de la forme 
 \begin{equation*}
 h:(x,y)\mapsto \left(\frac{-bx}{1-ax},\frac{-y}{1-ax}\right)
 \end{equation*}
+(les résultats énoncés pour cette homographie seront valables pour toute homographie unidirectionnelle)
+
 On peut décomposer cette homographie en deux applications $h_1 , h_2$
 \begin{equation*}
 h_1:(x,y) \mapsto \left(\frac{-bx}{1-ax}    ,y\right)~~~~~~h_2:(x,y) \mapsto \left(x,\frac{-y}{1-ax}\right)
@@ -140,7 +142,7 @@ Dans la pratique on utilisera la formule $d=2\sqrt{(0.8)^2 z^2 - (0.7)^2}$ car l
 
 \paragraph{Splines cubiques de Hermite}
 
-Il existe des méthodes d'interpolation plus efficace que celle bilinéaire, par exemple celle cubique. Elle peut être employée lors du traitement de l'homographie particulière.
+Il existe des méthodes d'interpolation plus efficace que celle bilinéaire, par exemple celle cubique. Elle peut être employée lors du traitement de l'homographie unidirectionnelle.
 
 Soit $(x_0,x_1,x_2,x_3)$ et $(y_0,y_1,y_2,y_3)$ dans $\mb{R}^4$. On peut construire un polynôme $P$ de degré 3 tel que  
 \begin{equation*}

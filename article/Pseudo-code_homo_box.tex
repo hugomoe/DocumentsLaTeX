@@ -110,12 +110,12 @@ $c=interpoleInt(imgint3,i+d,d)$\;
 
 \ssse{Complexité}
 
-La fonction $interpoleInt$ est clairement en temps constant. Ainsi on en conclu sans problème que $interpole$ et $interpole3$ le sont aussi. Dans $applyHomography$ on a ainsi des boucles sur des fonctions constantes et des intégrations. Ainsi la première boucle est en $O(h(w+w_f))$ car l'appel de $imageIntegrale$ se fait sur une colonne de taille $w$. De même la deuxième boucle est en $O(w_f(h_f+h))$.
+La fonction $interpoleInt$ est clairement en temps constant. Ainsi on en conclu sans problème que $interpole$ et $interpole3$ le sont aussi. Dans $applyHomography$ on a ainsi des boucles sur des fonctions constantes et des intégrations. Ainsi la première boucle est en $O(h(w+w_f))$ car l'appel de $imageIntegrale$ se fait sur une colonne de taille $w$. De même la deuxième boucle est en $O(w_f(h_f+h))$. Il y a donc un terme en $w_f h$ qui est spécifique pour cette méthode. Mais sur des images "raisonnable", c'est dire qui ne sont pas trop fine, on a néanmoins un temps linéaire.
 \medbreak
 %a verifier
-Ainsi en admettant que le rapport largeur sur longueur est borné, l'algorithme est en $O(n_1+n_2)$ où $n_1$ est la taille de l'image de départ et $n_2$ celle de l'image d'arrivée. On remarque que cela ne dépend pas des coefficients de l'homographie.
+En effet en admettant que le rapport largeur sur longueur est borné, l'algorithme est en $O(n_1+n_2)$ où $n_1$ est la taille de l'image de départ et $n_2$ celle de l'image d'arrivée. On remarque que cela ne dépend pas des coefficients de l'homographie.
 
-\subsubsection{Pseudo code convolution d'une image $1D$ par l'image $4-$intégrale :}
+\subsubsection{Pseudo-code convolution d'une image $1D$ par l'image $4-$intégrale :}
  Dans ce pseudo code $img$ est l'image $1D$ d'entrée de taille $wh$ et $Img$ est une image de taille $4(wh+1)$ contenant les valeurs des images $i-integrales$ pour $i\in \llb 1,4 \rrb $ aux points $\llb 0,wh \rrb$ on calcule ces valeurs à l'aide de la méthode 2 énoncée au paragraphe 
  On utilise essentiellement le format double lors de l'implémentation en c car les calculs demandent une certaine précision. La variable $xy$ est le point où l'on souhaite réechantillonner l'image et $d$ est le zoom effectué en $xy$ lors du ré-echantillonnage.
  

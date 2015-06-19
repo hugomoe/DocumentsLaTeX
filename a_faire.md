@@ -1,3 +1,10 @@
+PARTOUT
+	référer les figure
+	les reference peuvent disparaitre
+
+
+
+
 INTRO
 motiver le problème (simule camera (jv) + fusion d’image + le pb n’est pas trivial (combine zoom avant/arrière))
 

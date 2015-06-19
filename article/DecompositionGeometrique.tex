@@ -17,14 +17,14 @@ On étudie ici un cas a priori particulier d'homographie $h$   que l'on peut int
 \caption{Illustration d'un mouvement de caméra $(X_v =0)$. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra.}
 \end{figure}
 \begin{Def}
-Une homographie unidimentionnelle est une application $h:\mathbb{R}^{2} \mapsto \mathbb{R}^{2}$ définit par 
+Une homographie unidirectionnelle est une application $h:\mathbb{R}^{2} \mapsto \mathbb{R}^{2}$ définit par 
 \begin{equation*}
 h(x,y)=\left ( \frac{ax+p}{rx+t} , \frac{cy+p}{rx+t} \right)
 \end{equation*}
 Où $a,p,c,q,r,t$ sont des réels 
 \end{Def}
+
 \paragraph{Approche géométrique :}
-\subparagraph{Cas général :}
 On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une base orthonormale directe $(x_{0},y_{0},z_{0})$,\\ l'image de départ sera située dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
 On doit maintenant positionner notre caméra par rapport à l'image de départ \ref{shmdecomp}.
 \begin{itemize}
@@ -131,6 +131,7 @@ Dans le cas où le point visé existe
 
 \paragraph{Décomposition de l'homographie $h$ dans le cas où le point visé existe :}
 %tu identifie une rotation et son angle, c'est etrange
+\begin{proof}
 On peut positionner le vecteur $w$ par rapport au repère $(x_{0},y_{0},z_{0}) $ en introduisant deux angles, $\phi$ et $\theta$.
 \begin{itemize}
 \item la première rotation d'angle $\phi$ se fait autour de l'axe $z_{0}$ ; on lui associe la base $(x_{1},y_{1},z_{1})$ où $z_{0}=z_{1}$.
@@ -189,13 +190,12 @@ Comme $x_{1}=\cos(\phi)x_{0}+\sin(\phi)y_{0}$ et $y_{1}=-\sin(\phi)x_{0}+\cos(\p
 \end{eqnarray*}
 
 Si on définit les dilatations $z_{\lambda}:X\rightarrow \lambda X$, alors on obtient la formule générale pour les mouvements de caméra
-\begin{prop}
-$h$ est un mouvement de caméra si, et seulement si, il existe des paramètres $(\delta,\delta',\theta,\phi,\psi,C,X_v)$ tels que :
-\begin{equation}
+\begin{equation*}
 h = \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
 \label{formul_decomp}
-\end{equation}
-\end{prop}
+\end{equation*}
+
+\end{proof}
 
 
 
@@ -228,9 +228,10 @@ Dans la suite on notera $\sim$ la relation d'équivalence  sur $GL_{3}(\mathbb{R
 
 \paragraph{Décomposition matricielle :}
 \begin{prop}
-Toute homographie est un mouvement de caméra ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté.
+Toute homographie est un mouvement de caméra avec un point visé ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté.
 \end{prop}
 %la ref n'apparait pas bien
+\begin{proof}
 On fixe $h$ une homographie et $H$ une matrice qui lui est associée. On conserve ici les notations de la partie précédente, on suppose sans perte de généralité que $\det (H)=1$. On suppose de plus que $h$ peut s'écrire sous la forme $\ref{formul_decomp}$, on cherche à montrer que cette hypothèse n'impose aucune condition supplémentaire sur la matrice $H$, en déterminant les paramètres intervenants dans la décomposition en fonction des coefficients de $H$ .
 
 On a la formule de décomposition :
@@ -408,7 +409,7 @@ Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1
  \begin{equation*}
   \delta'^2 = (r^2 + s^2) \frac{1-\lambda^2}{\lambda^2 (\hat r^2+\hat s^2)^2}
  \end{equation*}
-
+\end{proof}
  %\paragraph{Synthèse et optimisation :}
  %On a montré dans la section précédente que toute homographie qui n'est pas une application affine est un mouvement de caméra. On a de plus que pour tout $\lambda \in ]0,1[$ %pas certain que c'est ce que tu veux dire
  %\begin{equation*}

@@ -12,10 +12,10 @@ On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alor
 %image aliasé à fond
 
 \begin{figure}[h!]
-\label{imagereciproque}
 \centering
 \includegraphics[scale=0.5]{imagereciproque.jpg}
 \caption{Image réciproque d'un pixel}
+\label{imagereciproque}
 \end{figure}
 
 En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983 \cite{williams1983pyramidal}.
@@ -29,9 +29,9 @@ Le Mipmap est donc représenté par une suite d'images chacune deux fois plus pe
 
 \begin{figure}[h!]
 \centering
-\label{MipMap_real}
 \caption{Un exemple de Mipmap}
 \includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
+\label{MipMap_real}
 \end{figure}
 
 Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approcher avec des carrés. %ou qui s'approxime par des carrés
@@ -51,9 +51,9 @@ La figure \ref{intertrilineaire} représente cette interpolation.
 
 \begin{figure}[h!]
 \centering
-\label{intertrilineaire}
 \caption{Schéma d'interpolation trilinéaire}
 \includegraphics[scale=0.5]{intertrilineaire.jpg}
+\label{intertrilineaire}
 \end{figure}
 
 \ssse{La fonction de distance}
@@ -77,8 +77,8 @@ Cette formule est justifiée car le déterminant est l'aire du parallélogramme,
 
 \begin{figure}[h!]
 \centering
-\label{methode_determinant}
 \includegraphics[scale=0.5]{methode_determinant.jpg}
+\label{methode_determinant}
 \end{figure}
 
 
@@ -93,8 +93,8 @@ On prend le plus grand côté du parallélogramme comme côté du carré. Cette 
 
 \begin{figure}[h!]
 \centering
-\label{methode_plus_grand_cote}
 \includegraphics[scale=0.5]{methode_plus_grand_cote.jpg}
+\label{methode_plus_grand_cote}
 \end{figure}
 
 
@@ -108,8 +108,8 @@ On prend la plus grande diagonale du parallélogramme. Ici l'image est trop flou
 
 \begin{figure}[h!]
 \centering
-\label{methode_grande_diagonale}
 \includegraphics[scale=0.5]{methode_grande_diagonale.jpg}
+\label{methode_grande_diagonale}
 \end{figure}
 
 %schéma avec un parallélogramme et le carré correspondant
@@ -127,8 +127,8 @@ On a schématisé cette méthode figure \ref{methode_valeur_singuliere}
 
 \begin{figure}[h!]
 \centering
-\label{methode_valeur_singuliere}
 \includegraphics[scale=0.5]{methode_valeur_singuliere.jpg}
+\label{methode_valeur_singuliere}
 \end{figure}
 
 On a une interprétation géométrique comme un mouvement de caméra de ces valeurs \cite{morel2009asift}.
@@ -152,9 +152,9 @@ Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour cha
 %un vrai ripmap, que je ferais moi
 \begin{figure}[h!]
 \centering
-\label{Ripmap_real}
 \caption{Un exemple de Ripmap}
 \includegraphics[scale=0.4]{Ripmap_real}
+\label{Ripmap_real}
 \end{figure}
 
 
@@ -163,6 +163,7 @@ Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour cha
 \centering
 \caption{Schéma d'interpolation quadrilinéaire}
 \includegraphics[scale=0.5]{interbibilineaire.jpg}
+\label{interbibilineaire}
 \end{figure}
 
 
@@ -172,8 +173,8 @@ On a de plus décalé les points pour que le rectangle considéré soit bien cel
 
 \begin{figure}[h!]
 \centering
-\label{methode_distance_ripmap}
 \includegraphics[scale=0.5]{methode_distance_ripmap.jpg}
+\label{methode_distance_ripmap}
 \end{figure}
 
 Cela améliore certes la méthode, mais ne résout pas par exemple le cas d'un rectangle fin en diagonale.

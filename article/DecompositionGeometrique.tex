@@ -8,7 +8,7 @@ Notre méthode de traitement des homographies repose sur la décomposition d'une
 
 
 \ssse{Changement d'orientation de caméra :}
-On étudie ici un cas à priori particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra (on montrera par la suite que c'est en fait un cas général).\\
+On étudie ici un cas a priori particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra (on montrera par la suite que c'est en fait un cas général).\\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
@@ -387,7 +387,7 @@ Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1
   \begin{equation*}
 H \sim T_{c} Z_{\frac{\delta}{\delta'}}  R_{\psi}  H_{\theta,\delta'} R_{\phi}  T_{x_{v}}
   \end{equation*}
-  avec $T_c$ translation de vecteur $(x_2,y_2$, $T_{x_v}$ translation envoyant $(0,0)$ sur le point visé $X_v$, et
+  avec $T_c$ translation de vecteur $(x_2,y_2)$, $T_{x_v}$ translation envoyant $(0,0)$ sur le point visé $X_v$, et
  \begin{equation*}
 x_2=\frac{ar+sb+\hat r \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+\hat s \lambda}{r^2 +s^2}, (x_1 , y_1) = h^{-1}(x_{2},y_{2})
   \end{equation*}
@@ -403,11 +403,11 @@ x_2=\frac{ar+sb+\hat r \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+\hat s \lambda}{r^2 +
    \begin{equation*}
 H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
   \end{equation*}
-  Les affinités $T_{c} R_{\psi}$ et $R_{\phi}$ sont des isométries, et même principalement des rotations (la translation pouvant être prise en compte en considérant qu'on change l'endroit du plan traité). Il existe donc déjà des manières efficaces de les traiter (étudiée à \ref{YaroSzeli}).
+  Les affinités $T_{c} R_{\psi}$ et $R_{\phi}$ sont des isométries, et même principalement des rotations (la translation pouvant être prise en compte en considérant qu'on change l'endroit du plan traité). Il existe donc déjà des manières efficaces de les traiter (étudiée en \ref{YaroSzeli}).
   
   L'homographie $\tilde H$ est une homographie de la forme
   \[\tilde H = \pmatrice{*&0&*\\ 0&*&*\\ *&0&*}\]
-  qui est une forme particulière permettant d'être plus facilement qu'une partie quelconque (voir \ref{HomoboxRipmap}).
+  qui est une forme particulière permettant d'être plus facilement qu'une homographie quelconque (voir \ref{HomoboxRipmap}).
   
  Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$.
  

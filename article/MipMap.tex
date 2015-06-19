@@ -147,7 +147,7 @@ Les méthodes du déterminant, du plus grand côté du parallélogramme et du ma
 On a une préférence pour le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'\emph{aliasing}.
 
 \ssse{Algorithme amélioré : Le Ripmap}
-
+\label{Ripmap}
 Une des grandes faiblesses du Mipmap est l'isotropie : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
 Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}.

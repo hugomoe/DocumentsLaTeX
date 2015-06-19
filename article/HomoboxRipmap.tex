@@ -18,16 +18,6 @@ Chacune de ces deux transformations ne modifie l'image que dans une seule direct
 La première transformation est une homographie en une dimension que l'on doit réaliser sur chaque ligne.\\ %sur ?
 La seconde est un zoom d'un facteur différent sur chaque colonne.
 
-\paragraph{Différentes méthodes de ré-échantillonage naif :}
-%peut etre inutile
-Le but ici est de présenter plusieurs méthodes permettant réaliser l'homographie par séparation.
-
-\subparagraph{Méthode du point le plus proche :}
-Il s'agit de la méthode la plus basique pour effectuer un ré-échantillonnage. On interpole l'image  par une fonction constante par morceau et on réévalue l'image $F\circ h $. Cette méthode est séparable, c'est-à-dire qu'il revient d'effectuer l'homographie $h$ et les deux applications $h_1 , h_2$ successivement.
-
-\subparagraph{Méthode d'interpolation bilinéaire}
-Cette méthode permet de réduire l'\emph{aliasing} par rapport à la méthode du point le plus proche, on interpole l'image en utilisant une fonction affine par morceaux $F$ et on évalue ensuite $F\circ h$. Cette méthode est aussi séparable.
-
 %a étoffer
 \paragraph{Sous échantillonnage gaussien :}
 Dans le cas d'un zoom gaussien on utilise la convolution $f*G_{d}$. Le paramètre $d$ doit être choisi tel que 

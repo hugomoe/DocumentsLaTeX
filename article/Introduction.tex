@@ -1,5 +1,9 @@
 % contient l'introduction
-	La première partie de cet article (cf partie \ref{Exposition_du_probleme}) traite du problème des homographies en général et fait une présentation non-exhaustive des méthodes actuelles pour traiter les homographies. Elle présente aussi une méthode de traitement des affinité que nous utilisons dans notre méthode de traitement des homographies.
+	Cet article traite du problème des homographies qui sont des applications projectives correspondant en fait à des mouvement de caméra. Elles ont donc de nombreuses applications en traitement d'image comme par exemple le \emph{texturing} (dans le jeux vidéo, l'animation, etc...), dans la constitution de panorama \cite{brown2007automatic} ou encore le recalage précis d'une suite d'images prises du même endroit (ce qui est la première étape de plusieurs méthodes de super-résolution).
+
+	Le traitement des homographie n'est pas un problème trivial puisqu'il s'agit de faire des zooms différents pour chaque points de l'image, et qu'il faut éviter le flou et l'aliasing. Une méthode naïve de traitement des homographies comme décrite première partie produit par exemple beaucoup d'aliasing. Dans cet article nous présentons une méthodes permettant de réduire au maximum le flou et l'aliasing.
+
+	La première partie de cet article (cf partie \ref{Exposition_du_probleme}) traite du problème des homographies en général et fait une présentation non-exhaustive des méthodes actuelles pour traiter les homographies. Elle présente aussi une méthode de traitement des affinité que nous utilisons dans notre méthode de traitement des homographies. 
 
 	La seconde partie (cf partie \ref{decomp_geo_hom} ) présente une interprétation géométrique d'une homographie en terme de mouvement de caméra. Elle permet de comprendre la théorie qui justifie notre méthode.
 

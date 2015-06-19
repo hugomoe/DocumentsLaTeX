@@ -60,8 +60,8 @@ Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f=f*\frac{
 \begin{proof}
 Pour toute fonction $f$ continue par morceau à support compact on a 
 \begin{eqnarray*}
-(f * g_1^d )(y)&=&\frac{1}{d} \int_{[-\frac{d}{2},\frac{d}{2}]} f(x) dx\\
-               &=&\frac{F^{(1)}(x+\frac{d}{2})-F^{(1)}(x-\frac{d}{2})}{d}\\
+(f * g_1^d )(y)&=&\frac{1}{d} \int_{[y-\frac{d}{2},y+\frac{d}{2}]} f(x) dx\\
+               &=&\frac{F^{(1)}(y+\frac{d}{2})-F^{(1)}(y-\frac{d}{2})}{d}\\
                &=&D_d F^{(1)}(y)
 \end{eqnarray*}
 On en déduit alors 

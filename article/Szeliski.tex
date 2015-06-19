@@ -94,15 +94,15 @@ Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spec
 
 		\begin{prop}
 		\label{propositionDecompositionAffinite}
-		Soit $A$ une affinité donnée sous forme projective : $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ \hline 0&0&1}$.
+		Soit $A$ une affinité donnée sous forme projective : $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ 0&0&1}$.
 		
 		$A$ se décompose de la manière suivante :
 		\[
 			A = 
-			\pmatrice{1 & 0 & 0\\ 0 & \frac{a_{11}}{r_v} & 0\\ \hline 0 & 0 & 1}
-			\pmatrice{\frac{b_{0}}{r_h} & \frac{a_{01}}{r_v} & t_2\\ 0 & 1 & 0\\ \hline 0 & 0 & 1}
-			\pmatrice{1 & 0 & 0\\ \frac{a_{10}r_v}{a_{11}r_h} & r_v & \frac{t_1r_v}{a_{11}}\\ \hline 0 & 0 & 1}
-			\pmatrice{r_h & 0 & 0\\ 0 & 1 & 0\\ \hline 0 & 0 & 1}
+			\pmatrice{1 & 0 & 0\\ 0 & \frac{a_{11}}{r_v} & 0\\ 0 & 0 & 1}
+			\pmatrice{\frac{b_{0}}{r_h} & \frac{a_{01}}{r_v} & t_2\\ 0 & 1 & 0\\ 0 & 0 & 1}
+			\pmatrice{1 & 0 & 0\\ \frac{a_{10}r_v}{a_{11}r_h} & r_v & \frac{t_1r_v}{a_{11}}\\ 0 & 0 & 1}
+			\pmatrice{r_h & 0 & 0\\ 0 & 1 & 0\\ 0 & 0 & 1}
 		\]
 avec : $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{01}t_1}{a_{11}}$.
 \end{prop}

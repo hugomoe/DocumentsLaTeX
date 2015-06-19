@@ -64,13 +64,11 @@ Il est aisé de calculer les coefficients des dérivées partielles. On note $H$
 
 % On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
 
-On note $\dd_{(x,y)} H$ la différentielle de $H$ en $(x,y)$.
-
-On note $(u,v)=H(x,y)$.
+On note $(u,v)=H(x,y)$, et $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ par rapport à $x$
 
 \sssse{Méthode du déterminant}
-$$D(x,y) = \sqrt{\det \txt{d}_{(x,y)} H}$$
-Cette formule est justifiée car le déterminant de $\txt{d}_{(x,y)} H$ est l'aire du parallélogramme, donc un carré de côté $\sqrt{\det \txt{d}_{(x,y)} H}$ est de même aire que le parallélogramme qu'il approche.
+$$D(x,y) = \sqrt{ |\frac{\dr u}{\dr x}\frac{\dr v}{\dr y}-\frac{\dr u}{\dr y}\frac{\dr v}{\dr x}| }$$
+Cette formule est justifiée car le déterminant est l'aire du parallélogramme, donc un carré de côté $D(x,y)$ est de même aire que le parallélogramme qu'il approche.
 
 \begin{figure}[h!]
 \centering

@@ -10,15 +10,23 @@ Notre méthode de traitement des homographies repose sur la décomposition d'une
 \ssse{Changement d'orientation de caméra :}
 On étudie ici un cas a priori particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra (on montrera par la suite que c'est en fait un cas général).\\
 \begin{figure}[h!]
+\label{shmdecomp}
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
+
 \caption{Illustration d'un mouvement de caméra $(X_v =0)$. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra.}
 \end{figure}
-
+\begin{Def}
+Une homographie unidimentionnelle est une application $h:\mathbb{R}^{2} \mapsto \mathbb{R}^{2}$ définit par 
+\begin{equation*}
+h(x,y)=\left ( \frac{ax+p}{rx+t} , \frac{cy+p}{rx+t} \right)
+\end{equation*}
+Où $a,p,c,q,r,t$ sont des réels 
+\begin{Def}
 \paragraph{Approche géométrique :}
 \subparagraph{Cas général :}
 On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une base orthonormale directe $(x_{0},y_{0},z_{0})$,\\ l'image de départ sera située dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
-On doit maintenant positionner notre caméra par rapport à l'image de départ.
+On doit maintenant positionner notre caméra par rapport à l'image de départ \ref{shmdecomp}.
 \begin{itemize}
 \item On note $F$ la position de l'objectif de la caméra, et $w$ le vecteur directeur unitaire de l'axe optique de la caméra. L'axe optique de la caméra est donc la droite passant par $F$ et dirigée par $w$.
 \item On note $\delta$ la distance entre l'objectif et l'écran.
@@ -28,9 +36,43 @@ P_{2}=\{Y\in \mathbb{R}^{3}|(Y-F-\delta w)\cdot w=0\}=\{Y\in \mathbb{R}^{3}|(Y-F
 \end{equation*}
 \end{itemize}
 
-On définit l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projection homographique sur $P_{2}$. C'est-à-dire que le point $H(X)$ est le point d'intersection entre la droite $D_{X}$ (passant par $X$ et $F$) et le plan $P_{2}$.
+On définit l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projection homographique sur $P_{2}$. C'est-à-dire que le point $H(X)$ est le point d'intersection entre la droite $D_{X}$ (passant par $X$ et $F$) et le plan $P_{2}$.\\
 
-Cette application n'est pas définie sur $P_{1}$ tout entier :\\
+L'application $H$ est une application de $P_{1}'$ dans $P_{2}$. Pour construire une expression analytique du mouvement de caméra, on peut munir le plan $P_{1}$ de la base $(x_{0},y_{0})$, de même le plan affine $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(u,v,w)$ soit un base orthonormale directe de $\mathbb{R}^{3}$, et que le point $C$ soit un point quelconque de l'écran qui servira d'origine.\\
+
+On peut repérer le point $C$ par rapport au centre de l'écran $C_{0}$, c'est-à-dire la projection orthogonale de l'objectif sur l'écran : $C_{0}=Z+\delta w$ et $C=C_{0}+c_{u}u+c_{v}v$.\\
+
+On peut alors définir les bijections $i$ et $k$
+\begin{itemize}
+\item $i:\mathbb{R}^{2}\rightarrow P_{1}$ telle que $i((x,y))=xx_{0}+yy_{0}$
+\item $k:P_{2}\rightarrow \mathbb{R}^{2}$ telle que $k(X)= ((X-C)\cdot u,(X-C)\cdot v)=((X-F)\cdot u-c_{u}, (X-F)\cdot v-c_{v})$
+\end{itemize}
+On pose alors 
+\begin{equation*}
+h=k\circ H \circ i
+\end{equation*}
+h est une application définie sur $\mathbb{R}^{2}$ privé d'une droite.
+\begin{prop}
+On peut factoriser $h$ sous la forme
+\begin{equation}
+h = \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
+\label{formul_decomp}
+\end{equation}
+Où $R_{\alpha}$ est la rotation d'angle $\alpha$, $\tau_y$ la translation du vecteur $-y$ et $h_{\theta,\delta'}$ est l'homographie unidirectionnelle 
+\begin{equation*}
+h_{\theta,\delta'}(x',y')=\left(\frac{-cos(\theta)x'}{1-\frac{sin(\theta)}{\delta'}x'} ,\frac{-y'}{1-\frac{sin(\theta)}{\delta'}x'}\right)
+\end{equation*}
+\end{prop}
+
+
+\begin{lem}$
+\forall X \in P_1$
+\begin{equation*}
+H(X)=Z+\delta w+\delta \frac{(F-X)-\left((F-X)\cdot w\right) w}{w\cdot (F-X)}
+\end{equation*}
+\end{lem}
+
+\begin{proof}
 Comme $D_{X}=\{X+t(F-X)|t\in\mathbb{R}\}$, si $H(X)$ existe alors 
 \begin{equation*}
 \exists t_{X},H(X)=X+t_{X}(F-X)
@@ -47,6 +89,7 @@ Finalement on en déduit que l'application $H$ est définie sur $P_{1}'=P_{1}\ba
 \begin{equation*}
 H(X)=Z+\delta w+\delta \frac{(F-X)-\left((F-X)\cdot w\right) w}{w\cdot (F-X)}
 \end{equation*}
+\end{proof}
 
 \subparagraph{Introduction du point visé :}
 On se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$. Dans ce cas, on peut définir $X_{v}$  le point de $P_{1}$ visé par la caméra, c'est-à-dire le point d'intersection entre l' axe optique et le plan $P_{1}$.On obtient alors 

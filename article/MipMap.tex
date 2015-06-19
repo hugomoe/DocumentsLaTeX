@@ -7,11 +7,12 @@
 
 On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer la zone de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
 
-On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone.
+On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone, comme schématisé sur la figure \ref{imagereciproque}.
 
 %image aliasé à fond
 
 \begin{figure}[h!]
+\label{imagereciproque}
 \centering
 \includegraphics[scale=0.5]{imagereciproque.jpg}
 \caption{Image réciproque d'un pixel}
@@ -24,10 +25,11 @@ En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en textur
 Le principe du Mipmap est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
 
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
-Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2.
+Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. Un exemple est représenté figure \ref{MipMap_real}.
 
 \begin{figure}[h!]
 \centering
+\label{MipMap_real}
 \caption{Un exemple de Mipmap}
 \includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
 \end{figure}
@@ -45,8 +47,11 @@ On suppose avoir une formule qui nous donne la distance d'un point quelconque. L
   \item d'autre part, dans chaque étage du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés qui encadrent le pixel.
 \end{itemize}
 
+La figure \ref{intertrilineaire} représente cette interpolation.
+
 \begin{figure}[h!]
 \centering
+\label{intertrilineaire}
 \caption{Schéma d'interpolation trilinéaire}
 \includegraphics[scale=0.5]{intertrilineaire.jpg}
 \end{figure}
@@ -68,10 +73,11 @@ On note $(u,v)=H(x,y)$, et $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ p
 
 \sssse{Méthode du déterminant}
 $$D(x,y) = \sqrt{ \left|\frac{\dr u}{\dr x}\frac{\dr v}{\dr y}-\frac{\dr u}{\dr y}\frac{\dr v}{\dr x}\right| }$$
-Cette formule est justifiée car le déterminant est l'aire du parallélogramme, donc un carré de côté $D(x,y)$ est de même aire que le parallélogramme qu'il approche.
+Cette formule est justifiée car le déterminant est l'aire du parallélogramme, donc un carré de côté $D(x,y)$ est de même aire que le parallélogramme qu'il approche. Cette formule est illustrée figure \ref{methode_determinant}.
 
 \begin{figure}[h!]
 \centering
+\label{methode_determinant}
 \includegraphics[scale=0.5]{methode_determinant.jpg}
 \end{figure}
 
@@ -82,11 +88,12 @@ Le résultat est relativement satisfaisant.
 
 \sssse{Méthode du plus grand côté}
 $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
-On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}.
+On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule viens d'un article de Heckbert \cite{heckbert1983texture}. On la représente figure \ref{methode_plus_grand_cote}.
 % On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
 
 \begin{figure}[h!]
 \centering
+\label{methode_plus_grand_cote}
 \includegraphics[scale=0.5]{methode_plus_grand_cote.jpg}
 \end{figure}
 
@@ -97,10 +104,11 @@ Ce résultat est satisfaisant.
 
 \sssse{Méthode des diagonales}
 $$D(x,y) = \max \left( \sqrt{\left(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x}\right)^2+\left(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y}\right)^2}, \sqrt{\left(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x}\right)^2+\left(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y}\right)^2} \right)$$
-On prend la plus grande diagonale du parallélogramme. Ici l'image est trop floue.
+On prend la plus grande diagonale du parallélogramme. Ici l'image est trop floue. On voit que le carré approchant le parallélogramme est trop grand figure \ref{methode_grande_diagonale}.
 
 \begin{figure}[h!]
 \centering
+\label{methode_grande_diagonale}
 \includegraphics[scale=0.5]{methode_grande_diagonale.jpg}
 \end{figure}
 
@@ -114,9 +122,12 @@ Pour cela on diagonalise $AA^t$, et $A^tA$, on prend $P$ et $Q$ des vecteurs pro
 
 Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
 
+On a schématisé cette méthode figure \ref{methode_valeur_singuliere} 
+
 
 \begin{figure}[h!]
 \centering
+\label{methode_valeur_singuliere}
 \includegraphics[scale=0.5]{methode_valeur_singuliere.jpg}
 \end{figure}
 
@@ -132,15 +143,16 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 
 Une des grandes faiblesses du Mipmap est l'isotropie : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux.
+Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}.
 
-Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux).%bibilinéaire ? sérieusement ?
+Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux). Elle est représentée dans la figure \ref{interbibilineaire}.%bibilinéaire ? sérieusement ?
 
 
 
 %un vrai ripmap, que je ferais moi
 \begin{figure}[h!]
 \centering
+\label{Ripmap_real}
 \caption{Un exemple de Ripmap}
 \includegraphics[scale=0.4]{Ripmap_real}
 \end{figure}
@@ -156,10 +168,11 @@ Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour cha
 
 On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est :
 $$D(x,y) = \left( \left|\frac{\dr u}{\dr x}\right|+\left|\frac{\dr u}{\dr y}\right|,\left|\frac{\dr v}{\dr x}\right|+\left|\frac{\dr v}{\dr y}\right|\right)$$
-On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme.
+On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme, comme on le voit sur la figure \ref{methode_distance_ripmap}.
 
 \begin{figure}[h!]
 \centering
+\label{methode_distance_ripmap}
 \includegraphics[scale=0.5]{methode_distance_ripmap.jpg}
 \end{figure}
 

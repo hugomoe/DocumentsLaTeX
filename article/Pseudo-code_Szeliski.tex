@@ -1,4 +1,4 @@
-\subsection{Pseudo-code pour la méthode multi-étape de traitement des affinités}
+\subsection{Pseudo-code pour la méthode multi-étapes de traitement des affinités}
 
  On définit des notations utilisées dans les pseudo-codes suivants :
  \begin{itemize}
@@ -6,7 +6,7 @@
  \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
  \end{itemize}
  
- \subsubsection{Traitement des affinités multi-étape}
+ \subsubsection{Traitement des affinités multi-étapes}
   
   Dans les algorithmes $\mathcal{R}_h$ et $\mathcal{R}_v$, on considère que l'image est prolongée par symétrie (par exemple, si on appelle $img[k][j]$ avec $k > m$ ($m$ le nombre de lignes de $img$), on obtient la valeur $img[2m-k][j]$). Cette condition au bord symétrique permet d'éviter des artefacts aux bords (dits effet Gibbs), car on convole ici par une fonction qui ressemble à un \emph{sinc}.
   
@@ -131,7 +131,7 @@
 	$img_3 = \mathcal{R}_v(img_2,r_v,r_v,\frac{a_{10}r_v}{a_{11}r_h},\frac{t_1r_v}{a_{11}})$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,0)$\;
 	\KwRet{$f_4[m+1..2m][n+1..2n]$}
-    \caption{Traitement multi-étape d'une affinité}
+    \caption{Traitement multi-étapes d'une affinité}
     \label{szeliski_affine}
    \end{algorithme}
 
@@ -254,7 +254,7 @@
   \end{algorithme}
   
   
-  \subsubsection{Traitement des affinités multi-étape, adapté pour les homographies}
+  \subsubsection{Traitement des affinités multi-étapes, adapté pour les homographies}
   Les trois algorithmes qui suivent (algorithmes \ref{algoUniqueEnSonGenre}, \ref{algoToutAussiUnique} et \ref{algoPresqueAussiUniqueQueLesDeuxAutres}) fonctionnent de la même manière que leurs analogues vus plus haut. La seule différence est qu'ils changent la taille de l'image de sorte à ne pas perdre l'information en la faisant sortir de l'image. Pour cela, les \emph{shear} élémentaires $\mathcal R$ doivent connaitre sur quelle partie du plan ils travaillent (quelle partie du plan ils reçoivent en entrée, quelle partie du plan ils doivent renvoyer en sortie). Chaque image étant un rectangle, possédant un centre, on peut situer ce rectangle dans le plan par la coordonnée de ce centre, non entière. On donne donc en argument les coordonnées du centre du rectangle d'entrée ($x_i,y_i$) et de sortie ($x_f,y_f$). Les translations (qui feraient sortir l'information de l'image) sont prises en compte de cette manière (en translatant la partie du plan observée).
   
   Ainsi, si on veut appliquer une homographie à la sortie de $applyAffinity$, il faut considérer que le point $img_a[0][0]$ a pour coordonnées $\mu',\nu'$ dans le plan.
@@ -343,7 +343,7 @@
 	$x_f = \frac{m \ppcm m'}{2}, y_f = \frac{n \ppcm n'}{2}$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,(x_i,y_i),(x_f,y_f))$\;
 	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n']$}
-    \caption{Traitement multi-étape d'une affinité $applyAffinity(img,A)$}
+    \caption{Traitement multi-étapes d'une affinité $applyAffinity(img,A)$}
     \label{algoPresqueAussiUniqueQueLesDeuxAutres}
    \end{algorithme}
    

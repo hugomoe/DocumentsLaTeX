@@ -59,10 +59,10 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
   Méthode & \emph{RMSE}  & Erreur L1 & erreur max & durée (sec) \\
   \hline
   b-spline d'ordre 9 & NaN &  NaN & NaN &  261.270000\\
-  affinités multi-étape, b-spline d'ordre 9 & 6.84302 &  4.03709 & 86.8555 &  6114.14\\
-  affinités multi-étape, b-spline d'ordre 3 & 14.8694 & 8.52079 & 158.043 & 1268.18\\
+  affinité multi-étape, b-spline d'ordre 9 & 6.84302 &  4.03709 & 86.8555 &  6114.14\\
+  affinité multi-étape, b-spline d'ordre 3 & 14.8694 & 8.52079 & 158.043 & 1268.18\\
   Yaroslavsky & 14.1871 & 7.77912 & 211.169 & \\
-  affinités multi-étapes, \emph{raised cosine-weighted sinc} &  828.852 & 503.147 & 13638.2 & 778.429\\
+  affinité multi-étapes, \emph{raised cosine-weighted sinc} &  828.852 & 503.147 & 13638.2 & 778.429\\
   \hline
 \end{tabular}} 
 \caption{Effet de 360 rotations de 1 degré (cf. section \ref{pleinsderotations})}
@@ -72,14 +72,14 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
  \begin{figure}[h]
    \centering
    \subfigPDP{lena.png originale}{lena.png}
-   \subfigPDP{lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : Raised-Cosine-weigted sinc)}{lena_10_rotations_szeli.png}
+   \subfigPDP{lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : \emph{raised cosine-weighted sinc})}{lena_10_rotations_szeli.png}
    \subfigPDP{lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro.png}
  \subfigure[Erreurs des 10 rotations de $\frac{\pi}{5}$ radians.]{\begin{tabular}{|c|c|c|c|c|}
   \hline
   Méthode & \emph{RMSE}  & Erreur L1 & erreur max  \\
   \hline
   Yaroslavsky & 12.817376 & 7.374875 & 159.840759  \\
-  affinités multi-étapes, \emph{raised cosine-weighted sinc} &   5.979119 & 3.624343 & 72.128845 \\
+  affinité multi-étapes, \emph{raised cosine-weighted sinc} &   5.979119 & 3.624343 & 72.128845 \\
   \hline
  \end{tabular}}
  \caption{Effet de dix rotations (cf. section \ref{pleinsderotations})}

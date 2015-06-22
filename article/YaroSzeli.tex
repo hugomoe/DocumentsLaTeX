@@ -34,27 +34,25 @@ Toutes rotations se décompose en trois \emph{shears} de la manière suivante :
 \subsubsection{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
 
 %A voir peut être dans les expériences ?
-	Dans les deux paragraphes suivants, l'erreur rms corresponds à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
+	Dans les deux paragraphes suivants, l'erreur \emph{RMS} corresponds à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
 
 	Afin d'observer de réelles différences entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (si on fait trop peu de rotations, on ne voit pas de différence à l'oeil entre les méthodes, car les erreurs sont trop faibles). On obtient les résultats figure  \ref{troiscentrotations}.  On remarque que la méthode de traitement des affinités multi-étapes avec une interpolation par b-spline d'ordre 9 est la plus proche de l'image initiale, cependant elle est beaucoup plus longue que les autres méthodes.  La méthode de traitement des affinités multi-étapes avec une interpolation par b-spline d'ordre 3 est assez floue. Celle de Yaroslavsky est beaucoup plus rapide, n'est pas floue, mais par contre on peut noter quelques erreurs dans les coins de droite. Enfin  la méthode de traitement des affinités multi-étapes avec le  Raised-Cosine-weigted sinc comme filtre d'interpolation est aussi très rapide mais introduit beaucoup d'erreures.\\
 \label{pleinsderotations}
 
-	En pratique si l'on veut un programme qui tourne en temps très court, seules  la méthode de traitement des affinités multi-étapes avec le Raised-Cosine-weigted sinc comme filtre d'interpolation et la méthode de Yaroslavsky semblent raisonnables. Etant donné que l'on ne fait que deux rotations dans la décomposition des homographies, pour comparer les deux méthodes on réalise seulement 10 rotations de l'image "Lena" de $\frac{\pi}{5}$. Les résultats sont sur la figure \ref{rotalena}. Visuellement les rotations semblent parfaites (mais si on observe bien il y a un peu plus d'effet Gibbs pour la méthode de traitement des affinités multi-étapes (avec le Raised-Cosine-weigted sin comme filtre d'interpolation) que pour Yaroslavsky). Les erreures de la méthode de traitement des affinités multi-étapes (avec le Raised-Cosine-weigted sin comme filtre d'interpolation) sont dans le tableau. \\
+	En pratique si l'on veut un programme qui tourne en temps très court, seules  la méthode de traitement des affinités multi-étapes avec le Raised-Cosine-weigted sinc comme filtre d'interpolation et la méthode de Yaroslavsky semblent raisonnables. Etant donné que l'on ne fait que deux rotations dans la décomposition des homographies, pour comparer les deux méthodes on réalise seulement 10 rotations de l'image lena.png d'angle $\frac{\pi}{5}$. Les résultats sont sur la figure \ref{rotalena}. Visuellement, les rotations semblent parfaites (mais si on observe bien, il y a un peu plus d'effet Gibbs pour la méthode de traitement des affinités multi-étapes (avec le Raised-Cosine-weigted sin comme filtre d'interpolation) que pour Yaroslavsky). Les erreures de la méthode de traitement des affinités multi-étapes (avec le \emph{raised cosine-weighted sinc} sin comme filtre d'interpolation) sont dans le tableau. \\
 
 En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.\\
 
-Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes avec le  Raised-Cosine-weigted sinc comme filtre d'interpolation à été choisie (pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats corrects pour deux rotations).  
+Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie (pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents pour deux rotations).  
 
  \begin{figure}[h]
-\centering
- 
-   
-   \subfigPDP{Lena.png originale}{lena.png}
-   \subfigPDP{Lena.png après 360 rotations par interpolation par b-spline d'ordre 11}{naive-b-spline_order11_double_lena.png}
-   \subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (filtre d'interpolation : Raised-Cosine-weigted sinc))}{raised-cosine_beta0-36_lena.png}
-\subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes (interpolation par b-spline d'ordre 3)}{b-spline_order3_lena.png}
-   \subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (interpolation par b-spline d'ordre 9)}{b-spline_order9_double_lena.png}
-   \subfigPDP{Lena.png après 360 rotations par Yaroslasky}{lena_360_rotations_yaro.png}
+ \centering
+   \subfigPDP{lena.png originale}{lena.png}
+   \subfigPDP{lena.png après 360 rotations par interpolation par b-spline d'ordre 11}{naive-b-spline_order11_double_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (filtre d'interpolation : Raised-Cosine-weigted sinc))}{raised-cosine_beta0-36_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes (interpolation par b-spline d'ordre 3)}{b-spline_order3_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (interpolation par b-spline d'ordre 9)}{b-spline_order9_double_lena.png}
+   \subfigPDP{lena.png après 360 rotations par Yaroslasky}{lena_360_rotations_yaro.png}
   
  \subfigure[Erreurs des 360 rotations de 1 degré]{\begin{tabular}{|c|c|c|c|c|}
   \hline
@@ -64,7 +62,7 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
   affinités multi-étape, b-spline d'ordre 9 & 6.84302 &  4.03709 & 86.8555 &  6114.14\\
   affinités multi-étape, b-spline d'ordre 3 & 14.8694 & 8.52079 & 158.043 & 1268.18\\
   Yaroslavsky & 14.1871 & 7.77912 & 211.169 & \\
- affinités multi-étapes, \emph{Raised-Cosine-weigted sinc} &  828.852 & 503.147 & 13638.2 & 778.429\\
+  affinités multi-étapes, \emph{raised cosine-weighted sinc} &  828.852 & 503.147 & 13638.2 & 778.429\\
   \hline
 \end{tabular}} 
 \caption{Effet de 360 rotations de 1 degré (cf. section \ref{pleinsderotations})}
@@ -72,20 +70,18 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
  \end{figure}
 
  \begin{figure}[h]
-
    \centering
-   \subfigPDP{Lena.png originale}{lena.png}
-   \subfigPDP{Lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : Raised-Cosine-weigted sinc)}{lena_10_rotations_szeli.png}
-   \subfigPDP{Lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro.png}
-  
+   \subfigPDP{lena.png originale}{lena.png}
+   \subfigPDP{lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : Raised-Cosine-weigted sinc)}{lena_10_rotations_szeli.png}
+   \subfigPDP{lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro.png}
  \subfigure[Erreurs des 10 rotations de $\frac{\pi}{5}$ radians.]{\begin{tabular}{|c|c|c|c|c|}
   \hline
   Méthode & \emph{RMSE}  & Erreur L1 & erreur max  \\
   \hline
   Yaroslavsky & 12.817376 & 7.374875 & 159.840759  \\
- affinités multi-étapes, \emph{Raised-Cosine-weigted sinc} &   5.979119 & 3.624343 & 72.128845 \\
+  affinités multi-étapes, \emph{raised cosine-weighted sinc} &   5.979119 & 3.624343 & 72.128845 \\
   \hline
-\end{tabular}}
+ \end{tabular}}
  \caption{Effet de dix rotations (cf. section \ref{pleinsderotations})}
-\label{rotalena}
+ \label{rotalena}
  \end{figure}

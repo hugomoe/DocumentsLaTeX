@@ -29,7 +29,17 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
 	\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
 	La période $T$ est prise égale à 1 (taille d'un pixel).
-	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus 9 termes, tant que le support du filtre n'est pas modifié. En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
+	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus 9 termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
+	
+	\begin{figure}
+		\centering
+		\subfigure[Domaine réel]{\includegraphics[scale=0.5]{raisedCosine-weightedSinc.jpg}}
+		\subfigure[Domaine de Fourier]{\includegraphics[scale=0.5]{raisedCosine-weightedSinc_spectrum.jpg}}
+		\caption{Représentation du \emph{raised cosine-weighted sinc} en fonction du paramètre $\beta$}
+		\label{szeliski_plotRaisedCosine}
+	\end{figure}
+	
+	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
 	\[ img_f[i][j] = \displaystyle{sum_k}h\left(\frac{a_0*i+a_1*j+t-k}{s}\right)img[k][j]\]
 	où $img_f$ est l'image finale et $img$ l'image initiale (ici en une dimension).
 	

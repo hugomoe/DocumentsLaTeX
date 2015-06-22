@@ -50,6 +50,7 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
  
    
    \subfigPDP{Lena.png originale}{lena.png}
+   \subfigPDP{Lena.png après 360 rotations par interpolation par b-spline d'ordre 11}{naive-b-spline_order11_double_lena.png}
    \subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (filtre d'interpolation : Raised-Cosine-weigted sinc))}{raised-cosine_beta0-36_lena.png}
 \subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes (interpolation par b-spline d'ordre 3)}{b-spline_order3_lena.png}
    \subfigPDP{Lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (interpolation par b-spline d'ordre 9)}{b-spline_order9_double_lena.png}
@@ -59,8 +60,9 @@ Pour les expériences qui suivent, la méthode de traitement des affinités mult
   \hline
   Méthode & \emph{RMSE}  & Erreur L1 & erreur max & durée (sec) \\
   \hline
-  affinités multi-étape, B-spline d'ordre 9 & 6.84302 &  4.03709 & 86.8555 &  6114.14\\
-  affinités multi-étape, B-spline d'ordre 3 & 14.8694 & 8.52079 & 158.043 & 1268.18\\
+  b-spline d'ordre 9 & NaN &  NaN & NaN &  261.270000\\
+  affinités multi-étape, b-spline d'ordre 9 & 6.84302 &  4.03709 & 86.8555 &  6114.14\\
+  affinités multi-étape, b-spline d'ordre 3 & 14.8694 & 8.52079 & 158.043 & 1268.18\\
   Yaroslavsky & 14.1871 & 7.77912 & 211.169 & \\
  affinités multi-étapes, \emph{Raised-Cosine-weigted sinc} &  828.852 & 503.147 & 13638.2 & 778.429\\
   \hline

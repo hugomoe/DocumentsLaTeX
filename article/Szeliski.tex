@@ -2,7 +2,7 @@
 Notre méthode de traitement des homographies utilise une méthode de traitement des affinités. Cette méthode est présentée dans la partie ci-dessous.
 \subsubsection{Principe général}
 	
-	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape qui ne crée pratiquement aucun \emph{aliasing} \cite{szeliski2010high}.
+	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape proposée par Szeliski, Winder et Uyttendaele \cite{szeliski2010high} et qui ne crée pratiquement aucun \emph{aliasing}. Dans toute la suite nous l'appellerons uniquement "méthode multi-étapes".
 
 	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
 	

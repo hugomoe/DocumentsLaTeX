@@ -88,7 +88,7 @@
 
 
 
-  Dans le traitement de l'affinité totale, on transpose éventuellement l'image (et l'affinité) pour réduire la compression que feront les \textit{shear} (\emph{bottleneck problem}), puis on décompose l'affinité en quatre \textit{shear} dont les coefficients dépendent de ceux de $A$ et des fréquences maximales utiles, déterminées par l'algorithme \ref{pseudo-code_umax_vmax} décrit plus bas. Les valeurs de $r_h$ et $r_v$ résulte de raisonnements géométriques simples pour éviter le repliement (ces calculs sont déjà présentés dans \cite{szeliski2010high}).
+  Dans le traitement de l'affinité totale, on transpose éventuellement l'image (et l'affinité) pour réduire la compression que feront les \textit{shear} (\emph{bottleneck problem}), puis on décompose l'affinité en quatre \textit{shear} dont les coefficients dépendent de ceux de $A$ et des fréquences maximales utiles, déterminées par l'algorithme \ref{pseudo-code_umax_vmax} décrit plus bas. Les valeurs de $r_h$ et $r_v$ résulte de raisonnements géométriques simples pour éviter le repliement \cite{szeliski2010high}.
   
    \begin{algorithme}
     \KwData{Une image $img[1..m][1..n]$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}

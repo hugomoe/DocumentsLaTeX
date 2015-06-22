@@ -21,11 +21,13 @@ On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alor
 En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en texturing, présentée par Williams en 1983 \cite{williams1983pyramidal}.
 
 \ssse{Présentation du Mipmap}
-
+\label{Mipmap}
 Le principe du Mipmap est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
 
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
-Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. Un exemple est représenté figure \ref{MipMap_real}.
+Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. 
+
+Un exemple est représenté figure \ref{MipMap_real}. Un pseudo-code naif figure en annexe, c'est l'algorithme \ref{buildMipmap}.
 
 \begin{figure}[h!]
 \centering
@@ -34,9 +36,8 @@ Le Mipmap est donc représenté par une suite d'images chacune deux fois plus pe
 \label{MipMap_real}
 \end{figure}
 
-Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approcher avec des carrés. %ou qui s'approxime par des carrés
+Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone de l'image de départ à laquelle il correspond à l'aide des différentielles de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approcher avec des carrés. 
 
-%image de parallélogramme avec les différentielles, avec au mieux schéma image de départ / arrivé qui explique la correspondance entre un pixel est un parallélogramme
 
 On appelle distance d'un pixel la taille du carré choisi pour l'approximation (car plus un pixel est "loin", plus les carrés qui l'approchent sont grands). 
 
@@ -47,7 +48,7 @@ On suppose avoir une formule qui nous donne la distance d'un point quelconque. L
   \item d'autre part, dans chaque étage du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés qui encadrent le pixel.
 \end{itemize}
 
-La figure \ref{intertrilineaire} représente cette interpolation.
+La figure \ref{intertrilineaire} représente cette interpolation. Elle est décrite en annexe dans les algorithmes \ref{intertri1} et \ref{intertri2}
 
 \begin{figure}[h!]
 \centering
@@ -60,7 +61,7 @@ Le pseudo-code de cette méthode (où la fonction de distance n'est pas précis�
 
 
 \ssse{La fonction de distance}
-
+\label{fonctiondistance}
 Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
 On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
 
@@ -150,9 +151,9 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 \label{Ripmap}
 Une des grandes faiblesses du Mipmap est l'isotropie : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}.
+Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}, et deux algorithme de construction en annexe en  \ref{pseudo_code_Ripmap}. L'algorithme 
 
-Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux). Elle est représentée dans la figure \ref{interbibilineaire}.%bibilinéaire ? sérieusement ?
+Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux). Elle est représentée dans la figure \ref{interbibilineaire}. L'algorithme \ref{interbibi1} disposé en annexe en \ref{pseudo_code_Ripmap} décrit cette interpolation. L'algorithme \ref{buildRipmap1} est naif, en pratique on a implémenté l'algorithme \ref{buildRipmap2}.
 
 
 

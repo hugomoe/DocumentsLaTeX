@@ -13,8 +13,7 @@
   Ces deux algorithmes ($\mathcal{R}_h$ et $\mathcal{R}_v$) fonctionnent de la manière suivante : dans un premier temps, on stocke à l'avance les valeurs prises par le filtre $h(\frac{\dot{}}{s})$ sur $\{k+p*2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$. $s$ est donc un paramètre pour élargir éventuellement le support de la fonction filtre ; $b$ est un paramètre de précision des calculs. Dans un second  temps on utilise ces valeurs stockées pour convoler selon une direction avec ledit filtre.
   
    \begin{algorithme}
-    \caption{$\mathcal{R}_h(f,s,a_0,a_1,t)$ (\textit{shear} horizontal : $y$ constant, $x$ variable)}
-    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul $b$ en bits}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$ (par exemple celui définit en équation \ref{szeliski_definition_raisedCosineWeightedSinc}), un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul $b$ en bits}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     \bloc{Stockage des valeurs prises par $h$}{
@@ -38,6 +37,7 @@
      }
     }
     \KwRet{$img_f$}
+    \caption{$\mathcal{R}_h(f,s,a_0,a_1,t)$ (\textit{shear} horizontal : $y$ constant, $x$ variable) (décrit en \ref{szeliski_rv_rh_section})}
     \label{szeliski_rh}
    \end{algorithme}
 
@@ -51,8 +51,7 @@
 
 
    \begin{algorithme}
-    \caption{$\mathcal{R}_v(f,s,a_0,a_1,t)$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
-    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$, un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
+    \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, un filtre d'interpolation $h$ (par exemple celui définit en équation \ref{szeliski_definition_raisedCosineWeightedSinc}), un réel $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     \bloc{Stockage des valeurs prises par $h$}{
@@ -76,6 +75,7 @@
      }
     }
     \KwRet{$img_f$}
+    \caption{$\mathcal{R}_v(f,s,a_0,a_1,t)$ (\textit{shear} vertical, $x$ constant, $y$ variable) (décrit en \ref{szeliski_rv_rh_section})}
     \label{szeliski_rv}
    \end{algorithme}
 
@@ -111,7 +111,7 @@
       $(m,n) = (n,m)$\;
      }
     }
-    \caption{Transposition éventuelle $transpoOpt(img,A)$}
+    \caption{Transposition éventuelle $transpoOpt(img,A)$ (décrit en \ref{szeliski_transpoOpt_section}}
     \label{szeliski_transpoOpt}
    \end{algorithme}
   
@@ -131,7 +131,7 @@
 	$img_3 = \mathcal{R}_v(img_2,r_v,r_v,\frac{a_{10}r_v}{a_{11}r_h},\frac{t_1r_v}{a_{11}})$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,0)$\;
 	\KwRet{$f_4[m+1..2m][n+1..2n]$}
-    \caption{Traitement multi-étapes d'une affinité}
+    \caption{Traitement multi-étapes d'une affinité (décrit en \ref{szeliski_affine_section})}
     \label{szeliski_affine}
    \end{algorithme}
 
@@ -161,7 +161,7 @@
    \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($U_1 \leq u_- \leq U_2$ ou $U_2 \leq u_- \leq U_1$)}{
     Concaténer $l$ et $(u_-,v_-)^T$\;
    }
-   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$}
+   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
    \label{szeliski_intersectionsVerticales}
   \end{algorithme}
 
@@ -187,7 +187,7 @@
    \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($V_1 \leq v_- \leq V_2$ ou $V_2 \leq v_- \leq V_1$)}{
     Concaténer $M$ et $(u_-,v_-)^T$\;
    }
-   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$}
+   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
    \label{szeliski_intersectionsHorizontales}
   \end{algorithme}
 
@@ -249,7 +249,7 @@
    }{
    \KwRet{$(\max_{i}\{|M[1][i]|\},\max_{i}\{|M[2][i]|\})$}
    }
-   \caption{$frequencesMax(A)$}
+   \caption{$frequencesMax(A)$ (décrit en \ref{szeliski_frequencesMax_section})}
    \label{szeliski_frequencesMax}
   \end{algorithme}
   
@@ -275,7 +275,7 @@
      }
     }
     \KwRet{$img$}
-    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} horizontal, $x$ variable, $y$ constant)}
+    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (version modifiée de l'algorithme \ref{szeliski_rh})}
     \label{algoUniqueEnSonGenre}
    \end{algorithme}
 
@@ -304,7 +304,7 @@
      }
     }
     \KwRet{$img_f$}
-    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
+    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (version modifiée de l'algorithme \ref{szeliski_rv})}
     \label{algoToutAussiUnique}
    \end{algorithme}
 
@@ -343,7 +343,7 @@
 	$x_f = \frac{m \ppcm m'}{2}, y_f = \frac{n \ppcm n'}{2}$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,(x_i,y_i),(x_f,y_f))$\;
 	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n']$}
-    \caption{Traitement multi-étapes d'une affinité $applyAffinity(img,A)$}
+    \caption{Traitement multi-étapes d'une affinité $applyAffinity(img,A)$ (version modifiée de l'algorithme \ref{szeliski_affine})}
     \label{algoPresqueAussiUniqueQueLesDeuxAutres}
    \end{algorithme}
    

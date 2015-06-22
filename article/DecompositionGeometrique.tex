@@ -485,21 +485,21 @@ H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
   
  Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$.
  
- On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie particulière, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
+ On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie unidirectionnelle, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
 		
 	\begin{figure}
 		\centering
 		\subfigure[Vue de départ]{
-		{\includegraphics[width=60mm]{vue_fps_identity.jpg}}
+		{\includegraphics[width=60mm]{vue_fps_identity.png}}
 		{\includegraphics[scale=0.5]{vue_tps_identity.png}}}\\
 		\subfigure[Vue après une première rotation (d'angle $\phi$)]{
-		{\includegraphics[width=60mm]{vue_fps_rotation_phi.jpg}}
+		{\includegraphics[width=60mm]{vue_fps_rotation_phi.png}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_phi.png}}}\\
-		\subfigure[Vue après l'homographie particulière]{
-		{\includegraphics[width=60mm]{vue_fps_hom_part.jpg}}
+		\subfigure[Vue après l'homographie unidirectionnelle]{
+		{\includegraphics[width=60mm]{vue_fps_hom_part.png}}
 		{\includegraphics[scale=0.5]{vue_tps_hom_part.png}}}\\
 		\subfigure[Vue finale (après rotation d'angle $\psi$)]{
-		{\includegraphics[width=60mm]{vue_fps_rotation_psi.jpg}}
+		{\includegraphics[width=60mm]{vue_fps_rotation_psi.png}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_psi.png}}}
 		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra (à gauche la vue de la caméra, à droite une vue extérieure immobile). Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra}
 	\end{figure}

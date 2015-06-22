@@ -91,7 +91,6 @@
   Dans le traitement de l'affinité totale, on transpose éventuellement l'image (et l'affinité) pour réduire la compression que feront les \textit{shear} (\emph{bottleneck problem}), puis on décompose l'affinité en quatre \textit{shear} dont les coefficients dépendent de ceux de $A$ et des fréquences maximales utiles, déterminées par l'algorithme \ref{pseudo-code_umax_vmax} décrit plus bas. Les valeurs de $r_h$ et $r_v$ résulte de raisonnements géométriques simples pour éviter le repliement (ces calculs sont déjà présentés dans \cite{szeliski2010high}).
   
    \begin{algorithme}
-    \caption{Transposition éventuelle $transpoOpt(img,A)$}
     \KwData{Une image $img[1..m][1..n]$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}
     \bloc{Normalisation des lignes de $A$}{
      \For{$k \in \{0,1\}$}{
@@ -112,10 +111,11 @@
       $(m,n) = (n,m)$\;
      }
     }
+    \caption{Transposition éventuelle $transpoOpt(img,A)$}
+    \label{szeliski_transpoopt}
    \end{algorithme}
   
    \begin{algorithme}
-    \caption{Traitement multi-étape d'une affinité}
     \KwData{Une image $img[1..m][1..n]$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}
     $transpoOpt(img,A)$\;\ \\
     $u_{max}, v_{max} = frequencesMax(A)$\;
@@ -131,6 +131,7 @@
 	$img_3 = \mathcal{R}_v(img_2,r_v,r_v,\frac{a_{10}r_v}{a_{11}r_h},\frac{t_1r_v}{a_{11}})$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,0)$\;
 	\KwRet{$f_4[m+1..2m][n+1..2n]$}
+    \caption{Traitement multi-étape d'une affinité}
     \label{szeliski_affine}
    \end{algorithme}
 
@@ -148,7 +149,6 @@
   NB : $^t\!\!A^{-1}[-1,1]^2$ est l'ensemble des fréquences conservées par l'effet de l'affinité $A$.
   
   \begin{algorithme}
-   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$}
    \KwData{$(U_1,V_1)$ et $(U_2,V_2)$ coordonnées des extrémités d'un segment non vertical ($U_1\neq U_2$)}
    $u_+ = 1$\;
    $u_- = -1$\;
@@ -161,6 +161,8 @@
    \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($U_1 \leq u_- \leq U_2$ ou $U_2 \leq u_- \leq U_1$)}{
     Concaténer $l$ et $(u_-,v_-)^T$\;
    }
+   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$}
+   \label{szeliski_intersectionsVerticales}
   \end{algorithme}
 
 
@@ -173,7 +175,6 @@
 
 
   \begin{algorithme}
-   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$}
    \KwData{$(U_1,V_1)$ et $(U_2,V_2)$ coordonnées des extrémités d'un segment non horizontal ($V_1 \neq V_2$)}
    $v_+ = 1$\;
    $v_- = -1$\;
@@ -186,6 +187,8 @@
    \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($V_1 \leq v_- \leq V_2$ ou $V_2 \leq v_- \leq V_1$)}{
     Concaténer $M$ et $(u_-,v_-)^T$\;
    }
+   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$}
+   \label{szeliski_intersectionsHorizontales}
   \end{algorithme}
 
 
@@ -198,7 +201,6 @@
 
 
   \begin{algorithme}
-   \caption{$frequencesMax(A)$}
    \KwData{$A$ matrice d'application linéaire $2 \times 2$}
    $\pmatrice{u_1\\v_1} =\ ^t\!\!A^{-1}\pmatrice{1\\1}$\;
    $\pmatrice{u_2\\v_2} =\ ^t\!\!A^{-1}\pmatrice{1\\-1}$\;
@@ -247,6 +249,8 @@
    }{
    \KwRet{$(\max_{i}\{|M[1][i]|\},\max_{i}\{|M[2][i]|\})$}
    }
+   \caption{$frequencesMax(A)$}
+   \label{szeliski_frequencesMax}
   \end{algorithme}
   
   
@@ -256,8 +260,6 @@
   Ainsi, si on veut appliquer une homographie à la sortie de $applyAffinity$, il faut considérer que le point $img_a[0][0]$ a pour coordonnées $\mu',\nu'$ dans le plan.
   
    \begin{algorithme}
-    \label{algoUniqueEnSonGenre}
-    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} horizontal, $x$ variable, $y$ constant)}
     \KwData{Une image d'entrée $img[1..m][1..n]$, des coefficients $s, a_0, a_1 \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
@@ -273,6 +275,8 @@
      }
     }
     \KwRet{$img$}
+    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} horizontal, $x$ variable, $y$ constant)}
+    \label{algoUniqueEnSonGenre}
    \end{algorithme}
 
 
@@ -285,8 +289,6 @@
 
 
    \begin{algorithme}
-    \label{algoToutAussiUnique}
-    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
     \KwData{Une image $img[1..m][1..n]$, des coefficients $s, a_0, a_1, t \in \mathbb{R}$, les coordonnées (dans le plan) du centre de l'image d'entrée $x_i,y_i$, les coordonnées (dans le plan) du centre de l'image de sortie $x_f,y_f$, un filtre d'interpolation $h$, $M$ tel que $\supp h \subset [-M,M]$, une précision de calcul en bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
@@ -302,6 +304,8 @@
      }
     }
     \KwRet{$img_f$}
+    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (\textit{shear} vertical, $x$ constant, $y$ variable)}
+    \label{algoToutAussiUnique}
    \end{algorithme}
 
 
@@ -314,8 +318,6 @@
 
 
    \begin{algorithme}
-    \label{algoPresqueAussiUniqueQueLesDeuxAutres}
-    \caption{Traitement multi-étape d'une affinité $applyAffinity(img,A)$}
     \KwData{Une image d'entrée $img[1..m][1..n]$, une image de sortie $img'[1..m'][1..n']$, une matrice d'affinité $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}$}
     $transpoOpt(img,A)$\;\ \\
     $u_{max}, v_{max} = frequencesMax(A)$\;
@@ -341,6 +343,8 @@
 	$x_f = \frac{m \ppcm m'}{2}, y_f = \frac{n \ppcm n'}{2}$\;
 	$img_4 = \mathcal{R}_h(img_3,r_h,r_h,0,(x_i,y_i),(x_f,y_f))$\;
 	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n']$}
+    \caption{Traitement multi-étape d'une affinité $applyAffinity(img,A)$}
+    \label{algoPresqueAussiUniqueQueLesDeuxAutres}
    \end{algorithme}
    
    

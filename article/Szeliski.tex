@@ -47,10 +47,14 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	
 	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}, on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing}.
 
-\begin{thm}
-Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre
-\end{thm}
-	Ce théorème est illustré figure \ref{szeliski_decompoSzeliski}  et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}.
+	\begin{thm}
+	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre
+	\end{thm}
+	\begin{proof}
+	L'effet des différentes étapes sur le spectre est présenté en figure \ref{szeliski_decompoSzeliski} et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}.
+	
+	Le sous-échantillonnage est effectué sans repliement grâce à un élargissement du support du filtre $h$ (support adaptatif).
+	\end{proof}
 	
 	Cette méthode semble donc décomposer une affinité en 6 opérations $\mathcal R$ (3 pour chacun des 2 \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à 4 opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	

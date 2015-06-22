@@ -1,20 +1,13 @@
-
-%il reste à faire une partie sur les applications affines
-
-Notre méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
-
-
-
-
-
-\ssse{Changement d'orientation de caméra :}
-On étudie ici un cas a priori particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra (on montrera par la suite que c'est en fait un cas général).\\
+Notre méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.\\
+\ssse{Mouvement de caméra :}
+On étudie ici un cas a priori particulier d'homographie $h$   que l'on peut interpréter comme un mouvement de caméra ,on montrera par la suite que c'est en fait un cas général.\\
+Nous modéliserons la situation en supposant que la scène filmée est bidimentionnelle, cela supposer que l'on est situé suffisamment loin de la scène observée, afin que les effets du relief soient négligeables. Le schéma de la figure suivante  illustre le modèle utilisé (figure \ref{shmdecomp}), les paramètres introduits sur ce schéma seront définitions et notations \ref{defpoint}.`\\
 \begin{figure}[h!]
-\label{shmdecomp}
+
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
-
 \caption{Illustration d'un mouvement de caméra $(X_v =0)$. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra.}
+\label{shmdecomp}
 \end{figure}
 \begin{Def}
 Une homographie unidirectionnelle est une application $h:\mathbb{R}^{2} \mapsto \mathbb{R}^{2}$ définit par 
@@ -22,57 +15,70 @@ Une homographie unidirectionnelle est une application $h:\mathbb{R}^{2} \mapsto 
 h(x,y)=\left ( \frac{ax+p}{rx+t} , \frac{cy+p}{rx+t} \right)
 \end{equation*}
 Où $a,p,c,q,r,t$ sont des réels 
+\label{homo_uni_direc}
 \end{Def}
 
-\paragraph{Approche géométrique :}
-On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une base orthonormale directe $(x_{0},y_{0},z_{0})$,\\ l'image de départ sera située dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
-On doit maintenant positionner notre caméra par rapport à l'image de départ \ref{shmdecomp}.
+\begin{defnot}
+On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une base orthonormée directe $(x_0,y_0,z_0)$.\\
+L'image de départ sera située dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.\\
+On doit maintenant positionner notre caméra par rapport à l'image de départ (figure \ref{shmdecomp}).\\
 \begin{itemize}
-\item On note $F$ la position de l'objectif de la caméra, et $w$ le vecteur directeur unitaire de l'axe optique de la caméra. L'axe optique de la caméra est donc la droite passant par $F$ et dirigée par $w$.
-\item On note $\delta$ la distance entre l'objectif et l'écran.
+\item On note $F$ la position de l'objectif de la caméra, et $w$ le vecteur directeur unitaire de l'axe optique de la caméra. L'axe optique de la caméra est donc la droite passant par $F$ et dirigée par $w$.\\
+\item On note $\delta$ la distance entre l'objectif et l'écran.\\
 \item L'écran $P_{2}$ est alors le plan affine passant par $F+\delta w$ et perpendiculaire à l'axe optique de la caméra.
 \begin{equation*}
 P_{2}=\{Y\in \mathbb{R}^{3}|(Y-F-\delta w)\cdot w=0\}=\{Y\in \mathbb{R}^{3}|(Y-F)\cdot w=\delta\}
 \end{equation*}
-\end{itemize}
-
-On définit l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projection homographique sur $P_{2}$. C'est-à-dire que le point $H(X)$ est le point d'intersection entre la droite $D_{X}$ (passant par $X$ et $F$) et le plan $P_{2}$.\\
-
-L'application $H$ est une application de $P_{1}'$ dans $P_{2}$. Pour construire une expression analytique du mouvement de caméra, on peut munir le plan $P_{1}$ de la base $(x_{0},y_{0})$, de même le plan affine $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(u,v,w)$ soit un base orthonormale directe de $\mathbb{R}^{3}$, et que le point $C$ soit un point quelconque de l'écran qui servira d'origine.\\
-
-On peut repérer le point $C$ par rapport au centre de l'écran $C_{0}$, c'est-à-dire la projection orthogonale de l'objectif sur l'écran : $C_{0}=Z+\delta w$ et $C=C_{0}+c_{u}u+c_{v}v$.\\
-
-On peut alors définir les bijections $i$ et $k$
-\begin{itemize}
-\item $i:\mathbb{R}^{2}\rightarrow P_{1}$ telle que $i((x,y))=xx_{0}+yy_{0}$
-\item $k:P_{2}\rightarrow \mathbb{R}^{2}$ telle que $k(X)= ((X-C)\cdot u,(X-C)\cdot v)=((X-F)\cdot u-c_{u}, (X-F)\cdot v-c_{v})$
-\end{itemize}
-On pose alors 
+\item Si on se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$, on peut alors définir $X_{v}$  le point de $P_{1}$ visé par la caméra, c'est-à-dire le point d'intersection entre l' axe optique et le plan $P_{1}$.On obtient alors
 \begin{equation*}
-h=k\circ H \circ i
+X_{v}=F-\delta'w \text{ et }\delta'=\small{\left|\frac{F \cdot z_{0}}{w\cdot z_{0}} \right|}
 \end{equation*}
-h est une application définie sur $\mathbb{R}^{2}$ privé d'une droite.
+\item La caméra peut aussi effectuer une rotation autour de son axe optique, que l'on appellera rotation propre et dont l'angle sera noté $\psi$.\\
+\end{itemize}
+
+On définit l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projection homographique sur $P_{2}$. C'est-à-dire que le point $H(X)$ est le point d'intersection entre la droite $D_{X}$ passant par $X$ et $F$, et le plan $P_{2}$. Ce point n'est pas toujours défini, le domaine de définition de $H$ est $P_1$ privé d'une droite $D$ qui correspond à un angle mort de la caméra.
+\begin{equation*}
+D=\{X\in P_1 | (X-F) \cdot w=0\}
+\end{equation*}
+De même l'image de $H$ est $P_2 \setminus D'$ où $D'$ est appelé l'horizon du mouvement de \begin{equation*}
+D'=\{ X\in P_2 | (X-F).z_0=0\}
+\end{equation*}
+Un mouvement de caméra est donc définit en fonction de $9$ paramètres, il n'y a d'unicité.
+L'application $H$ est une bijection de $P_1 \setminus D$ dans $P_2 \setminus D'$ ,on peut remarquer que $H^{-1}$ est aussi un mouvement de caméra, de plus l'horizon de $H^{-1}$ est l'angle mort de $H$ et l'angle mort de $H^{-1}$ est l'horizon de $H$.\\
+L'application $H$ est une version géométrique du mouvement de caméra. La formulation analytique du mouvement de est l'application $h:\mathbb{R}^{2} \setminus D \mapsto\mathbb{R}^{2}\setminus D'$, qui à un point $X\in P_1\setminus D$ de coordonnées $(x,y)$,  associe les coordonnées $h(x,y)$ du point $H(X)\in P_2 \setminus D'$ , dans le repère lié à la caméra.
+On vera plus tard que $h$ est bien une homographie, c'est l'homographie associée au mouvement de caméra.\\
+Le plan $P_1$ sera muni du repère orthonormé $(0,x_0,y_0)$, de même le plan affine $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(u,v,w)$ soit un base orthonormée directe de $\mathbb{R}^{3}$. La base $(u,v)$ est définit en fonction des  rotations effectuées par la caméra son expression sera précisée plus tard. Le point $C$ est un point arbitraire de $P_2$, on ne cherchera pas à vérifier la condition $C=C_0$ \\
+Par abus de notation on note encore $D$ et $D'$ les droites de $\mathbb{R}^{2}$ lorsque l'on munit $P_1$ et $P_2$ des repères $(0,x_0,y_0)$ et $(C,u,v)$.  \\
+On peut repérer le point $C$ par rapport au centre de l'écran $C_{0}$, c'est-à-dire la projection orthogonale de l'objectif sur l'écran : $C_{0}=Z+\delta w$ et $C=C_{0}+c_{u}u+c_{v}v$, on note $c=(c_u,c_v)$ et $x_v = (X_v \cdot x_0,X_v \cdot y_0)$.\\
+\label{defpoint}
+\end{defnot}
+Dans la suite de cette section on fixe un jeux de paramètres $(\theta,\phi,\psi,\delta,\delta',c,Z)$ et on considère le mouvement de caméra $H$ associé à ces paramètres.\\
+Dans cette partie on cherche à établir la décomposition suivante
 \begin{prop}
-On peut factoriser $h$ sous la forme
+$h$ est une homographie et si $H$ admet un point visé $X_v$ alors $h$ se factorise sous la forme
 \begin{equation}
 h = \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
 \label{formul_decomp}
 \end{equation}
-Où $R_{\alpha}$ est la rotation d'angle $\alpha$, $\tau_y$ la translation du vecteur $-y$ et $h_{\theta,\delta'}$ est l'homographie unidirectionnelle 
-\begin{equation*}
+Où $R_{\alpha}$ est la rotation d'angle $\alpha$,$z_\lambda$ est la dilatation de facteur $\lambda$, $\tau_y$ est  la translation du vecteur $-y$ et $h_{\theta,\delta'}$ est l'homographie unidirectionnelle (cf définition \ref{homo_uni_direc})
+\begin{equation}
 h_{\theta,\delta'}(x',y')=\left(\frac{-cos(\theta)x'}{1-\frac{sin(\theta)}{\delta'}x'} ,\frac{-y'}{1-\frac{sin(\theta)}{\delta'}x'}\right)
-\end{equation*}
+\label{mise_perspective}
+\end{equation}
+\label{prop_decomp}
 \end{prop}
+Ce résultat est intuitif et se comprend facilement grâce à la figure \ref{shmdecomp}, afin de le démontrer on commencera par établir deux lemmes
 
-
-\begin{lem}
-$\forall X \in P_1$
-\begin{equation*}
-H(X)=Z+\delta w+\delta \frac{(F-X)-\left((F-X)\cdot w\right) w}{w\cdot (F-X)}
-\end{equation*}
+\begin{lem}Si le point visé $X_v$ existe alors
+$\forall X \in P_1 \setminus D$
+\begin{equation}
+H(X)=Z+\delta w+\delta \frac{(X_v-X)-\left((X_v-X)\cdot w\right) w}{w\cdot (X_v-X)+\delta'}
+\label{homo_form_geo}
+\end{equation}
 \end{lem}
 
 \begin{proof}
+On sait que $H(X)$ est le point d'intersection entre la droite $D_X$ passant par $X$ et $F$ , et le plan $P_2$.
 Comme $D_{X}=\{X+t(F-X)|t\in\mathbb{R}\}$, si $H(X)$ existe alors 
 \begin{equation*}
 \exists t_{X},H(X)=X+t_{X}(F-X)
@@ -85,86 +91,81 @@ Et donc
 \begin{equation*}
 t_{X}=1+\frac{\delta}{w\cdot(F-X)}
 \end{equation*}
-Finalement on en déduit que l'application $H$ est définie sur $P_{1}'=P_{1}\backslash \{Y\in P_{1}|w\cdot(F-Y)=0\}$ et 
+ On en déduit que l'application $H$ est bien définie sur $P_{1}\setminus D$ et 
 \begin{equation*}
 H(X)=Z+\delta w+\delta \frac{(F-X)-\left((F-X)\cdot w\right) w}{w\cdot (F-X)}
 \end{equation*}
+Si le point visé $X_v$ existe alors  $F=X_v+\delta' w$ et donc
+\begin{equation*}
+H(X)=Z+\delta w+\delta \frac{(X_v-X)-\left((X_v-X)\cdot w\right) w}{w\cdot (X_v-X)+\delta'}
+\end{equation*}
+\end{proof}
+Afin de simplifier les expressions dans les calculs qui suivent on défini la bijection $i$ 
+\begin{equation*}
+i:\mathbb{R}^{2}\rightarrow P_{1},~~~~~~i((x,y))=xx_{0}+yy_{0}
+\end{equation*}
+
+\begin{lem}Si le point visé $X_v$ existe alors $\forall X\in \mathbb{R}^{2} \setminus D$ 
+\begin{equation}
+h(X)=\left(\frac{\delta (X_{v}-i(X))\cdot u}{w \cdot (X_{v}-i(X)))+\delta'}-c_{u},\frac{\delta (X_{v}-i(X))\cdot v}{w \cdot (X_{v}-i(X))+\delta'} -c_{v} \right) 
+\label{homo_form_analytique}
+\end{equation}
+\end{lem}
+Ce lemme montre en particulier que $h$ est bien une homographie.
+\begin{proof}
+Par définition de $h$,les composantes de $h(X)$ sont les coordonnées de $H(i(X))$ dans le repère orthonormé $(C,u,v)$ de $P_2$ (cf notations et définitions \ref{defpoint}), on a donc $ \forall X\in \mathbb{R}^{2} \setminus D$
+\begin{eqnarray*}
+h(X) &=& ((H(i(X))-C)\cdot u, (H(i(X))-C)\cdot v)\\
+     &=& ((H(i(X))-Z-\delta -c_u u -c_v v)\cdot u, (H(i(X))-Z-\delta -c_u u -c_v v)\cdot v)\\
+     &=& ((H(i(X)-Z)\cdot u -c_u, (H(i(X))-Z)\cdot v - c_v)
+\end{eqnarray*}
+Grâce à la formule du lemme précédent (formule \ref{homo_form_geo}) on en déduit alors 
+\begin{equation*}
+h(X)=\left(\frac{\delta (X_{v}-i(X))\cdot u}{w \cdot (X_{v}-X))+\delta'}-c_{u},\frac{\delta (X_{v}-i(X))\cdot v}{w \cdot (X_{v}-i(X))+\delta'} -c_{v} \right) 
+\end{equation*}
 \end{proof}
 
-\subparagraph{Introduction du point visé :}
-On se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$. Dans ce cas, on peut définir $X_{v}$  le point de $P_{1}$ visé par la caméra, c'est-à-dire le point d'intersection entre l' axe optique et le plan $P_{1}$.On obtient alors 
-\begin{equation*}
-X_{v}=F-\delta'w \text{ et }\delta'=\small{\left|\frac{F \cdot z_{0}}{w\cdot z_{0}} \right|}
-\end{equation*}
-On peut alors en déduire que l'application $H$ est définie sur \[P_{1}'=P_{1}\backslash \{Y\in P_{1}|\delta'+w\cdot(X_{v}-Y)=0\}\] et 
-\begin{equation*}
-H(X)=X_{v}+(\delta+\delta')w+\delta_{2}\frac{(X_{v}-X)-\left((X_{v}-X)\cdot w\right) w}{\delta'+w\cdot (X_{v}-X)}
-\end{equation*}
 
+On peut maintenant établir la formule de décomposition (formule \ref{formul_decomp} ) de la proposition \ref{prop_decomp}, les notations utilisées dans cette preuve ont été introduites au début de cette section (cf définitions et notations \ref{defpoint}).
 
-
-\subparagraph{Formulation analytique :}
-
-L'application $H$ est une application de $P_{1}'$ dans $P_{2}$. Pour construire une expression analytique du mouvement de caméra, on peut munir le plan $P_{1}$ de la base $(x_{0},y_{0})$, de même le plan affine $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(u,v,w)$ soit un base orthonormale directe de $\mathbb{R}^{3}$, et que le point $C$ soit un point quelconque de l'écran qui servira d'origine.
-
-On peut repérer le point $C$ par rapport au centre de l'écran $C_{0}$, c'est-à-dire la projection orthogonale de l'objectif sur l'écran : $C_{0}=Z+\delta w$ et $C=C_{0}+c_{u}u+c_{v}v$.
-
-On peut alors définir les bijections $i$ et $k$
-\begin{itemize}
-\item $i:\mathbb{R}^{2}\rightarrow P_{1}$ telle que $i((x,y))=xx_{0}+yy_{0}$
-\item $k:P_{2}\rightarrow \mathbb{R}^{2}$ telle que $k(X)= ((X-C)\cdot u,(X-C)\cdot v)=((X-F)\cdot u-c_{u}, (X-F)\cdot v-c_{v})$
-\end{itemize}
-On pose alors 
-\begin{equation*}
-h=k\circ H \circ i
-\end{equation*}
-h est une application définie sur $\mathbb{R}^{2}$ privé d'une droite. On obtient dans le cas général
-\begin{equation*}
-\forall X\in \mathbb{R}^{2}, h(X)=\left(\frac{\delta (F-i(X))\cdot u}{w \cdot (F-i(X))}-c_{u},\frac{\delta (F-i(X))\cdot v}{w \cdot (F-i(X))} -c_{v} \right) 
-\end{equation*} 
-Dans le cas où le point visé existe
-\begin{equation*}
-\forall X\in \mathbb{R}^{2}, h(X)=\left(\frac{\delta (X_{v}-i(X))\cdot u}{w \cdot (X_{v}-i(X))+\delta'}-c_{u},\frac{\delta (X_{v}-i(X))\cdot v}{w \cdot (X_{v}-i(X))+\delta'} -c_{v} \right) 
-\end{equation*}
-
-
-
-\paragraph{Décomposition de l'homographie $h$ dans le cas où le point visé existe :}
-%tu identifie une rotation et son angle, c'est etrange
 \begin{proof}
-On peut positionner le vecteur $w$ par rapport au repère $(x_{0},y_{0},z_{0}) $ en introduisant deux angles, $\phi$ et $\theta$.
+On peut positionner le vecteur $w$ par rapport à la $(x_{0},y_{0},z_{0}) $ en introduisant deux angles, $\phi$ et $\theta$.
+
 \begin{itemize}
-\item la première rotation d'angle $\phi$ se fait autour de l'axe $z_{0}$ ; on lui associe la base $(x_{1},y_{1},z_{1})$ où $z_{0}=z_{1}$.
-\item la seconde rotation d'angle $\theta$ se fait autour de l'axe $y_{1}$ ; on lui associe la base $(x_{2},y_{2},z_{2})$ où $z_{2}=w$ et $y_{1}=y_{2}$.
+\item la première rotation d'angle $\phi$ se fait autour de l'axe $(0,z_{0})$ ; on lui associe la base $(x_{1},y_{1},z_{1})$ où $z_{0}=z_{1}$.
+\item la seconde rotation d'angle $\theta$ se fait autour de l'axe $(0,y_1)$ ; on lui associe la base $(x_{2},y_{2},z_{2})$ où $z_{2}=w$ et $y_{1}=y_{2}$.
 \end{itemize}
+
 \begin{figure}[h!]
 \centering
 \subfigure[rotation d'angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}
 \subfigure[rotation d'angle $\theta$]{\includegraphics[width=5cm]{graphe2.jpg}}
+\label{img_angles}
 \end{figure}
 
-Pour positionner la caméra, on doit définir sa rotation propre autour de son axe optique. Pour cela on définit l'angle $\psi$ (figure \ref{decompositionGeometrique_rotationPropre}).
+Pour positionner la caméra, on doit définir sa rotation propre autour de son axe optique. Pour cela on définit l'angle $\psi$ (figure \ref{decompgeo_rotationPropre}).
 \begin{figure}[h!]
 \centering
 \includegraphics[width=5cm]{graphe3.jpg}
 \caption{rotation propre}
-\label{decompositionGeometrique_rotationPropre}
+\label{decompgeo_rotationPropre}
 \end{figure}
 
-On obtient alors 
+On obtient alors (figure \ref{decompgeo_rotationPropre})
 \begin{equation*}
 u=\cos(\psi)x_{2}+\sin(\psi)y_{2} \text{ et } v=-\sin(\psi)x_{2}+\cos(\psi)y_{2}
 \end{equation*}
-Si on pose $R_{s}$ la rotation d'angle $s$ et $\tau_{y}$ la translation de vecteur $-y$, on obtient alors 
-\begin{equation*}
-(\tau_{c}^{-1} \circ h)(X) = R_{\psi}\left(\frac{\delta (X_{v}-i(X))\cdot x_{2} }{w \cdot (X_{v}-i(X))+\delta'},\frac{\delta (X_{v}-i(X))\cdot y_{2}}{w \cdot (X_{v}-i(X))+\delta'}  \right) 
-\end{equation*}
-On assimile $X_{v}$ et $i^{-1}(X_{v})$ pour obtenir
+Si on pose $R_{s}$ la rotation d'angle $s$ et $\tau_{y}$ la translation de vecteur $-y$, on obtient alors grâce au lemme précédent (formule \ref{homo_form_analytique})
+\begin{eqnarray*}
+(\tau_{c}^{-1} \circ h)(X) &=& \left(\frac{\delta (X_{v}-i(X))\cdot u }{w \cdot (X_{v}-i(X))+\delta'},\frac{\delta (X_{v}-i(X))\cdot y_{2}}{w \cdot (X_{v}-i(X))+\delta'}  \right) \\
+                           &=& R_{\psi}\left(\frac{\delta (X_{v}-i(X))\cdot x_{2} }{w \cdot (X_{v}-i(X))+\delta'},\frac{\delta (X_{v}-i(X))\cdot y_{2}}{w \cdot (X_{v}-i(X))+\delta'}  \right) \\
+\end{eqnarray*}
+Comme  $X_{v}=i(x_{v})$ on obtient
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{c}^{-1}  \circ h)(X)=\delta \left(\frac{-i(\tau_{x_{v}} (X))\cdot x_{2} }{-w \cdot i(\tau_{x_{v}} (X))+\delta'},\frac{-i(\tau_{x_{v}} (X))\cdot y_{2}}{-w \cdot i(\tau_{x_{v}} (X))+\delta'}  \right) 
 \end{equation*}
 
-Comme $z_{2}=cos(\theta)z_{1}+sin(\theta)x_{1}$, $x_{2}=cos(\theta)x_{1}-sin(\theta)z_{1}$ et $z_{1}\perp P_{1}$, on a
+Comme $z_{2}=cos(\theta)z_{1}+sin(\theta)x_{1}$, $x_{2}=cos(\theta)x_{1}-sin(\theta)z_{1}$ (figure \ref{img_angles}) et $z_{1}\perp P_{1}$, on a
 
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{c}^{-1}  \circ h)(X)=\delta\left(\frac{-\cos(\theta)i(\tau_{x_{v}} (X))\cdot x_{1} }{\delta'-\frac{sin(\theta)}{\delta'}x_{1}\cdot i(\tau_{x_{v}}(X))}, \frac{-i(\tau_{x_{v}} (X))\cdot y_{1}}{\delta'-\frac{sin(\theta)}{\delta'}x_{1}\cdot i(\tau_{x_{v}}(X))}  \right) 
@@ -182,7 +183,7 @@ Alors
 (R_{\psi}^{-1} \circ \tau_{c}^{-1} \circ h)(X)= \frac{\delta}{\delta'}h_{\theta,\delta'}\left ( i(\tau_{x_{v}}(X)) \cdot x_{1}, i(\tau_{x_{v}}(X)) \cdot y_{1}\right)
 \end{equation*}
 
-Comme $x_{1}=\cos(\phi)x_{0}+\sin(\phi)y_{0}$ et $y_{1}=-\sin(\phi)x_{0}+\cos(\phi)y_{0}$, alors
+Comme $x_{1}=\cos(\phi)x_{0}+\sin(\phi)y_{0}$ et $y_{1}=-\sin(\phi)x_{0}+\cos(\phi)y_{0}$ (figure \ref{img_angles}), alors
 
 \begin{eqnarray*}
 (R_{\psi}^{-1} \circ \tau_{c}^{-1} \circ h)(X) &=& \frac{\delta}{\delta'}h_{\theta,\delta'}\left ( R_{\phi}(i(\tau_{x_{v}}(X)) \cdot x_{0}, i(\tau_{x_{v}}(X)) \cdot y_{0})\right)\\
@@ -190,22 +191,57 @@ Comme $x_{1}=\cos(\phi)x_{0}+\sin(\phi)y_{0}$ et $y_{1}=-\sin(\phi)x_{0}+\cos(\p
 \end{eqnarray*}
 
 Si on définit les dilatations $z_{\lambda}:X\rightarrow \lambda X$, alors on obtient la formule générale pour les mouvements de caméra
+
 \begin{equation*}
 h = \tau_{c} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{x_{v}}
-\label{formul_decomp}
 \end{equation*}
 
 \end{proof}
+On verra plus tard qu'une homographie admet plusieurs décompositions il n'y a pas unicité des paramètres $(\theta,\phi,\psi,\delta,\delta',c,x_v)$
+\begin{Remaffin}
+Une homographie associée à un mouvement de caméra est une application affine si et seulement si $\theta=0$ dans ce cas la on obtient  
+\begin{equation*}
+h=z_{-\frac{\delta}{\delta'}} \circ \tau_c \circ R_{\phi+\psi} \circ \tau_{x_{v}}
+=\tau' \circ z_{-\frac{\delta}{\delta'}} \circ  R_{\phi+\psi}
+\end{equation*}
+Toutes les applications affines ne sont donc pas des mouvements de caméra.\\
+On peut cependant les voir comme un cas limite, fixons le rapport  $k=\frac{\delta}{\delta'}$ si l'on fait tendre $\delta'$ et $\delta$ vers $+\infty$ la fonction $h_{\theta,\delta'}$ tend vers une limite $h_{\theta,\infty}$ définie par
+\begin{equation*}
+h_{\theta,\infty}=(x,y)=(-\cos(\theta)x,-y)
+\end{equation*}
+Physiquement cela revient à s'éloigner de la scène en tout  en augmentant la focale afin de ne pas modifier la taille de l'image en sortie de l'appareil.\\
+Si on pose $h_\infty = z_{-\frac{\delta}{\delta'}} \circ \tau_c \circ R_{\phi} \circ h_{\theta,\infty} \circ R_{\psi} \circ \tau_{x_{v}}$ la partie linéraire de $h_{\infty}$ peut être représentée par la matrice $2\times2$
 
+\begin{equation*}
+R_{\psi} \cdot 
+\begin{pmatrix}
+-k\cos(\theta)&0\\
+0&-k
+\end{pmatrix}
+\cdot R_{\phi}
+\end{equation*}
+
+Si  $M$ est une matrice $2\times 2$  inverssible on à alors le lemme suivant qui provient de la décomposition en valeurs singulières \\
+\begin{lem}
+Il existe deux matrices de rotations $R_1$ et $R_2$  et une matrice diagonale $D$ telles que $M = R_1 \cdot D \cdot R_2$.
+\end{lem}
+Grâce à ce lemme on peut en déduire que pour toute application affine bijective $A$ il existe un changement de caméra $h$ tel que $h_\infty = A$, on peut deplus supposer que $h$ 
+ne translate pas en sortie.
+\end{Remaffin}
 
 
 \subsubsection{Application à la décomposition des homographies :}
+Le but de cette partie est généraliser cette décomposition à toutes les homographies qui ne sont pas des applications affines.
+\begin{prop}
+Toute homographie est un mouvement de caméra avec un point visé ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté..
+\label{thepropdecomp}
+\end{prop}
 \paragraph{Résultats généraux sur les homographies :}
- On rappelle ici les notions sur les homographies qui nous seront utiles dans la suite. Le lien entre les homographies et les espaces projectifs ne sera pas étudié. Dans toute la suite du document, une homographie $h$ est une application bijective de la forme :
+ On rappelle ici les notions sur les homographies qui seront utiles dans la suite. Le lien entre les homographies et les espaces projectifs ne sera pas étudié. On rappelle que dans ce document, une homographie $h$ est une application bijective de la forme :
 	\[h:(x,y)\mapsto \left(\frac{ax+by+p}{rx+sy+t},\frac{cx+dy+q}{rx+sy+t}\right)\]
 (l'ensemble d'arrivée est $\mathbb R^2$ privé d'une droite).
 
-Les applications affines sont un cas particulier d'homographie ; si une homographie n'est pas une application affine alors elle est définie sur le plan privé d'une droite appelée horizon.
+Les applications affines sont un cas particulier d'homographie ; si une homographie n'est pas une application affine alors elle est définie sur le plan privé d'une droite.
 
 L'ensemble des homographies a une structure de groupe pour la loi de composition.
 
@@ -222,14 +258,8 @@ Cette notation rend compatible le produit matriciel et la composition des homogr
 
 Dans la suite on notera $\sim$ la relation d'équivalence  sur $GL_{3}(\mathbb{R})$ définie par $A\sim B \iff \exists \lambda\in \mathbb{R}^{*} , A=\lambda B$, c'est-à-dire si, et seulement si, $A$ et $B$ définissent la même homographie.
 
-\underline{Remarque :} Dans certains cas une homographie peut être définie par ses valeurs prises en quatre points du plan.
-
-
-
 \paragraph{Décomposition matricielle :}
-\begin{prop}
-Toute homographie est un mouvement de caméra avec un point visé ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté.
-\end{prop}
+Le but de cette partie est d'établir la proposition \ref{thepropdecomp}
 %la ref n'apparait pas bien
 \begin{proof}
 On fixe $h$ une homographie et $H$ une matrice qui lui est associée. On conserve ici les notations de la partie précédente, on suppose sans perte de généralité que $\det (H)=1$. On suppose de plus que $h$ peut s'écrire sous la forme $\ref{formul_decomp}$, on cherche à montrer que cette hypothèse n'impose aucune condition supplémentaire sur la matrice $H$, en déterminant les paramètres intervenants dans la décomposition en fonction des coefficients de $H$ .
@@ -455,21 +485,22 @@ H \sim T_{c} R_{\psi}  \tilde H R_{\phi}
   
  Formellement, on peut s'autoriser $\lambda \in \mathbb R^*$ ; la décomposition matricielle reste alors correcte, mais elle perd son interprétation géométrique ($\lambda$ ne peut plus être identifié à un cosinus). De plus, on peut prendre $\phi + \pi$ au lieu de $\phi$ (de même pour $\psi$), car cela aura uniquement pour effet de multiplier certains coefficients de $\tilde H$ par $-1$.
  
- On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie unidirectionnelle, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
+ On en déduit donc un traitement d'une homographie générale, non affine, en passant par deux rotations-translations et une homographie particulière, correspondant à l'algorithme \ref{pseudoCodeDecompo}. Le traitement des affinités et des homographies correspond aux deux prochaines parties.
 		
 	\begin{figure}
 		\centering
 		\subfigure[Vue de départ]{
-		{\includegraphics[width=60mm]{vue_fps_identity.png}}
+		{\includegraphics[width=60mm]{vue_fps_identity.jpg}}
 		{\includegraphics[scale=0.5]{vue_tps_identity.png}}}\\
 		\subfigure[Vue après une première rotation (d'angle $\phi$)]{
-		{\includegraphics[width=60mm]{vue_fps_rotation_phi.png}}
+		{\includegraphics[width=60mm]{vue_fps_rotation_phi.jpg}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_phi.png}}}\\
 		\subfigure[Vue après l'homographie particulière]{
-		{\includegraphics[width=60mm]{vue_fps_hom_part.png}}
+		{\includegraphics[width=60mm]{vue_fps_hom_part.jpg}}
 		{\includegraphics[scale=0.5]{vue_tps_hom_part.png}}}\\
 		\subfigure[Vue finale (après rotation d'angle $\psi$)]{
-		{\includegraphics[width=60mm]{vue_fps_rotation_psi.png}}
+		{\includegraphics[width=60mm]{vue_fps_rotation_psi.jpg}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_psi.png}}}
 		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra (à gauche la vue de la caméra, à droite une vue extérieure immobile). Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra}
 	\end{figure}
+

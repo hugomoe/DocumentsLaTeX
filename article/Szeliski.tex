@@ -40,12 +40,14 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	\end{figure}
 	
 	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
-	\[ img_f[i][j] = \displaystyle{sum_k}h\left(\frac{a_0i+a_1j+t-k}{s}\right)img[k][j]\]
+	\[ img_f[i][j] = \displaystyle{\sum_k}h\left(\frac{a_0i+a_1j+t-k}{s}\right)img[k][j]\]
 	où $img_f$ est l'image finale et $img$ l'image initiale (ici en une dimension).
 	
 	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
-	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}, on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing}.
+	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rv} et \ref{szeliski_rh} traitant les opérations $\mathcal R_v$ et $\mathcal R_h$.
+	
+	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
 
 	\begin{thm}
 	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre
@@ -67,6 +69,7 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	\[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
 	
 	\paragraph{Éventuelle transposition}
+		\label{szeliski_transpoOpt_section}
 		
 		Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} déjà connu \cite{wolberg1990digital}.
 		
@@ -76,6 +79,8 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 		\[\hat a_{10} = \frac{a_{10}}{\sqrt{a_{10}^2+a_{11}^2}}\]
 		\[\hat a_{11} = \frac{a_{11}}{\sqrt{a_{10}^2+a_{11}^2}}\]
 		on transpose dans le cas où $|\hat a_{00}|+|\hat a_{11}|<|\hat a_{01}|+|\hat a_{10}|$.
+		
+		Cette transposition correspond à l'algorithme \ref{szeliski_transpoOpt}.
 		
 	\paragraph{Décomposition de $A$}
 		

@@ -8,169 +8,104 @@ Les images sont des matrices. On a ignoré les éventuelles multiples niveaux de
 
 Il y a en fait une origine $(\mu,\nu)$ sur les images (pour pouvoir faire des translations instantanées).
 
-\medbreak
-Les fonctions $imageIntegrale$ construisent simplement l'image intégrale de la ligne/colonne correspondante, on ne les a pas précisées.
-
-On suppose qu'on dispose d'une fonction $cubicInterpolation$ qui réalise l'interpolation à l'aide de la valeur en quatre points et de la position à interpoler.
-
-On peut remplacer les appels à $imageIntegrale$ par trois appels à $imageIntegrale$ (pour utiliser l'image triple intégrale) auquel cas il faudra appeler $interpole3$ au lieu de $interpole$. De plus il faut déclarer une image intégrale plus grande que celle de départ, en effet quand on intègre trois fois les valeurs au delà de la dernière ne sont plus nulles, ni même constantes.
+ Dans ce pseudo-code $img2D$ est l'image de départ, $img$ est une colonne/ligne de taille $wh$ et $Img$ est un vecteur de taille $4(wh+1)$ contenant les valeurs des images $i-integrales$ pour $i\in \llb 1,4 \rrb $ aux points $\llb 0,wh \rrb$. La justification des calculs est décrite dans la section \ref{4Integral}.
 
 \ssse{Corps de l'algorithme}
 
 \begin{algorithm}[H]
 \caption{$applyHomography(img,imgf,H)$}
-\KwData{Une image de départ $img[1..w][1..h]$, une image d'arrivé $img_f[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
+\KwData{Une image de départ $img2D[1..w][1..h]$, une image d'arrivé $img2D_f[1..w_f][1..h_f]$, une homographie $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
 $f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
 $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 \For{$j \in \llbracket 1, h \rrbracket$}{
-	$iimgw = imageIntegrale(j^e \text{ colonne de } img)$ \;
+	$img = j^e \text{ colonne de } img2D$\;
+	$Img = build4Integrale(img)$ \;
 	\For{$i \in \llbracket 1, w_f \rrbracket$}{
 		$x = f_1(i)$\;
 		$d = |f_1'(i)|$\;
-		$img_{aux}(i,j) = interpole(iimgw,x,d)$\;
+		$img2D_{aux}(i,j) = convolImg(img,Img,x,d)$\;
 	}
 }
 \For{$i \in \llbracket 1, w_f \rrbracket$}{
-	$iimgh = imageIntegrale(i^e \text{ ligne de } img_{aux})$\;
-	$d=\frac{\dr}{\dr y} f_2(i,0)$ (indépendant de $j$)\;
+	$img = i^e \text{ ligne de } img2D_{aux})$\;
+	$Img = build4Integrale(img)$\;
+	$d=\frac{\dr}{\dr y} f_2(i,0)$ \tcc*{c'est indépendant de $j$}
 	\For{$j \in \llbracket 1, h_f \rrbracket$}{
 		$y=f_2(i,j)$\;
-		$img_f(i,j)=interpole(iimgh,y,d)$\;
+		$img2D_f(i,j)=convolImg(img,Img,y,d)$\;
 	}
 }
 \end{algorithm}
 
-\ssse{Interpolation à l'aide de l'image intégrale}
 
-Une première version naive. La fonction $interpoleInt$ renvoie la moyenne sur un segment de longueur $d$ est d'origine $i$.
-
-Nous n'avons pas réglé les cas où $interpoleInt$ n'est pas définie.
-
-\begin{algorithm}[H]
-\caption{$interpole(imgint,u,d)$}
-\KwData{Une image intégrée une fois $imgint[1..n]$, une position $x\in\mb{R}$, une distance $d\in\mb{R}$}
-$u=u-\frac{d}{2}$\;
-$id=floor(d)$\;
-$iu=floor(u)$\;
-$x = d-id$\;
-$y = u-iu$\;
-\uIf{$id\leq 0$}{
-$a=interpoleInt(imgint,iu,1)$\;
-$b=interpoleInt(imgint,iu+1,1)$\;
-\KwRet{$(1-y)*a + y*b$}
-}
-\Else{$a=interpoleInt(imgint,iu,id)$\;
-$b=interpoleInt(imgint,iu+1,id)$\;
-$c=interpoleInt(imgint,iu,id+1)$\;
-$d=interpoleInt(imgint,iu+1,id+1)$\;
-\KwRet{$(1-x)(1-y)*a+(1-x)y*b+x(1-y)*c+xy*d$}}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\caption{$interpoleInt(imgint,i,d)$}
-\KwData{Une image intégrée une fois $imgint[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
-\uIf{$i+d-1<0$}{\KwRet{$0$}}
-\uElseIf{$i<1$}{\KwRet{$\frac{imgint[i+d-1]}{d}$}}
-\Else{\KwRet{$\frac{imgint[i+d-1]-imgint[i-1]}{d}$}}
-\end{algorithm}
+\ssse{Construction de l'image $4-$Intégrales}
 
 
-\ssse{A l'aide de la convolée de trois portes}
-
-Notons $g_3$ la convolée de trois portes. On a $g_3'' = \mathds{1}_{[-\frac{3}{2} -\frac{1}{2}]}-2*\mathds{1}_{[-\frac{1}{2},\frac{1}{2}]}+\mathds{1}_{[\frac{1}{2},\frac{3}{2}]}$.
-Ainsi en notant $F$ l'intégrale de l'image et $F_2$ l'intégrale seconde de l'image, on a $\int f g_3 = \int F g_3' = \int F_2 g_3''$.
-
-Ainsi on peut prendre plutôt : 
-
-\begin{algorithm}[H]
-\caption{$interpole3(imgint3,u,d)$}
-\KwData{Une colonne/ligne d'une image intégrée trois fois $imgint3[1..n]$, une position $u\in\mb{R}$, une distance $d\in\mb{R}$}
-$id=floor(d)$\;
-$iu=floor(u)$\;
-$x = d-id$\;
-$y = u-iu$\;
-On déclare deux tableaux $Y1[1..4],Y2[1..4]$\;
-\For{$i\in\llb-1,2\rrb$}{
-$Y1[i+2]=interpoleTripleInt(imgint3,iu+i,id)$\;
-$Y2[i+2]=interpoleTripleInt(imgint3,iu+i,id+1)$\;
-}
-$a=cubicInterpolation(Y1,y)$\;
-$b=cubicInterpolation(Y2,y)$\;
-\KwRet{$(1-x)*a+x*b$}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\caption{$interpoleTripleInt(imgint3,i,d)$}
-\KwData{Une colonne/ligne d'une image intégrée trois fois $imgint3[1..n]$, une position $i\in\mb{N}$, une distance $d\in\mb{N}$}
-$a=interpoleInt(imgint3,i-d,d)$\;
-$b=interpoleInt(imgint3,i,d)$\;
-$c=interpoleInt(imgint3,i+d,d)$\;
-\KwRet{$\frac{a-2*b+c}{d^2}$}
-\end{algorithm}
-
-\ssse{Complexité}
-
-La fonction $interpoleInt$ est clairement en temps constant. Ainsi on en conclu sans problème que $interpole$ et $interpole3$ le sont aussi. Dans $applyHomography$ on a ainsi des boucles sur des fonctions constantes et des intégrations. Ainsi la première boucle est en $O(h(w+w_f))$ car l'appel de $imageIntegrale$ se fait sur une colonne de taille $w$. De même la deuxième boucle est en $O(w_f(h_f+h))$. Il y a donc un terme en $w_f h$ qui est spécifique pour cette méthode. Mais sur des images "raisonnable", c'est dire qui ne sont pas trop fine, on a néanmoins un temps linéaire.
-\medbreak
-%a verifier
-En effet en admettant que le rapport largeur sur longueur est borné, l'algorithme est en $O(n_1+n_2)$ où $n_1$ est la taille de l'image de départ et $n_2$ celle de l'image d'arrivée. On remarque que cela ne dépend pas des coefficients de l'homographie.
-
-\subsubsection{Pseudo-code convolution d'une image $1D$ par l'image $4-$intégrale :}
- Dans ce pseudo code $img$ est l'image $1D$ d'entrée de taille $wh$ et $Img$ est une image de taille $4(wh+1)$ contenant les valeurs des images $i-integrales$ pour $i\in \llb 1,4 \rrb $ aux points $\llb 0,wh \rrb$ on calcule ces valeurs à l'aide de la méthode 2 énoncée au paragraphe 
- On utilise essentiellement le format double lors de l'implémentation en c car les calculs demandent une certaine précision. La variable $xy$ est le point où l'on souhaite réechantillonner l'image et $d$ est le zoom effectué en $xy$ lors du ré-echantillonnage.
- 
- \begin{algorithm}
- \caption{$build4Integrale(img,Img)$}
- \KwData{$img$,$Img$}
+ \begin{algorithm}[H]
+ \caption{$build4Integrale(img)$, qui renvoie les quatre première intégrales concaténées (décrit en \ref{4Integral})}
+ \KwData{Une ligne/colonne de l'image $img[1..wh]$}
  \For{$i\in \llb 0,3 \rrb $}{
- $Img[i(wh+1)]=0$\;
+ $Imgwh[i(wh+1)+1]=0$\;
  }
  \For{$i\in \llb 1,wh \rrb $ }{
- $Img[i]=Img[i-1]+img[i-1]$; image 1-intégrale \\
- $Img[wh+i+1]=Img[wh+i]+Img[i-1]+\frac{img[i-1]}{2}$; image 2-intégrale \\
- $Img[2 wh+i+2]=Img[2*wh+i+1]+Img[wh+i]+\frac{Img[i-1]}{2}+\frac{img[i-1]}{6}$; image 3-intégrale\\
- $Img[3 wh+i+3]=Img[wh+i+2]+Img[2wh+i+1]+\frac{Img[wh+i]}{2}+\frac{Img[i-1]}{6}+ \frac{img[i-1]}{24}$; image 4-intégrale
+ $Img[i+1]=Img[i]+img[i]$\tcc*{image 1-intégrale} 
+ $Img[wh+i+2]=Img[wh+i+1]+Img[i]+\frac{img[i]}{2}$\tcc*{image 2-intégrale}
+ $Img[2 wh+i+3]=Img[2 wh+i+2]+Img[wh+i+1]+\frac{Img[i]}{2}+\frac{img[i]}{6}$\tcc*{image 3-intégrale}
+ $Img[3 wh+i+4]=Img[wh+i+3]+Img[2wh+i+2]+\frac{Img[wh+i+1]}{2}+\frac{Img[i]}{6}+ \frac{img[i]}{24}$\tcc*{image 4-intégrale}
  }
+ \KwRet{Img}
  \end{algorithm}
  
-  \begin{algorithm}
- \caption{$eval4Integral(img,Img,xy)$}
- \KwData{$img$,$Img$,point où l'on évalue $xy$ }
- \uIf{$xy \ge wh$}{$r = xy - wh$\; 
- $s = Img[4wh+3] + r \left (Img[3wh+2] + \frac{r}{2}  \left(Img[2wh+1] + \frac{r}{3}  Img[wh]\right)\right)$\;}
- \uElseIf{$xy<0$}{
-  $s = 0$\;
- }
- \Else{
-  $xys=\lfloor xy\rfloor$\; 
-  $r = xy-xys$\; 
-  $s = Img[3wh+3+xys] + r \left( Img[2wh+2+xys] + \frac{r}{2}  \left(Img[wh+1+xys] + \frac{r}{3}  \left(Img[xys]+ \frac{r}{4} img[xys] \right)\right)\right)$\;}
- \end{algorithm}
  
- \begin{algorithm}
- \caption{$convolImg(img,Img,xy,d)$}
- \KwData{$img$,$Img$,$xy$,$d$,$wh$}
- On calcule $D$ la largeur de la fonction porte servant à la convolution\\
- \eIf{$d>(\frac{0.49+0.01}{0.64})$}{
- $D = \sqrt{0.64 * d^{2} - 0.49}$\;
- }
- {
- $D=0.2$\;
- }
- $xy_{i}$ pour $i\in \llb 0,3 \rrb $ sont les points où ré-échantillonner\\
+ \ssse{Evaluation à l'aide de l'image $4-$intégrales}
+ 
+ 
+  \begin{algorithm}[H]
+ \caption{$convolImg(img,Img,xy,d)$, qui convole avec une triple porte (décrit en \ref{4Integral})}
+ \KwData{Une ligne/colonne de l'image $img[1..wh]$, ses quatre premières intégrales $Img[1..4(wh+1)]$, le point où l'on évalue $xy\in\mb{R}$, la distance $d\in\mb{R}$}
+ \tcc{On calcule $D$ la largeur de la fonction porte servant à la convolution, le seuillage est arbitraire}
+ $d_{aux} = 0.64 * d^{2} - 0.49$\;
+ \eIf{$d_{aux}>0.01$}{$D = 2\sqrt{d_{aux}}$}{$D=0.2$}
  $xy_{1}  = xy + \frac{3D}{2}$\; 
  $xy_{2}  = xy + \frac{D}{2}$\; 
  $xy_{3}  = xy - \frac{D}{2}$\; 
  $xy_{4}  = xy - \frac{3D}{2}$\;
- On réalise une première convolution pour lisser l'interpolation\\
+ \tcc{On réalise une première convolution pour lisser l'interpolation}
  \For{$i\in \llb 1,4 \rrb $}{
  $a_{2i-1}=eval4Integrale(img,Img,xy_i+\frac{1}{2})$\; 
  $a_{2i}=eval4Integrale(img,Img,xy_i-\frac{1}{2})$\; 
  $b_i = a_{2i-1} - a_{2i}$\; 
  }
- On réalise la dérivé discrète $3$ième pour convoler avec le filtre $g_3$\; 
+\tcc{On réalise la dérivé discrète $3$ième pour convoler avec la convolée de trois portes}
  $c_1 = \frac{b_1 - b_2}{D}; c_2=\frac{b_2 - b_3}{D}; c_2=\frac{b_3 - b_4}{D}$\; 
  $d_1 = \frac{c_1 - c_2}{D}; d_2=\frac{c_2 - c_3}{D}$\; 
- $s = \frac{d_1 - d_2}{D}$\; 
- \KwRet{s}
+ \KwRet{$\frac{d_1 - d_2}{D}$}
  \end{algorithm}
+ 
+ 
+ 
+  \begin{algorithm}[H]
+ \caption{$eval4Integral(img,Img,xy)$, qui évalue en un réel quelconque (décrit en \ref{4Integral})}
+ \KwData{Une ligne/colonne de l'image $img[1..wh]$, ses quatre premières intégrales $Img[1..4(wh+1)]$, le point où l'on évalue $xy$}
+ \uIf{$xy \ge wh$}{$r = xy - wh$\; 
+ \KwRet{$Img[4wh+3] + r \left (Img[3wh+2] + \frac{r}{2}  \left(Img[2wh+1] + \frac{r}{3}  Img[wh]\right)\right)$}}
+ \uElseIf{$xy<0$}{
+  \KwRet{$0$}
+ }
+ \Else{
+  $xys=\lfloor xy\rfloor$\; 
+  $r = xy-xys$\; 
+  \KwRet{$Img[3wh+3+xys] + r \left( Img[2wh+2+xys] + \frac{r}{2}  \left(Img[wh+1+xys] + \frac{r}{3}  \left(Img[xys]+ \frac{r}{4} img[xys] \right)\right)\right)$}}
+ \end{algorithm}
+
+
+
+
+
+\ssse{Complexité}
+
+La fonction $eval4Integrale$ est clairement en temps constant. Ainsi on en conclu sans problème que $convolImg$ le sont aussi. Dans $applyHomography$ on a ainsi des boucles sur des fonctions constantes et des intégrations. Ainsi la première boucle est en $O(h(w+w_f))$ car l'appel de $build4Integral$ se fait sur une colonne de taille $w$. De même la deuxième boucle est en $O(w_f(h_f+h))$. Il y a donc un terme en $w_f h$ qui est spécifique pour cette méthode. Mais sur des images "raisonnable", c'est dire qui ne sont pas trop fine, on a néanmoins un temps linéaire.
+\medbreak
+En effet en admettant que le rapport largeur sur longueur est borné, l'algorithme est en $O(n_1+n_2)$ où $n_1$ est la taille de l'image de départ et $n_2$ celle de l'image d'arrivée. On remarque que cela ne dépend pas des coefficients de l'homographie.
+
+

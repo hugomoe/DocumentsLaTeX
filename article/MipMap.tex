@@ -27,7 +27,7 @@ Le principe du Mipmap est de précalculer des coefficients qui représentent des
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur de certains carrés de l'image de taille une puissance de 2.
 Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. 
 
-Un exemple est représenté figure \ref{MipMap_real}. Un pseudo-code naif qui effectue cette construction figure en annexe en \ref{pseudo_code_Mipmap}, c'est l'algorithme \ref{buildMipmap}.
+Un exemple est représenté figure \ref{MipMap_real}. Un pseudo-code naïf qui effectue cette construction figure en annexe en \ref{pseudo_code_Mipmap}, c'est l'algorithme \ref{buildMipmap}.
 
 \begin{figure}[h!]
 \centering
@@ -149,7 +149,7 @@ On a une préférence pour le plus grand côté et la valeur singulière, en eff
 \label{Ripmap}
 Une des grandes faiblesses du Mipmap est l'isotropie : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 
-Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}, ainsi que deux algorithmes de construction en annexe en \ref{pseudo_code_Ripmap}. L'algorithme \ref{buildRipmap1} est naif, en pratique on a implémenté l'algorithme \ref{buildRipmap2}.
+Pour tenter de résoudre ce problème on utilise un Ripmap \cite{akenine2008real}. C'est en fait un Mipmap où l'on a aussi calculé la moyenne des pixels de tous les rectangles dont les côtés sont des puissances de deux. On en présente un exemple dans la figure \ref{Ripmap_real}, ainsi que deux algorithmes de construction en annexe en \ref{pseudo_code_Ripmap}. L'algorithme \ref{buildRipmap1} est naïf, en pratique on a implémenté l'algorithme \ref{buildRipmap2}.
 
 Ainsi la fonction de distance ne renvoie plus une seule valeur mais une pour chaque côté du rectangle. On réalise alors une interpolation quadrilinéaire (bilinéaire entre les étages et bilinéaire dans chacun d'eux). Elle est représentée dans la figure \ref{interbibilineaire}. L'algorithme \ref{interbibi1} disposé en annexe en \ref{pseudo_code_Ripmap} décrit cette interpolation.
 

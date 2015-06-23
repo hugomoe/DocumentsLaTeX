@@ -27,7 +27,7 @@
      }
     }
     $img_f = $ tableau de taille $m \times n$\;
-    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant}{
+    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant (équation \ref{formule_convolution_discrete})}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
       $i' = \frac m 2+a_0(i-\frac m 2)+a_1(j-\frac n 2)+t$\;
       $k^* = \lfloor i' \rfloor$\;
@@ -65,7 +65,7 @@
      }
     }
     $img_f = $ tableau de taille $m \times n$\;
-    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant}{
+    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant(équation \ref{formule_convolution_discrete})}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
       $j' = \frac n 2+a_1(i-\frac m 2)+a_0(j-\frac n 2)+t$\;
       $k^* = \lfloor j' \rfloor$\;
@@ -265,7 +265,7 @@
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     Stockage dans $H$ des valeurs prises par $h$\;\ \\
     $img_f = $ image vide de taille $m \times n$\;
-    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant}{
+    \bloc{Convolution (selon $i$) avec un noyau centré en $i'$ ; $\red j$ est constant(équation \ref{formule_convolution_discrete})}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
       $i' = \frac{m}{2}-x_i+a_0(i+x_f-\frac{m}{2})+a_1(j+y_f-\frac{n}{2})$\;
       $k^* = \lfloor i' \rfloor$\;
@@ -294,7 +294,7 @@
     $H = $ tableau de taille $(2N+1) \times 2^b$\;
     Stockage dans $H$ des valeurs prises par $h$\;\ \\
     $img_f = $ tableau de taille $m \times n$\;
-    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant}{
+    \bloc{Convolution (selon $j$) avec un noyau centré en $j'$ ; $\red i$ est constant(équation \ref{formule_convolution_discrete})}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
       $j' = \frac{n}{2}-y_i-y+a_i(i+x_f-\frac{m}{2})+a_0(j+y_f-\frac{n}{2})$\;
       $k^* = \lfloor j' \rfloor$\;

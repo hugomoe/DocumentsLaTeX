@@ -12,40 +12,17 @@ PARTOUT
 
 
 
-INTRO
-motiver le problème (simule camera (jv) + fusion d’image + le pb n’est pas trivial (combine zoom avant/arrière))
-analyse biblio
-	impossibilité d’interplation 
-	zoom arrière zero-padding
-	Ripmap/Mipmap
-->revendication de methode
-	toute homo
-	decomp géométrique
-	un peu plus lente
-seulement ici mettre le plan (l'intro qu'on avait déjà)
-l'intro fait une page au moins
 
 
 
 
-
-HOMOGRAPHIE
-	va dans l’intro 5 ligne
+HOMOGRAPHIE (? ailleurs qu'ici)
 	c’est un mvt d’une caméra idéale
 
-METHODE NAIVE
-	mentionne dans l’introduction 
 
-MIPMAP
-	indiquer quelle distance on a choisi
-	dans les images distance : mettre label.
-	conclusion : la mettre de manière informelle.
-	nous avons essayés et nous avons trouvé...
 
 AFFINITE
 	formule convolution discrète avec zoom (reference pseudo-code supp adaptatif)
-	graphique avec le cosine weighted (éventuellement avec différents beta)
-	reference pseudo-code / figure (e.g. umax/vmax, transpoopt, dcompo affinite)
 
 
 DECOMP GEOM 
@@ -54,32 +31,16 @@ DECOMP GEOM
 
 
 MVT DE CAMERA
-	proposition de shmuel : décrire rapidement ce qu'est une caméra parfaite (projection) notamment via fig11
-	mettre lemme plutôt que « finalement on en déduit »
-	mettre des props / Lemme
-		tous les lemmes et propositions doivent rappeler leurs notations
-		ds le lemme : "sous les notations précédentes..."
 	Prop 2 = revoir les notations (h ‘est’ un mvet de cam -> h une appli de R^2, h s'identifie à)
 
-DECOMP HOMO
-	include \begin{proof} \end{proof}
 
 HOMO PARTICULIERE (-> HOMO UNIDIRECTIONNELLE)
 	Rentrer « on en déduit » de fin de partie precedente, on le met là
 	inclure image qui montre la séparation (damier par exemple), chacun en partant de l'image originale
 	Lemme pour la convergence des convolées
-	"la spline de cubique", "si on pose F1 est la spline"
 
-TRAITEMENT DES ROTATIONS
-	dans les expériences, mettre la différence à l'originale (et pas l'image)
-	rms, l1 etc : begin{tab} end{tab} et mettre en gras les meilleurs (ou tabular ?)
 
-	
 
 EXPERIENCES
-	utiliser le même rescale pour les différents Fourier d'une même série d'expérience
+	comparaison toute méthode
 	mettre en comparaison la méthode naïve
-
-CONCLUSION
-	on propose une solution optimale dans le sens suivant. mipmap < decomposition pour des résultats super exacts.
-	ouverture dans la conclusion : on peut mettre surement plus rapide pour les rotations sans perdre trop de qualité.

@@ -239,7 +239,7 @@ Une homographie associée à un mouvement de caméra est une application affine 
 h=z_{-\frac{\delta}{\delta'}} \circ \tau_c \circ R_{\phi+\psi} \circ \tau_{x_{v}}
 =\tau' \circ z_{-\frac{\delta}{\delta'}} \circ  R_{\phi+\psi}
 \end{equation*}
-Toutes les applications affines ne sont donc pas des mouvements de caméra.\\
+Toutes les applications affines ne sont donc pas associées à des mouvements de caméra.\\
 On peut cependant les voir comme un cas limite : fixons le rapport  $k=\frac{\delta}{\delta'}$ ; si l'on fait tendre $\delta'$ et $\delta$ vers $+\infty$, la fonction $h_{\theta,\delta'}$ tend vers une limite $h_{\theta,\infty}$ définie par
 \begin{equation*}
 h_{\theta,\infty}=(x,y)=(-\cos(\theta)x,-y)
@@ -268,7 +268,7 @@ Grâce à ce lemme on peut en déduire que pour toute application affine bijecti
 \subsubsection{Application à la décomposition des homographies :}
 Le but de cette partie est de généraliser cette décomposition à toutes les homographies qui ne sont pas des applications affines.
 \begin{prop}
-Toute homographie est un mouvement de caméra avec un point visé ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté.
+Toute homographie s'identifie à un mouvement de caméra avec un point visé ou une application affine. Dans le premier cas, la décomposition \ref{formul_decomp} n'est pas unique et possède un degré de liberté.
 \label{thepropdecomp}
 \end{prop}
 \paragraph{Résultats généraux sur les homographies :}

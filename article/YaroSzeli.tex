@@ -44,7 +44,8 @@ Toutes rotations se décompose en trois \emph{shears} de la manière suivante :
 En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.\\
 
 Bien que pour 360 rotations la méthode de traitement des affinités multi-étapes avec  le  Raised-Cosine-weigted sinc comme filtre d'interpolation donne de mauvais résultats (comparés à Yaroslavsky), sur dix rotations ses perfomances sont meilleures que Yaroslavsky.
-Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents pour deux rotations.  
+Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents pour deux rotations. 
+Bien entendu si le but est d'étre le plus précis possible sur beaucoup d'homographies successives sans se préoccuper du temps de calculs, on peut choisir d'autres méthodes de rotation comme la méthode de traitement des affinités multi-étapes  avec une interpolation par b-spline d'ordre 9.
 
  \begin{figure}[h]
  \centering

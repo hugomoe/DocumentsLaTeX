@@ -7,12 +7,12 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
 	
 	Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
-		
+		\label{label_des_deux_prems_fig_de_szeli}
 	\begin{figure}
 		\centering
 		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{szeliski_naiveEntree.png}}
 		\subfigure[Spectre de l'image de sortie : repliement du spectre]{\includegraphics[scale=0.5]{szeliski_naiveSortie.png}}
-		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la méthode naïve)}
+		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la méthode naïve) (cf. partie \ref{label_des_deux_prems_fig_de_szeli})}
 		\label{szeliski_decompoNaive}
 	\end{figure}
 		
@@ -23,7 +23,7 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 		\subfigure[Spectre de l'image après sur-échantillonnage et \emph{shear}]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
 		\subfigure[Spectre de l'image de sortie (après sur-échantillonnage, \emph{shear} et sous-échantillonnage)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
 		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par le traitement multi-étapes). Mise en pratique figure \ref{experiments_decompoSzeliski_sinc}}
-		\label{szeliski_decompoSzeliski}
+		\label{szeliski_decompoSzeliski (cf. partie \ref{label_des_deux_prems_fig_de_szeli})}
 	\end{figure}
 	
 	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
@@ -33,13 +33,13 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	\end{equation}
 	La période $T$ est prise égale à 1 (taille d'un pixel).
 	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus 9 termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
-	
+	\label{label_figure_dom_reel_fourier_jt}
 	\begin{figure}
 		\centering
 		\subfigure[Domaine réel]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc.jpg}}
 		\subfigure[Domaine de Fourier]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc_spectrum.jpg}}
 		\caption{Représentation du \emph{raised cosine-weighted sinc} en fonction du paramètre $\beta$}
-		\label{szeliski_plotRaisedCosine}
+		\label{szeliski_plotRaisedCosine (cf. partie \ref{label_figure_dom_reel_fourier_jt})}
 	\end{figure}
 	
 	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :

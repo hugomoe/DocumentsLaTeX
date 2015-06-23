@@ -20,11 +20,19 @@
  }
 \newcommand{\arrowPDP}{{\raisebox{15\height}{\scalebox{1}{$\longrightarrow$}}}}
 
-\newtheorem{Def}{Définition}
+%les theoremes dans le style theoreme
+\theoremstyle{plain}
 \newtheorem{prop}{Proposition}
 \newtheorem{thm}{Théorème}
 \newtheorem{lem}{Lemme}
+%les theoremes dans le style definition
+\theoremstyle{definition}
+\newtheorem{Def}{Définition}
+\newtheorem{pte}{Propriété}
 \newtheorem{defnot}{Définitions et notations}
+%les theoremes dans le style remarque
+\theoremstyle{remark}
+\newtheorem{remarque}{Remarque}
 \newtheorem*{Remaffin}{Remarque sur les applications affines}
 
 \newcommand{\affinite}[1]{\left(\begin{array}{c c|c} #1 \end{array}\right)}

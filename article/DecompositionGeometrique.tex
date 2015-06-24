@@ -1,20 +1,20 @@
-Notre méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
+La nouvelle méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
 
 \ssse{Mouvement de caméra}
 \label{mouv_de_camera}
 On étudie ici un cas a priori particulier d'homographie $h$ : les homographies que l'on peut interpréter comme un mouvement de caméra idéale. On montrera par la suite que c'est en fait un cas général.
 
-Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale, les paramètres introduits sur ce schéma seront définis dans les définitions et notations \ref{defpoint}. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant toute lentille ou dispositif correcteur présent dans les caméras réelles.
+Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale, les paramètres introduits sur ce schéma seront définis dans les définitions et notations \ref{defpoint}. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant les lentillse ou les dispositifs correcteurs présent dans les caméras réelles.
 \begin{figure}[h!]
 
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
-\caption{Illustration d'un mouvement de caméra $(X_v =0)$ (les translations ont été omise pour plus de clarté. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. Un point du plan image est le projeté passant par $F$ d'un point du plan $(x,y)$. (cf partie \ref{mouv_de_camera})}
+\caption{Illustration d'un mouvement de caméra $(X_v =0)$ (les translations ont été omises pour plus de clarté. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. Un point du plan image est le projeté passant par $F$ d'un point du plan $(x,y)$. (cf. partie \ref{mouv_de_camera})}
 \label{shmdecomp}
 \end{figure}
 
 \begin{defnot}
-On se place dans l'espace $\mathbb{R}^{3}$,on le munit d'une base orthonormée directe $(x_0,y_0,z_0)$.
+On se place dans l'espace $\mathbb{R}^{3}$, on le munit d'une base orthonormée directe $(x_0,y_0,z_0)$.
 
 L'image de départ sera située dans le plan $P_{1}= \mathbb{R}^{2}\times \{0\}$.
 
@@ -30,7 +30,7 @@ On doit maintenant positionner notre caméra par rapport à l'image de départ (
 P_{2}=\{Y\in \mathbb{R}^{3}|(Y-F-\delta w)\cdot w=0\}=\{Y\in \mathbb{R}^{3}|(Y-F)\cdot w=\delta\}
 \end{equation*}
 
-\item Si on se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$, on peut alors définir $X_{v}$ le point de $P_{1}$ visé par la caméra, c'est-à-dire le point d'intersection entre l' axe optique et le plan $P_{1}$.On obtient alors
+\item Si on se place dans le cas où le vecteur $w$ n'appartient pas à $P_{1}$, on peut alors définir $X_{v}$ le point de $P_{1}$ visé par la caméra, c'est-à-dire le point d'intersection entre l' axe optique et le plan $P_{1}$. On obtient alors
 \begin{equation*}
 X_{v}=F-\delta'w \text{ et }\delta'=\small{\left|\frac{F \cdot z_{0}}{w\cdot z_{0}} \right|}
 \end{equation*}
@@ -43,12 +43,14 @@ On définit l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projec
 D=\{X\in P_1 | (X-F) \cdot w=0\}
 \end{equation*}
 
-De même, l'image de $H$ est $P_2 \setminus D'$ où $D'$ est appelé l'horizon (du mouvement de caméra).
+De même, l'image de $H$ est $P_2 \setminus D'$ où $D'$ est appelée l'horizon (du mouvement de caméra).
 \begin{equation*}
 D'=\{ X\in P_2 | (X-F).z_0=0\}
 \end{equation*}
 
-Un mouvement de caméra est donc défini en fonction de $9$ paramètres, il n'y a d'unicité de ces paramètres.
+On appelle $H:P_1 \setminus D \ra P_2 \setminus D'$ un mouvement de caméra.
+
+Un mouvement de caméra est donc défini en fonction de $9$ paramètres, il n'y a pas unicité de ces paramètres.
 
 Le plan $P_1$ sera muni du repère orthonormé $(0,x_0,y_0)$ ; le plan $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(u,v,w)$ soit un base orthonormée directe de $\mathbb{R}^{3}$.
 

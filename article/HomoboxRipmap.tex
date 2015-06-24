@@ -1,7 +1,10 @@
 % contient la description des différentes possibilités pour traiter l'homographie unidirectionnelle au centre de la décomposition
 %simon
+%Homobox refait, une relecture s'impose, manque encore les ref vers les pseudos code (elles sont en com)
+%Je sais pas si on doit garder la partie sur l'interp de hermite
 \subsubsection{Séparation d'une homographie unidirectionelle}
 \label{homobox_paragraph}
+On en déduit par la formule du paragraphe précédent (formule \ref{formule_decompososition_effective}) que le traitement d'une homographie générale peut se ramener au traitement d'une homographie  unidirectionnelle.\\
 On considère une homographie  $h$ de la forme 
 \begin{equation*}
 h:(x,y)\mapsto \left(\frac{-bx}{1-ax},\frac{-y}{1-ax}\right)
@@ -16,138 +19,169 @@ On obtient $h=h_1  \circ h_2$, ce qui nous donne le schéma suivant
 \begin{equation*}
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
 \end{equation*}
-Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimentionnels . Cette méthode n'est en revanche pas séparable.\\ 
-La première transformation est une homographie en une dimension que l'on doit réaliser sur chaque ligne.\\ %sur ?
-La seconde est un zoom d'un facteur différent sur chaque colonne.
+Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimentionnels. Les méthode de ré-échantillonnage sont donc plus simple ce qui permet un gain de rapidité car les calculs sont moins couteux. De plus les transformations $h_1,h_2$ peuvent être appliqué en ne réalisant que des filtrages horizontaux et verticaux, les direction de filtrage sont simples.\\ 
+La première transformation est une homographie en une dimension que l'on doit réaliser sur chaque colonne.\\ 
+La seconde est un zoom d'un facteur différent sur chaque ligne.\\
+On peut voir sur la figure suivante (figure  \ref{image_separation_f14}) l' effet des transformations $h,h_1,h_2$.\\
 
-%a étoffer
+\begin{figure}[h!]
+\centering
+
+\subfigure[identité]{
+\includegraphics[scale =0.30]{f14.png}}
+\subfigure[homographie unidirecionnelle $h=h_1 \circ h_2$]{\includegraphics[scale =0.30]{homo_unidirec_f14_2.png}}
+\subfigure[transformation $h_1$ ]{\includegraphics[scale =0.30]{homo_unidirec_part_1_f14_2.png}}
+\subfigure[transformation $h_2$]{\includegraphics[scale =0.30]{homo_unidirec_part_2_f14_2.png}}
+\caption{Séparation des homographies unidirectionnelles (échelle $0.3$) }
+\label{image_separation_f14}
+\end{figure}
+
 \paragraph{Sous échantillonnage gaussien :}
-Dans le cas d'un zoom gaussien on utilise la convolution $f*G_{d}$. Le paramètre $d$ doit être choisi tel que 
+\label{zoom_gaussien}
+Le zoom gaussien est une méthode de sous échantillonnage utilisant la convolutions $f*G_{d}$ , où $G_d$ est un noyaux gaussien d'écart type $d$. Dans nos algorithme on utilisera la méthode développée dans l'article "Sift is an invariant scale" (cf \cite{morel2011sift}).\\
+Si $f$ est une image on suppose que $f$ peut s'écrire sous la forme $f=G_c' * f'$, où $f'$ est une image de résolution infinie. Le paramètre $c'$ est le facteur de flou gaussien idéal de l'image $f$. L'expérience montre que le facteur de flou gaussien idéal se situe autour de $c=0.8$ (cf \cite{morel2011sift}).\\
+Soit $z\le 1$ posons $f''(x)=f'(zx)$, si l'on cherche à échantillonner la fonction  $x\mapsto f(zx)$,  on doit d'abord s'assurer qu'elle possède un facteur de flou gaussien égal à $0.8$ on sait que 
 \begin{equation*}
-z^2 c^2=c^2 + d^2     ~~~~~~~c= 0.8
+(f''*G_{c})(x)=(f'*G_{cz})(zx)
 \end{equation*}
-On obtient donc la formule $d=c\sqrt{z^2 - 1}$, nous renvoyons à l'article \cite{morel2011sift} pour les détails de ce raisonnement et une justification de la valeur expérimentale de c.\\
+Grâce à cette relation on peut en déduire la valeur de $d$ à utiliser, sachant que l'image de départ possède un flou gaussien de $c'$ on obtient
+\begin{equation*}
+(f*G_d)(zx)=(f'*G_c'*G_d)(zx)=(f'*G_{\sqrt{c'^2 + d^2}})(zx)
+\end{equation*}
+En identifiant ces deux expressions on obtient
+\begin{equation}
+d=\sqrt{c^2 z^2 - c'^2}
+\label{formule_zoom_gaussien}
+\end{equation}
 
-\paragraph{Ré-échantillonnage utilisant les images intégrale }
+Le paramètre $c'$ est difficile à déterminer en pratique, l'expérience montre que pour image "correctement échantillonnée" le facteur de zoom doit être pris égal à $0.7$. Cependant pour certaines images provenant de la photographie on peut prendre $c'=0.5$.\\
+
+\paragraph{Ré-échantillonnage par les images intégrales }
 \label{4Integral}
-Soit $d>0$, on veut convoler une fonction d'une variable par une approximation d'une gaussienne d'écart type $\delta$.\\
-Soit $g_n^d$ le noyau défini par 
+Dans ce paragraphe on présente une méthode permettant de ré-échantillonner une image 1D, cette méthode s'appuie sur une approximation du zoom gaussien (cf \ref{zoom_gaussien}) et utilise les images intégrales .\\
+
+
+Soit $\Gcal_n^d$ le noyau définit par 
 \begin{equation*}
-g_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) ~~~~~~~g_{n+1}^d= g_n^d * g_1^d
+\Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) ~~~~~~~\Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d 
+\label{formule_convol_n_int}
 \end{equation*}
-Si on pose $G_n^d(x)=\sqrt{n}g_n^d(\sqrt{n} x)$ on peut montrer que 
+Cette suite de fonction vérifie la propriété suivante
+\begin{prop}
+La fonction $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformément sur $\mathbb{R}$ vers une courbe gaussienne 
+\end{prop}
+Si $f$ est une fonction continue par morceau on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$  et on pose
 \begin{equation*}
-\widehat{G_n^d}(\omega)\underset{n\rightarrow\infty}{\rightarrow} \exp\left(-\frac{\omega^2 d^2}{12}\right)
+F_{n+1}(x)= \int_{-\infty}^{x}F_{n}(y)dy~~~~~~F_{0}(x)= f(x)
 \end{equation*}
-\begin{proof}
-On a $\widehat{g_1^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)~~$  donc $~~\widehat{g_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2}\right)^n~~$ et 
-$~~\widehat{G_n^d}(\omega)=\text{sinc}\left(\frac{\omega d}{2\sqrt{n}}\right)^n~~$\\
-on obtient le résultat voulu en réalisant un développement limité de cette fonction 
-\end{proof}
-Si on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$ et on pose $F^{n+1}(x)= \int_{-\infty}^{x}F^{n}(y)dy$ où $F^{0}(x)= f(x)$, on a alors le lemme suivant 
+On a alors le lemme suivant 
 \begin{prop} Pour toute fonction $f$ continue par morceau à support compact :
-\begin{equation*}
-(f*g_n^d)(y)=D_d ^n F^{(n)}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
-\end{equation*}
+\begin{equation}
+ (f*\Gcal_n^d)(y)=D_d^n F_{n}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F_{n}(y+\frac{(n-2k)d}{2})
+\end{equation}
 \end{prop}
 \begin{proof}
 Pour toute fonction $f$ continue par morceau à support compact on a 
 \begin{eqnarray*}
-(f * g_1^d )(y)&=&\frac{1}{d} \int_{[y-\frac{d}{2},y+\frac{d}{2}]} f(x) dx\\
-               &=&\frac{F^{(1)}(y+\frac{d}{2})-F^{(1)}(y-\frac{d}{2})}{d}\\
-               &=&D_d F^{(1)}(y)
+(f * \Gcal_1^d )(y)&=&\frac{1}{d} \int_{[y-\frac{d}{2},y+\frac{d}{2}]} f(x) dx\\
+               &=&\frac{F_{1}(y+\frac{d}{2})-F_{1}(y-\frac{d}{2})}{d}\\
+               &=&D_d F_{1}(y)
 \end{eqnarray*}
-On en déduit alors 
+On montre par récurrence que $ f*\Gcal_n^d=D_d^n F_{n}$.\\
+La relation est donc vraie pour $n=1$ , si la propriété est vraie au rang $n$ alors
 \begin{equation*}
-(f*g_{n+1}^{d})=(f*g_1^d * g_{n}^{d})= ((D_d F^{(1)})*g_n )
+f*\Gcal_{n+1}^{d}=(f * \Gcal_{n}^d) * \Gcal_{1}^{d}= (D_d^n F_{n})*\Gcal_1^d 
 \end{equation*}
-Par récurrence on obtient la formule 
+Par linéarité de la convolution
 \begin{equation*}
-(f*g_n^d)(y)=D_d ^n F^{(n)}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F^{(n)}(y+\frac{(n-2k)d}{2})
+(f*\Gcal_{n+1}^{d})= D_d^n (F_{n}*\Gcal_n^d) = D_d^{n+1} F_{n+1}
+\end{equation*}
+Comme $D_n^d$ est la somme des opérateur de translation
+\begin{equation*}
+f\mapsto f(\cdot+\frac{d}{2})~~~~~~f\mapsto f(\cdot-\frac{d}{2})
+\end{equation*}
+On peut développer $D_d^n$ à l'aide de la formule du binome de Newton car les deux opérateurs commutent, on obtient donc
+\begin{equation*}
+(f*\Gcal_n^d)(y) = \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F_{n}(y+\frac{(n-2k)d}{2})
 \end{equation*}
 
 \end{proof}
-Dans nos algorithmes  on utilisera cette formule pour $n=3$ :
-\begin{equation*}
-(f*g_3)(y)=\frac{1}{d^3}(F^{(3)}(y+\frac{3d}{2})-3F^{(3)}(y+\frac{d}{2})+3F^{(3)}(y-\frac{d}{2})-F^{(3)}(y-\frac{3d}{2}))
-\end{equation*}
-On doit cependant calculer une valeur approchée des fonctions $F^{(k)}$  car on ne connait que les échantillons de la fonctions $f$.\\
-On peut utiliser la méthode suivante on pose par récurrence
-\begin{equation*}
-F^{(n+1)}(k)=\underset{l\le k-1}{\sum}F^{(n)}(l)
-\end{equation*}
-On utilise ensuite une méthode d'interpolation par splines cubiques de Hermite afin de pouvoir évaluer cette fonction en des valeurs non entières.\\
-Une autre méthode consiste à poser 
+Dans nos algorithmes  on utilisera généralement cette propriété pour $n=3$ mais on calculera l'opérateur $D_d^n$ en faisant des différences successive %ref pseudo code 
 
+
+On doit cependant calculer une valeur approchée des fonctions $F_{k}$  car on ne connait que les échantillons de la fonctions $f$.\\
+Si le signal discret possède $m$ valeurs non nulles $f_k,~~k=0...m-1$, on peut poser 
 \begin{equation*}
-F^{(0)} (x) =\underset{0\le k \le m-1}{\sum}f_{k} \mathds{1}_{[k,k+1[}(x)
+F_{0} (x) =\underset{0\le k \le m-1}{\sum}f_{k} \mathds{1}_{[k,k+1[}(x)
 \end{equation*}
-$(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F^{(n)}(x)=\int_{-\infty}^{x}F^{(n-1)}(y)dx$ on a par exemple
+
+$(f_k)_{k=0...m-1}$ sont les termes du signal .On calcule ensuite $F_{n}(x)=\int_{-\infty}^{x}F_{n-1}(y)dx$ on a par exemple
 \begin{equation*}
-F^{(1)}(x)=\underset{k\le \lfloor x\rfloor \wedge m~-1}{\sum}f_{k}~~+ f_{\lfloor x\rfloor}
+F_{1}(x)=\underset{k\le \lfloor x\rfloor \wedge~-1}{\sum}f_{k}~~+ f_{\lfloor x\rfloor}
 (x-\lfloor x\rfloor)
 \end{equation*}
 Cette fonction est affine par morceau on peut démontrer la formule suivante par récurrence
 \begin{eqnarray*}
-F^{(n)}(x) &=& F^{(n)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F^{(k)}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}\\
-          &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F^{(k)}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
+F_{n}(x) &=& F_{n}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F_{k}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}\\
+          &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F_{k}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
 \end{eqnarray*}
-Où la valeur de $F^{(n)}$ se calcule par récurrence on a la relation $\forall k\le m$
+Où la valeur de $F_{n}$ se calcule par récurrence on a la relation $\forall k \in \llbracket 0 ;m-1 \rrbracket$
 \begin{equation*}
-F^{(n)}(k+1)=F^{(n)}(k)+\underset{0\le l < n}{\sum} \frac{F^{(l)}(k)}{(n-l)!}
+F_{n}(k+1)=F_{n}(k)+\underset{0\le l < n}{\sum} \frac{F_{l}(k)}{(n-l)!}
 \end{equation*}
-Comme dans la méthode précédente on doit calculer une composante constante par morceau afin d'avoir la valeur de $F^{(n)}$ aux entiers  ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.\\
-Dans le cas $n=3$ on obtient les formules
+On doit calculer une composante constante par morceau afin d'avoir la valeur de $F_{n}$ aux entiers  ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.\\
+Dans la pratique on a utilisé cette formule pour $n=4$, afin d'évaluer $F_4$ on procède de la façon suivante 
+\begin{itemize}
+\item Si $x\le 0$ alors $F_{n}=0$
+\item Si $x\in ]0 , m[$ alors $F_{4}(x)-F_{4}(\lfloor x \rfloor)=P_{\lfloor x \rfloor}(x-\lfloor x \rfloor)$ où $P_k$ sont les polynômes de degrés $4$ définis par
+\begin{equation*}
+P_k (r) =r \left( F_{3}(k) +\frac{r}{2} \left(F_{2}(k)+ \frac{r}{3}\left(F_{1}(k)+\frac{r}{4} f_{k}\right)\right)\right)~~~~~k=0...m-1
+\end{equation*}
+\item Si $x\ge m$ alors $F_{4}(x)-F_{4}(m)=Q(x-m)$ où le polynôme $Q$ est définit par
+\begin{equation*}
+Q(r)=r \left(F_{3}(m)+\frac{r}{2} \left( F_{2}(m) + \frac{r}{3} F_1 (m)\right)\right)
+\end{equation*}
+
+\end{itemize}
+Ces formules sont utilisées dans le pseudo code %ref pseudo code eval 4 int 
+Pour calculer la valeur $F_4$ aux entiers on peut applique la relation de récurrence suivante
 \begin{eqnarray*}
-F^{(3)}(x)&=&F^{(3)}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x)(x-\lfloor x \rfloor) \left(F^{(2)}(\lfloor x \rfloor)+ \frac{(x-\lfloor x \rfloor)}{2}\left(F^{(1)}(\lfloor x \rfloor)+\frac{(x-\lfloor x \rfloor)}{3} f_{\lfloor x \rfloor}\right)\right)\\
-          &+&\mathds{1}_{[m,+\infty[}(x)(x-\lfloor x \rfloor) \left(F^{(2)}(m)+ \frac{(x-\lfloor x \rfloor)}{2}F^{(1)}(m)\right) \\
-F^{(3)}(k)&=&  \underset{0\le l<k}{\sum}\left(F^{(2)}(l)+\frac{F^{(1)}(l)}{2}+\frac{f_{l}}{6} \right)  \\
-F^{(2)}(k)&=&  \underset{0\le l<k}{\sum}\left(F^{(1)}(l)+\frac{f_{l}}{2} \right)  \\
-F^{(1)}(k)&=&  \underset{0\le l<k}{\sum}f_{l} 
+F_{1}(k+1)&=&  F_{1}(k)+f_{k}  \\
+F_{2}(k+1)&=&  F_{2}(k)+F_{1}(k)+\frac{f_{k}}{2}   \\
+F_{3}(k+1)&=&  F_{3}(k)+F_{2}(k)+\frac{F_{1}(k)}{2}+\frac{f_{k}}{6}   \\
+F_{4}(k+1)&=&  F_{4}(k)+F_{3}(k)+\frac{F_{2}(k)}{2}++\frac{F_{1}(k)}{6}+\frac{f_{k}}{24}  
 \end{eqnarray*}
-Si on fixe $0\le l\le m-1$ et on pose
+Ces formules sont utilisées dans le pseudo code.\\ %ref pseudo build 4 int %\\
+Dans cette méthode on réalise un ré-échantillonnage du signal $(f_k)$ en l'interpolant d'abord par la fonction $F_{0}$, puis on ré-échantillonne en appliquant une convolution avec un noyaux $G_n^d$. On utilise dans nos algrithmes les fonctions $G_3^d$ car elles se sont de bonnes approximations de courbes gaussiennes.\\ %placer figure 
+Dans cette méthode l'image est initialement interpolée par une fonction constante par morceau. Lorsque le paramètre $d$ est pris très petit le ré-échantillonnage $F_{0}*G_3^d$ est équivalent à la méthode du point le plus proche.\\
+On peut cependant corriger ce problème
+
+\begin{prop} Si on pose $\tilde{F}_0$  est la spline d'ordre $1$ continue, telle que $\tilde{F}_0(k+\frac{1}{2})=f_k$ alors 
 \begin{equation*}
-P_l (x)=F^{3}(l) +(x-l) \left(F^{(2)}(l)+ \frac{(x-l)}{2}\left(F^{(1)}(l)+\frac{(x-l)}{3} f_{l}\right)\right)
+( \tilde{F}_0 * \Gcal_n^d ) (x) = D_d^{(n)}D_1 F_{n+1}(x)
 \end{equation*}
-On obtient alors
-\begin{eqnarray*}
-P_l (l) &=& F^{(3)}(l) \\
-P_l (l+1) &=& F^{(3)}(l+1) \\
-P_l '(l) &=& F^{(2)}(l) \\
-P_l '(l+1) &=& F^{(2)}(l+1)
-\end{eqnarray*}
-On peut donc obtenir ces formules en utilisant une méthode d'interpolation de Hermite. La fonction $F^{(3)}$ est la spline de cubique passant par le point $F^{(3)}(k)$ en $k$ avec une dérivé égale à $F^{(2)}(k)$, elle est $\mathcal{C}^2$.\\
-Cette méthode a cependant un défaut, l'image est initialement interpolée par une fonction constante par morceau, Si on pose $F_1$  est la spline d'ordre $1$ continue, telle que $F_{1}(k+\frac{1}{2})=f_k$ alors
-\begin{prop} Si on pose $F_1$  est la spline d'ordre $1$ continue, telle que $F_{1}(k+\frac{1}{2})=f_k$ alors 
-\begin{equation*}
-( F_1 * g_n^d ) (y) = D_d^{(n)}D_1 F^{(n+1)}(y)
-\end{equation*}
-Où $F$ est l'interpolation constante par morceau de $(f)$
+Où $F$ est l'interpolation constante par morceau de $(f)$ 
 \end{prop}
 \begin{proof}
 On a
 \begin{equation*}
-F_1(x)=\underset{0\le k \le m-1}{\sum} f_k g_2^1 (x-k-\frac{1}{2})=(F^{(0)} *g_1^1 )(x)
+\tilde{F}(x)=\underset{0\le k \le m-1}{\sum} f_k \Gcal_2^1 (x-k-\frac{1}{2})=(F_{0} *\Gcal_1^1 )(x)
 \end{equation*}
 On obtient alors 
 \begin{equation*}
-F_1*g_n^d=(F ^{(0)}*g_1^1)*g_n^d=(F ^{(0)}*g_n^d)*g_1^1=(D_d^n F ^{(n)})*g_1^1= D_d^n D_1 F^{(n+1)}
+\tilde{F}*\Gcal_n^d=(F_{0}*\Gcal_1^1)*\Gcal_n^d=(F_{0}*\Gcal_n^d)*\Gcal_1^1=(D_d^n F_{n})*\Gcal_1^1= D_d^n D_1 F_{n+1}
 \end{equation*}
 \end{proof}
-L'interpolation supplémentaire peut donc être obtenue en évaluant $F^{(n+1)}$. La méthode de calcul est donc la même que dans le cas précédent, mais il faut utiliser l'intégrale quatrième de l'image dans la pratique.\\
-Il est possible d'utiliser cette méthode pour obtenir une représentation plus régulière du signal de départ mais la courbe n'est pas  interpolante si $2\le n$.\\
+L'interpolation supplémentaire peut donc être obtenue en évaluant $F_{n+1}$. La méthode de calcul est donc la même que dans le cas précédent, la convolution avec $\Gcal_3^d$ nécessite  l'utilisation l'intégrale quatrième de l'image dans la pratique.\\
+Il est possible d'utiliser cette méthode pour obtenir une représentation plus régulière du signal de départ mais la courbe $F_0 * \Gcal_p^1~$ n'est pas  interpolante si $2\le p$.\\
 %à faire mieux 
-Afin d'implémenter cette méthode nous devons déterminer la valeur du paramètre $d$ en fonction du facteur de zoom local. Nous allons réutiliser les résultats du paragraphe précédent, car la fonction $g_3$ est une bonne approximation d'une gaussienne. L'écart type de $g_1$ est $\sigma_1=\frac{d}{\sqrt{12}}$ donc l'écart type $\sigma_3$ est donné par la formule $\sigma_3=\sqrt{3}\sigma_1=\frac{d}{2}$
-donc $d=2c\sqrt{z^2 - 1}$.\\
-Dans la pratique on utilisera la formule $d=2\sqrt{(0.8)^2 z^2 - (0.7)^2}$ car les images utilisées ne sont en général pas parfaites.\\
-
-\paragraph{Splines cubiques de Hermite}
-
-Il existe des méthodes d'interpolation plus efficace que celle bilinéaire, par exemple celle cubique. Elle peut être employée lors du traitement de l'homographie unidirectionnelle.
-
-Soit $(x_0,x_1,x_2,x_3)$ et $(y_0,y_1,y_2,y_3)$ dans $\mb{R}^4$. On peut construire un polynôme $P$ de degré 3 tel que  
+Afin d'implémenter cette méthode nous devons déterminer la valeur du paramètre $d$ en fonction du facteur de zoom local $z$ que l'on doit effectuer en ce point. Généralement nous prendrons $z$ égal à la dérivé de la transformation au point où l'on ré-échantillonne .\\ 
+On réutilise les résultats du paragraphe précédent (cf \ref{zoom_gaussien}), car les  fonctions $\Gcal_3^d$ sont de bonnes approximations de courbes gaussiennes. L'écart type $\sigma$ de $\Gcal_3^d$ est donné par la formule 
 \begin{equation*}
-P(x_1)=y_1~~~~P(x_2)=y_2~~~~P'(x_1)= \frac{y_2-y_0}{x_2 -x_0}~~~~P'(x_2)= \frac{y_3-y_1}{x_3 -x_1}
+\sigma=\frac{d}{2}
 \end{equation*}
-
-Il suffit ensuite pour avoir une valeur de la courbe en $x\in [x_1,x_2]$ d'évaluer $P(x)$.
+Par la formule du zoom gaussien (formule\ref{formule_zoom_gaussien}) on en déduit que si $z\ge 1$ alors
+\begin{equation*}
+d=2\sqrt{c^2 z^2 - c'^2}~~~~~c=0.8~~~~c'=0.7
+\end{equation*}
+La valeur de $c'$ peut être choisi en fonction de l'image d'entrée, pour des images très nettes si l'on souhaite que le résultat final ne soit pas alliasé on doit prendre une valeur de $c'$ autour de $0.5$, pour la grande majorité des image que l'on a utilisé lors de nos expériences une valeur de $0.7$ était suffisante. Une valeur trop faible de $c'$ aboutit à un flou excessif.

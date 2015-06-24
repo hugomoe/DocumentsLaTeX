@@ -1,10 +1,10 @@
 % contient une description du fonctionnement de Szeliski, pour préciser qu'on possède une méthode "parfaite" dans le cas des affinités
-Notre méthode de traitement des homographies utilise une méthode de traitement des affinités. Cette méthode est présentée dans la partie ci-dessous.
+Le traitement par décomposition des homographies utilise une méthode de traitement des affinités. Elle est présentée dans la partie ci-dessous.
 \subsubsection{Principe général}
 	
-	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape proposée par Szeliski, Winder et Uyttendaele \cite{szeliski2010high} et qui ne crée pratiquement aucun \emph{aliasing}. Dans toute la suite nous l'appellerons uniquement "méthode multi-étapes".
+	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape proposée par Szeliski, Winder et Uyttendaele \cite{szeliski2010high}, qui ne crée pratiquement aucun \emph{aliasing}. Dans toute la suite nous l'appellerons "méthode multi-étapes".%shmuel veut garder ce nous
 
-	Le principe de cette méthode est de d'abord se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est alors effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
+	Le principe de cette méthode est d'abord de se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est ensuite effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
 	
 	Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
 		\label{label_des_deux_prems_fig_de_szeli}
@@ -47,16 +47,16 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 	img_f[i][j] = \displaystyle{\sum_k}h\left(\frac{a_0i+a_1j+t-k}{s}\right)img[k][j]
 	\label{formule_convolution_discrete}
 	\end{equation}
-	où $img_f$ est l'image finale et $img$ l'image initiale (ici en une dimension).
+	où $img_f$ est l'image finale et $img$ l'image initiale.
 	
 	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
-	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rv} et \ref{szeliski_rh} traitant les opérations $\mathcal R_v$ et $\mathcal R_h$. \label{szeliski_rv_rh_section}
+	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rh} et \ref{szeliski_rv} traitant les opérations $\mathcal R_h$ et $\mathcal R_v$. \label{szeliski_rv_rh_section}
 	
 	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
 
 	\begin{thm}
-	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre
+	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre.
 	\end{thm}
 	\begin{proof}
 	L'effet des différentes étapes sur le spectre est présenté en figure \ref{szeliski_decompoSzeliski} et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}.
@@ -103,7 +103,7 @@ Notre méthode de traitement des homographies utilise une méthode de traitement
 		\label{uMax_vMax}
 		\end{figure}
 		
-		En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image). Les algorithmes \ref{szeliski_intersectionsHorizontales} et \ref{szeliski_intersectionsVerticales} réalisent l'intersection d'un segment (d'extrémités $(U_1,V_1)$ et $(U_2,V_2)$) et d'un côté du carré $[-1,1]^2$. L'algorithme \ref{szeliski_frequencesMax} s'appuient sur ces algorithmes pour calculer $u_{max}$ et $v_{max}$.
+		En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image). Les algorithmes \ref{szeliski_intersectionsVerticales} et \ref{szeliski_intersectionsHorizontales} réalisent l'intersection d'un segment (d'extrémités $(U_1,V_1)$ et $(U_2,V_2)$) et d'un côté du carré $[-1,1]^2$. L'algorithme \ref{szeliski_umax_vmax} s'appuient sur ces algorithmes pour calculer $u_{max}$ et $v_{max}$.
 		
 		À partir des coefficients de $A$ et des valeurs de $u_{max}$ et $v_{max}$, on peut en déduire les coefficients de sur-échantillonnage verticaux et horizontaux nécessaires \cite{szeliski2010high} :
 		\[r_v \geq \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))\]
@@ -137,7 +137,7 @@ avec : $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{
 		
 		Il ne reste qu'à appliquer les quatre opérations $\mathcal R$.
 		
-		Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où
+		Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où :
 		\begin{itemize}
 		\item $\varphi$ parcourt $2^b$ nombres rationnels de $[0,1]$ avec $b$ le nombre de bit de précision voulu
 		\item $k$ parcourt les entiers tels que $\frac{k}{s}$ soit dans le support de $h$ ($h(x)$ étant presque nul quand $|x|$ est assez grand, on suppose $h$ à support compact)

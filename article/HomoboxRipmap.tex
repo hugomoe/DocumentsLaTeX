@@ -106,7 +106,8 @@ On peut développer $D_d^n$ à l'aide de la formule du binome de Newton car les 
 \end{equation*}
 
 \end{proof}
-Dans nos algorithmes  on utilisera généralement cette propriété pour $n=3$ mais on calculera l'opérateur $D_d^n$ en faisant des différences successive (algorithme \ref{pseudo_code_convol_4_int}).\\
+Dans nos algorithmes  on utilisera généralement cette propriété pour $n=3$ mais on calculera l'opérateur $D_d^n$ en faisant des différences successives (algorithme \ref{pseudo_code_convol_4_int).\\ 
+
 
 On doit cependant calculer une valeur approchée des fonctions $F_{k}$  car on ne connait que les échantillons de la fonctions $f$.\\
 Si le signal discret possède $m$ valeurs non nulles $f_k,~~k=0...m-1$, on peut poser 
@@ -142,8 +143,8 @@ Q(r)=r \left(F_{3}(m)+\frac{r}{2} \left( F_{2}(m) + \frac{r}{3} F_1 (m)\right)\r
 \end{equation*}
 
 \end{itemize}
-Ces formules sont utilisées dans l'algorithme permettant d'évaluer l'intégrale qutrième de l'image (algorithme \ref{pseudo_code_eval_4_int}).\\
-Pour calculer la valeur $F_4$ aux entiers on peut applique la relation de récurrence suivante :
+Ces formules sont utilisées dans l'lgorithme permettant d'évaluer l'intégrale quatrième de l'image (algorithme \ref{pseudo_code_eval_4_int}).\\
+Pour calculer la valeur $F_4$ aux entiers on peut applique la relation de récurrence suivante
 \begin{eqnarray*}
 F_{1}(k+1)&=&  F_{1}(k)+f_{k}  \\
 F_{2}(k+1)&=&  F_{2}(k)+F_{1}(k)+\frac{f_{k}}{2}   \\

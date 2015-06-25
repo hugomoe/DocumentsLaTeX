@@ -2,7 +2,7 @@ On présente ici des expériences réalisé en C. On vérifie d'abord le comport
 
 \subsection{Décomposition multi-étapes d'une affinité}
  
- On présente ici les résultats de la décomposition multi-étapes d'une affinité \cite{szeliski2010high} (section \ref{szeliski_section}), ainsi que le spectre de l'image aux différentes étapes. L'affinité utilisée étant elle même un \emph{shear}, la décomposition en six étapes élémentaires se réduit à trois étapes élémentaires. La réduction à quatre étapes n'a donc pas lieu d'être, on reste donc à trois étapes élémentaires.
+ On présente ici les résultats de la décomposition multi-étapes d'une affinité \cite{szeliski2010high} (section \ref{szeliski_section}), ainsi que le spectre de l'image aux différentes étapes. L'affinité utilisée étant elle-même un \emph{shear}, la décomposition se réduit à trois étapes élémentaires, au lieu des quatres d'une affinité quelconque.
  
 	\begin{figure}
 		\centering
@@ -36,9 +36,9 @@ On présente ici des expériences réalisé en C. On vérifie d'abord le comport
 	
 	En figure \ref{experiments_decompoSzeliski_sinc}, le filtre utilisé est un \emph{sinc}, correspondant au \emph{raised cosine-weighted sinc} avec $\beta = 0$ ; pour rappel, le filtre a pour forme
 	\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
-	On ne perd pas en qualité visuelle en réduisant la convolution à un nombre fini de termes suffisamment grand, par exemple 90.
+	On ne perd pas en qualité visuelle en réduisant la convolution à un nombre fini de termes suffisamment grand.
 	
-	Avec un $\beta$ plus élevé, on conserve des hautes fréquences sur l'extérieur du spectre, mais dont l'impact est faible quand l'image reprend sa taille initiale ; en augmentant $\beta$ (figure \ref{experiments_decompoSzeliski}), on peut donc autoriser un peu plus de repliement du spectre, en veillant à ce que visuellement, on n'observe aucun artefact. Comme l'augmentation de $\beta$ augmente la vitesse à laquelle le filtre décroit, on peut alors convoler sur des supports plus réduits, et donc gagner du temps. Avec $\beta = 0.36$, on peut restreindre la convolution à une somme de 9 termes (figure \ref{szeliski_plotRaisedCosine}) (9 est le nombre de termes de base ; il est plus grand lors des sur-échantillonnages car le support du filtre de convolution est adaptatif). Cette valeur $\beta = 0.36$ est celle qu'on utilise pour les autres expériences.
+	Avec un $\beta$ plus élevé, on conserve des hautes fréquences sur l'extérieur du spectre, mais leur impact est faible quand l'image reprend sa taille initiale ; en augmentant $\beta$ (figure \ref{experiments_decompoSzeliski}), on peut donc autoriser un peu plus de repliement du spectre, en veillant à ce que visuellement, on n'observe aucun artefact. Comme l'augmentation de $\beta$ augmente la vitesse à laquelle le filtre décroit, on peut alors convoler sur des supports plus réduits, et donc gagner du temps. Avec $\beta = 0.36$, on peut restreindre la convolution à une somme de 9 termes (figure \ref{szeliski_plotRaisedCosine}) (9 est le nombre de termes de base ; il est plus grand lors des sur-échantillonnages car le support du filtre de convolution est adaptatif). Cette valeur $\beta = 0.36$ est celle qu'on utilise pour les autres expériences.
  
 	\begin{figure}
 		\centering

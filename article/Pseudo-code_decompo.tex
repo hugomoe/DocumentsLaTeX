@@ -41,7 +41,7 @@
  De plus, en pratique, la condition $as-br=0$ n'est jamais vérifiée, on préfère donc la remplacer par une condition $as-br<cs-dr$.
 
 \subsection{Traitement d'une homographie quelconque}
- 
+ \label{translainsta}
  À partir de la décomposition, en utilisant les algorithmes de traitement d'homographie et d'affinités des sections suivantes, on peut donc traiter une homographie quelconque :
  
  On crée des images intermédiaires pour entre chaque étape (entre affinité et homographie et entre homographie et affinité) d'une taille suffisamment grande pour contenir toute l'image entre les transformations. Chaque image (d'entrée, intermédiaire ou de sortie) se situe dans un rectangle du plan, $rect$, qui peut être caractérisé par ses tailles (largeur, hauteur) et sa position dans le plan, par exemple par les coordonnées $(\mu,\nu)$ de son origine (son pixel supérieur gauche). On peut donc caractériser la portion du plan qui contient l'information d'une image intermédiaire, et donc minimiser la taille de celles-ci ou encore traiter les translations uniquement en changeant les paramètres $\mu$ et $\nu$.

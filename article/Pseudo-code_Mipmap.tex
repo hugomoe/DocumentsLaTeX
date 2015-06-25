@@ -42,7 +42,7 @@ $I[x][y] = evalPixel(H^{-1}(x,y),d,M)$\;
 \begin{algorithm}[H]
 \caption{$evalPixel((u,v),d,M)$, on effectue l'interpolation trilinéaire (comme décrit en \ref{Mipmap})}
 \label{intertri1}
-\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une distance $d \in \mb{R}$, un mipmap $M[1..l]$ où chaque élément est un image}
+\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une distance $d \in \mb{R}$, un Mipmap $M[1..l]$ où chaque élément est un image}
 \uIf{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
 \uElseIf{$d>l$}{\KwRet{$M[l][1][1]$}}
 \Else{Trouver $m \in \mb{N}$ tels que $2^m \leq d < 2^{m+1}$\;
@@ -60,7 +60,7 @@ $b= bilinearMipMap(\frac{u}{2^{m}}, \frac{v}{2^{m}},M[m+1])$\;
 \begin{algorithm}[H]
 \caption{$bilinearMipMap((u,v),M)$,  on effectue l'interpolation bilinéaire au niveau $d$ (comme décrit en \ref{Mipmap})}
 \label{intertri2}
-\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une image tirée du mipmap $img[1..k][1..k]$}
+\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une image tirée du Mipmap $img[1..k][1..k]$}
 $u'=floor(u)$\;
 $v' = floor(v)$\;
 $x=u-u'$\;
@@ -70,11 +70,11 @@ $y = v-v'$\;
 
 \medbreak
 \medbreak
-Ce n'est qu'un algorithme générique, nous allons maintenant voir comment le spécifier pour permettre une implémentation réelle. Il faut examiner la construction du mipmap. On s'est intéressé au problème de la fonction de distance dans la section \ref{fonctiondistance}.
+Ce n'est qu'un algorithme générique, nous allons maintenant voir comment le spécifier pour permettre une implémentation réelle. Il faut examiner la construction du Mipmap. On s'est intéressé au problème de la fonction de distance dans la section \ref{fonctiondistance}.
 
-\ssse{Construction du mipmap}
+\ssse{Construction du Mipmap}
 
-C'est un exemple naïf de construction d'un mipmap. On fait simplement la moyenne des quatre pixels concernés. Ce n'est pas une bonne méthode, en pratique on a fait précéder chaque moyennage par un filtrage gaussien de l'image. C'est une phase de précalcul, on tolère le fait qu'elle soit relativement coûteuse.
+C'est un exemple naïf de construction d'un Mipmap. On fait simplement la moyenne des quatre pixels concernés. Ce n'est pas une bonne méthode, en pratique on a fait précéder chaque moyennage par un filtrage gaussien de l'image. C'est une phase de précalcul, on tolère le fait qu'elle soit relativement coûteuse.
 
  \medbreak
   \medbreak
@@ -100,9 +100,9 @@ C'est un exemple naïf de construction d'un mipmap. On fait simplement la moyenn
 
 \ssse{Conventions}
 
-Le ripmap $R$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $R[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine. On suppose l'image de départ carrée de taille $n=2^l$.
+Le Ripmap $R$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $R[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine. On suppose l'image de départ carrée de taille $n=2^l$.
 
-\ssse{Pseudo-code pour le ripmap}
+\ssse{Pseudo-code pour le Ripmap}
 
 \medbreak
 \medbreak
@@ -154,11 +154,11 @@ $y = m_{22} - \log_2(d_2)$\;
 \end{algorithm}
 
 
-\ssse{La construction du ripmap}
+\ssse{La construction du Ripmap}
 \medbreak
 \medbreak
 \begin{algorithm}[H]
-\caption{$buildRipMap(img)$, un algorithme naïf de construction de ripmap.}
+\caption{$buildRipMap(img)$, un algorithme naïf de construction de Ripmap.}
 \label{buildRipmap1}
 \KwData{une image $img[1..n][1..n]$, où $n = 2^l$}
 $R[1][1] = img$\;

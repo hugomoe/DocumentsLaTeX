@@ -62,7 +62,7 @@ La figure \ref{intertrilineaire} schématise cette interpolation. Elle est décr
 Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
 On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
 
-Le choix de la distance est crucial car si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit l'image est aliasée.
+Le choix de la distance est crucial car si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit, l'image est aliasée.
 
 Il est aisé de calculer les coefficients des dérivées partielles. On note $H$ l'homographie inverse.
 
@@ -70,7 +70,7 @@ Il est aisé de calculer les coefficients des dérivées partielles. On note $H$
 
 % On a jugé de la performance des méthodes "à vue". On compte à terme l'évaluer sur des cosinus/sinus.
 
-On a anisi $(u,v)=H(x,y)$, et on note par exemple $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ par rapport à $x$.
+On a ainsi $(u,v)=H(x,y)$, et on note par exemple $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ par rapport à $x$.
 
 \sssse{Méthode du déterminant}
 $$D(x,y) = \sqrt{ \left|\frac{\dr u}{\dr x}\frac{\dr v}{\dr y}-\frac{\dr u}{\dr y}\frac{\dr v}{\dr x}\right| }$$

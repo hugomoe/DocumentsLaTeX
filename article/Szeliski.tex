@@ -26,7 +26,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
 	
-	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduit à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
+	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduits à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
 	\begin{equation}
 	h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}
 	\label{szeliski_definition_raisedCosineWeightedSinc}

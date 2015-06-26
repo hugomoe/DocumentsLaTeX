@@ -5,24 +5,25 @@
 \subsubsection{Séparation d'une homographie unidirectionelle}
 \label{homobox_paragraph}
 On en déduit par la formule du paragraphe précédent (formule \ref{formule_decomposition_effective}) que le traitement d'une homographie générale peut se ramener au traitement d'une homographie unidirectionnelle.\\
-On considère une homographie  $h$ de la forme 
+On considère une homographie unidirectionelle $h$, de la forme 
 \begin{equation*}
-h:(x,y)\mapsto \left(\frac{-bx}{1-ax},\frac{-y}{1-ax}\right)
+h:(x,y)\mapsto \left(\frac{ax+p}{rx+t},\frac{dy+q}{rx+t}\right)
 \end{equation*}
-(les résultats énoncés pour cette homographie seront valables pour toute homographie unidirectionnelle)
 
 On peut décomposer cette homographie en deux applications $h_1 , h_2$
 \begin{equation*}
-h_1:(x,y) \mapsto \left(\frac{-bx}{1-ax},y\right)~~~~~~h_2:(x,y) \mapsto \left(x,\frac{-y}{1-ax}\right)
+h_1:(x,y) \mapsto \left(\frac{ax+p}{rx+t},y\right) \text{ et } h_2:(x,y) \mapsto \left(x,\frac{dy+q}{rx+t}\right)
 \end{equation*}
 On obtient $h=h_1  \circ h_2$, ce qui nous donne le schéma suivant 
 \begin{equation*}
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
 \end{equation*}
-Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimentionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.\\ 
-Sur chaque colonne, la première transformation est une homographie en une dimension.\\ 
-Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).\\
-On peut voir sur la figure \ref{image_separation_f14} l'effet des transformations $h,h_1,h_2$.\\
+Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimentionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.
+\begin{itemize}
+\item Sur chaque colonne, la première transformation est une homographie en une dimension.
+\item Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
+\end{itemize}
+On peut voir sur la figure \ref{image_separation_f14} l'effet des transformations $h,h_1,h_2$.
 
 \begin{figure}[h!]
 \centering

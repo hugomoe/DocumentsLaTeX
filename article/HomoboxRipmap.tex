@@ -21,7 +21,7 @@ On obtient $h=h_1  \circ h_2$, ce qui nous donne le schéma suivant
 \begin{equation*}
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
 \end{equation*}
-Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimentionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.
+Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimensionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.
 \begin{itemize}
 \item Sur chaque colonne, la première transformation est une homographie en une dimension.
 \item Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
@@ -40,7 +40,7 @@ On peut voir sur la figure \ref{image_separation_f14} l'effet des transformation
 
 \paragraph{Sous-échantillonnage gaussien}
 \label{zoom_gaussien}
-Le zoom gaussien est une méthode de sous-échantillonnage utilisant la convolutions $f*G_{d}$ , où $G_d$ est un noyau gaussien d'écart type $d$. Dans nos algorithme on utilisera la méthode développée dans l'article \emph{SIFT is an invariant scale} \cite{morel2011sift}.
+Le zoom gaussien est une méthode de sous-échantillonnage utilisant la convolution $f*G_{d}$ , où $G_d$ est un noyau gaussien d'écart type $d$. Dans nos algorithme on utilisera la méthode développée dans l'article \emph{SIFT is an invariant scale} \cite{morel2011sift}.
 
 Si $f$ est une image on suppose que $f$ peut s'écrire sous la forme $f=G_{c'} * f'$, où $f'$ est une image de résolution infinie. Le paramètre $c'$ est le facteur de flou gaussien idéal de l'image $f$. L'expérience montre que le facteur de flou gaussien idéal se situe autour de $c=0.8$ \cite{morel2011sift}.\\
 Soit $z\le 1$ posons $f''(x)=f'(zx)$. Si on cherche à échantillonner la fonction  $x\mapsto f(zx)$,  on doit d'abord s'assurer qu'elle possède un facteur de flou gaussien égal à $0.8$. On sait que 
@@ -68,7 +68,7 @@ Soit $\Gcal_n^d$ le noyau définit par
 \Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) \text{ et } \Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d 
 \label{formule_convol_n_int}
 \end{equation*}
-Cette suite de fonction vérifie la propriété suivante
+Cette suite de fonctions vérifie la propriété suivante
 \begin{prop}
 La fonction $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformément sur $\mathbb{R}$ vers une courbe gaussienne 
 \end{prop}
@@ -77,18 +77,18 @@ La fonction $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformément sur
 \includegraphics[width=10cm]{filtre_g3.png}
 \caption{Comparaison en $\Gcal_3^20$ et $G_10$ (les filtres sont centrées sur $50$)}
 \end{figure}
-Si $f$ est une fonction continue par morceau on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$  et on pose
+Si $f$ est une fonction continue par morceaux on définit $D_d$ l'opérateur de "dérivation discrète" par $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$  et on pose
 \begin{equation*}
 F_{n+1}(x)= \int_{-\infty}^{x}F_{n}(y)dy~~~~~~F_{0}(x)= f(x)
 \end{equation*}
 On a alors le lemme suivant 
-\begin{prop} Pour toute fonction $f$ continue par morceau à support compact :
+\begin{prop} Pour toute fonction $f$ continue par morceaux à support compact :
 \begin{equation}
  (f*\Gcal_n^d)(y)=D_d^n F_{n}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F_{n}(y+\frac{(n-2k)d}{2})
 \end{equation}
 \end{prop}
 \begin{proof}
-Pour toute fonction $f$ continue par morceau à support compact on a 
+Pour toute fonction $f$ continue par morceaux à support compact on a 
 \begin{eqnarray*}
 (f * \Gcal_1^d )(y)&=&\frac{1}{d} \int_{[y-\frac{d}{2},y+\frac{d}{2}]} f(x) dx\\
                &=&\frac{F_{1}(y+\frac{d}{2})-F_{1}(y-\frac{d}{2})}{d}\\
@@ -103,7 +103,7 @@ Par linéarité de la convolution
 \begin{equation*}
 (f*\Gcal_{n+1}^{d}) = D_d^n (F_{n}*\Gcal_1^d) = D_d^{n+1} F_{n+1}
 \end{equation*}
-Comme $D_n^d$ est la somme des opérateur de translation
+Comme $D_n^d$ est la somme des opérateurs de translation
 \begin{equation*}
 f\mapsto f(\cdot+\frac{d}{2})~~~~~~f\mapsto f(\cdot-\frac{d}{2})
 \end{equation*}
@@ -126,7 +126,7 @@ $(f_k)_{k=0...m-1}$ sont les termes du signal. On calcule ensuite $F_{n}(x)=\int
 F_{1}(x)=\underset{k\le \lfloor x\rfloor \wedge m-1}{\sum}f_{k}+ f_{\lfloor x\rfloor}
 (x-\lfloor x\rfloor)
 \end{equation*}
-Cette fonction est affine par morceau. On peut démontrer la formule suivante par récurrence
+Cette fonction est affine par morceaux. On peut démontrer la formule suivante par récurrence
 \begin{eqnarray*}
 F_{n}(x) &=& F_{n}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{0\le k \le n-1}{\sum}F_{k}(\lfloor x \rfloor) \frac{(x-\lfloor x \rfloor)^{n-k}}{(n-k)!}\\
           &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F_{k}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
@@ -135,7 +135,7 @@ Où la valeur de $F_{n}$ se calcule par récurrence :
 \begin{equation*}
 \forall k \in \llbracket 0 ;m-1 \rrbracket, F_{n}(k+1)=F_{n}(k)+\underset{0\le l < n}{\sum} \frac{F_{l}(k)}{(n-l)!}
 \end{equation*}
-On doit calculer une composante constante par morceau afin d'avoir la valeur de $F_{n}$ aux entiers ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.
+On doit calculer une composante constante par morceaux afin d'avoir la valeur de $F_{n}$ aux entiers ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.
 
 Dans la pratique, on a utilisé cette formule pour $n=4$. Afin d'évaluer $F_4$, on procède de la façon suivante 
 \begin{itemize}
@@ -162,7 +162,7 @@ F_{4}(k+1)&=&  F_{4}(k)+F_{3}(k)+\frac{F_{2}(k)}{2}+\frac{F_{1}(k)}{6}+\frac{f_{
 Ces formules sont utilisées dans le pseudo-code (algorithme \ref{pseudo_code_built_4_int}).
 
 Dans cette méthode on ré-échantillonne le signal $(f_k)$ en l'interpolant d'abord par la fonction $F_{0}$, puis on ré-échantillonne en appliquant une convolution avec un noyau $\Gcal_n^d$. On utilise dans nos algorithmes les fonctions $\Gcal_3^d$ car elles se sont de bonnes approximations de courbes gaussiennes.\\ %placer figure 
-Dans cette méthode, l'image est initialement interpolée par une fonction constante par morceau. Lorsque le paramètre $d$ est choisi très petit, le ré-échantillonnage $F_{0}*\Gcal_3^d$ est équivalent à la méthode du point le plus proche.\\
+Dans cette méthode, l'image est initialement interpolée par une fonction constante par morceaux. Lorsque le paramètre $d$ est choisi très petit, le ré-échantillonnage $F_{0}*\Gcal_3^d$ est équivalent à la méthode du point le plus proche.\\
 On peut cependant corriger ce problème
 
 \begin{prop}
@@ -170,7 +170,7 @@ Si on pose $\tilde{F}$ la spline d'ordre $1$ continue, telle que $\tilde{F}(k+\f
 \begin{equation*}
 ( \tilde{F} * \Gcal_n^d ) (x) = D_d^{n}D_1 F_{n+1}(x)
 \end{equation*}
-Où $F$ est l'interpolation constante par morceau de $(f)$ 
+Où $F$ est l'interpolation constante par morceaux de $(f)$ 
 \end{prop}
 \begin{proof}
 On a

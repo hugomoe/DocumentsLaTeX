@@ -44,7 +44,7 @@ X_{v}=F-\delta'\wbf \text{ et }\delta'=\small{\left|\frac{F \cdot \zbf_{0}}{\wbf
 \end{Not}
 
 Dans la suite on suppose que le point visé existe toujours, dans ce cas la situation est définit par un vecteur de paramètres
-$(\theta,\phi,\psi,\delta,\delta',c,x_v)$.\\
+$(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$.\\
 \begin{Def}
 On fixe un jeux de paramètres. Le mouvement de caméra associé à ces paramètres, est l'application $H$ qui à un point $X\in P_{1}$ lui associe sa projection homographique sur $P_{2}$ (le point $H(X)$ est le point d'intersection de la droite $D_{X}$ passant par $X$ et $F$ et du plan $P_{2}$). Cette intersection n'existe pas toujours, le domaine de définition de $H$ est donc $P_1$ privé d'une droite $D$ qui correspond à un angle mort de la caméra.
 \begin{equation*}
@@ -58,9 +58,10 @@ D'=\{ X\in P_2 | (X-F).\zbf_0=0\}
 
 On appelle $H:P_1 \setminus D \ra P_2 \setminus D'$ un mouvement de caméra.
 \end{Def}
+
 Un mouvement de caméra est donc défini en fonction de neuf paramètres, il n'y a pas unicité de ces paramètres.
 
-Le plan $P_1$ sera muni du repère orthonormé $(0,\xbf_0,\ybf_0)$ ; le plan $P_{2}$ peut être muni d'un repère orthonormé $(C,u,v)$ tel que la famille $(\ubf,\vbf,\wbf)$ soit un base orthonormée directe de $\mathbb{R}^{3}$.
+Le plan $P_1$ sera muni du repère orthonormé $(0,\xbf_0,\ybf_0)$ ; le plan $P_{2}$ peut être muni d'un repère orthonormé $(C,\ubf,\vbf)$ tel que la famille $(\ubf,\vbf,\wbf)$ soit un base orthonormée directe de $\mathbb{R}^{3}$.
 
 La base $(\ubf,\vbf)$ est définie en fonction des rotations effectuées par la caméra (figures \ref{img_angles},\ref{decompgeo_rotationPropre}). Le point $C$ est un point arbitraire de $P_2$, on ne cherchera pas à vérifier la condition $C=C_0$.
 
@@ -77,13 +78,13 @@ L'application $H$ est une bijection de $P_1 \setminus D$ dans $P_2 \setminus D'$
 De plus, l'horizon de $H^{-1}$ est l'angle mort de $H$ et l'angle mort de $H^{-1}$ est l'horizon de $H$.
 \end{remarque}
 
-Dans la suite de cette section on fixe un jeu de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf)$ et on considère le mouvement de caméra $H$ associé à ces paramètres.
+Dans la suite de cette section on fixe un jeu de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ et on considère le mouvement de caméra $H$ associé à ces paramètres.
 Dans cette partie, on cherche à établir la décomposition suivante
 \begin{prop}
  Soit  $H$ un mouvement de caméra de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$,l'application $h$ est une homographie. De plus $h$ se factorise sous la forme
  
 \begin{equation}
-h = \tau_{\cbf_v} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
+h = \tau_{\cbf} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \label{formul_decomp}
 \end{equation}
 Où $R_{\alpha}$ est la rotation d'angle $\alpha$,$z_\lambda$ est la dilatation de facteur $\lambda$, $\tau_\ybf$ est  la translation du vecteur $-\ybf$ et $h_{\theta,\delta'}$ est l'homographie unidirectionnelle (cf. définition \ref{homo_uni_direc})

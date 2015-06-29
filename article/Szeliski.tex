@@ -32,7 +32,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 	\label{szeliski_definition_raisedCosineWeightedSinc}
 	\end{equation}
 	La période $T$ est prise égale à 1 (taille d'un pixel).
-	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus 9 termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
+	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus neuf termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
 	\label{label_figure_dom_reel_fourier_jt}
 	\begin{figure}
 		\centering
@@ -64,7 +64,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 	Le sous-échantillonnage est effectué sans repliement grâce à un élargissement du support du filtre $h$ (support adaptatif).
 	\end{proof}
 	
-	Cette méthode semble donc décomposer une affinité en 6 opérations $\mathcal R$ (3 pour chacun des 2 \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à 4 opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
+	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	
 \subsubsection{Étapes de l'algorithme}
 	\label{szeliski_affine_section}

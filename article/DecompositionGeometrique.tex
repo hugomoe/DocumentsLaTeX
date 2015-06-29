@@ -76,7 +76,7 @@ L'application $H$ est une formulation géométrique du mouvement de caméra, et 
 On verra plus tard que $h$ est une homographie : c'est l'homographie associée au mouvement de caméra.
 \end{remarque}
 
-Dans la suite de cette section on fixe un jeux de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,Z)$ et on considère le mouvement de caméra $H$ associé à ces paramètres.
+Dans la suite de cette section on fixe un jeu de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,Z)$ et on considère le mouvement de caméra $H$ associé à ces paramètres.
 Dans cette partie, on cherche à établir la décomposition suivante
 \begin{prop}
  Soit  $H$ un mouvement de caméra de paramètres $(\theta,\phi,\psi,\delta,\delta',\cbf,Z)$,l'application $h$ est une homographie.
@@ -311,7 +311,7 @@ On fixe $h$ une homographie et $H$ une matrice qui lui est associée. On cherche
 h= \tau_{\cbf} \circ z_{\frac{\delta}{\delta'}}\circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \end{equation*}
 On conserve ici les notations de la partie précédente, on suppose sans perte de généralité que $\det (H)=1$.\\
-Les transformations intervenant dans la décomposition sont des homographie, on peut réecrire cette relation sous forme matricielle. On cherche à prouver qu'il existe $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ tels que
+Les transformations intervenant dans la décomposition sont des homographies, on peut réecrire cette relation sous forme matricielle. On cherche à prouver qu'il existe $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ tels que
 \begin{equation*}
 H\sim T_{\cbf} Z_{\frac{\delta}{\delta'}}  R_{\psi}  H_{\theta,\delta'} R_{\phi}  T_{\xbf_v}
 \end{equation*}
@@ -526,7 +526,7 @@ H \sim T_{(x_2,y_2} R_{\psi}  \tilde H R_{\phi}
 		\subfigure[Vue finale (après rotation d'angle $\psi$)]{
 		{\includegraphics[width=60mm]{vue_fps_rotation_psi.png}}
 		{\includegraphics[scale=0.5]{vue_tps_rotation_psi.png}}}
-		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra, à gauche la vue de la caméra, à droite une vue extérieure immobile. Les translations ont été omise pour plus de clarté. Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. (cf \ref{ref_schema_decomp_cool})}
+		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra, à gauche la vue de la caméra, à droite une vue extérieure immobile. Les translations ont été omises pour plus de clarté. Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. (cf \ref{ref_schema_decomp_cool})}
 		\label{schema_decomp_cool}
 		\label{SchemaEtapesDecompoGeometrique}
 	\end{figure}

@@ -7,7 +7,7 @@
 
 On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer le point de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
 
-On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faut moyenner l'image de départ sur une certaine zone, et non trouver sa valeur en ce point, comme schématisé sur la figure \ref{imagereciproque}.
+On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faudrait calculer une moyenne pondérée de l'image par un filtre anti-aliasing sur une zone de taille suffisante, et non trouver sa valeur en ce point, comme schématisé sur la figure \ref{imagereciproque}.
 
 
 \begin{figure}[h!]
@@ -21,7 +21,7 @@ En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en \emph{
 
 \ssse{Présentation du Mipmap}
 \label{Mipmap}
-Le principe du Mipmap est de précalculer des coefficients qui représentent des zones entières de l'image, pour pouvoir ensuite calculer en temps réel une homographie. 
+Le principe du Mipmap est de précalculer des  moyennes locales de l'image à plusieurs échelles, pour pouvoir ensuite calculer en temps réel une homographie. 
 
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur moyenne de certains carrés de l'image de taille une puissance de 2.
 Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. 
@@ -40,7 +40,7 @@ Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone
 
 On appelle distance d'un pixel la taille du carré choisi pour l'approximation (car plus un pixel est "loin", plus les carrés qui l'approchent sont grands). 
 
-On suppose avoir une formule qui nous donne la distance d'un point quelconque. La géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
+On suppose que l'on dispose d'une formule qui nous donne la distance d'un point quelconque. La géométrie du Mipmap ne permettant que des distances puissance de 2, on fait une approximation trilinéaire : 
 
 \begin{itemize}
   \item d'une part, on fait une interpolation linéaire entre deux étages dont les profondeurs encadrent la distance.

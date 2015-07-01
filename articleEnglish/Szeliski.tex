@@ -1,32 +1,43 @@
 % contient une description du fonctionnement de Szeliski, pour préciser qu'on possède une méthode "parfaite" dans le cas des affinités
-Le traitement par décomposition des homographies utilise une méthode de traitement des affinités. Elle est présentée dans la partie ci-dessous.
+
+%Le traitement par décomposition des homographies utilise une méthode de traitement des affinités. Elle est présentée dans la partie ci-dessous.
+
+Affinities are a particular case of homographies for which there exists a efficient anti-aliasing method, and which will be used later to resample all homographies.
+
 \subsection{Principe général}
 	
-	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape proposée par Szeliski, Winder et Uyttendaele \cite{szeliski2010high}, qui ne crée pratiquement aucun \emph{aliasing}. Dans toute la suite nous l'appellerons "méthode multi-étapes".%shmuel veut garder ce nous
+	This multi-pass resampling method has been introduced by Szeliski, Winder et Uyttendaele \cite{szeliski2010high}. It has been thought to minimize apparition of aliasing.
 
-	Le principe de cette méthode est d'abord de se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est ensuite effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse. 
+	%Le principe de cette méthode est d'abord de se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est ensuite effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse.
 	
-	Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
-		\label{label_des_deux_prems_fig_de_szeli}
+	The principle is to bring back the problem to a particular case of affine map, called shear, which only act towards one direction (their matrix form is $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Each shear is computed in three steps : an oversampling, a shear and a subsampling.
+	
+	%Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
+	
+	The aim is to choose the oversampling factor large enough so that the global operation avoids aliasing (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
+	\label{label_des_deux_prems_fig_de_szeli}
 	\begin{figure}
 		\centering
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{szeliski_naiveEntree.png}}
-		\subfigure[Spectre de l'image de sortie : repliement du spectre]{\includegraphics[scale=0.5]{szeliski_naiveSortie.png}}
-		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par la méthode naïve) (cf. partie \ref{label_des_deux_prems_fig_de_szeli})}
+		\subfigure[Spectrum of the initial image]{\includegraphics[scale=0.5]{szeliski_naiveEntree.png}}
+		\subfigure[Spectrum of the final image : aliasing]{\includegraphics[scale=0.5]{szeliski_naiveSortie.png}}
+		\caption{Spectrum of a naive resampling by a shear (cf. partie \ref{label_des_deux_prems_fig_de_szeli})}
 		\label{szeliski_decompoNaive}
 	\end{figure}
 		
 	\begin{figure}
 		\centering
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{szeliski_szeliskiEntree.png}}
-		\subfigure[Spectre de l'image après sur-échantillonnage]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
-		\subfigure[Spectre de l'image après sur-échantillonnage et \emph{shear}]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
-		\subfigure[Spectre de l'image de sortie (après sur-échantillonnage, \emph{shear} et sous-échantillonnage)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
-		\caption{Effet d'un \emph{shear} sur le spectre de l'image (par le traitement multi-étapes)(cf. partie \ref{label_des_deux_prems_fig_de_szeli}). Mise en pratique figure \ref{experiments_decompoSzeliski_sinc} }
+		\subfigure[Spectrum of the initial image]{\includegraphics[scale=0.5]{szeliski_szeliskiEntree.png}}
+		\subfigure[Spectrum of the image after oversampling]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
+		\subfigure[Spectrum of the image after an oversampling and a shear]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
+		\subfigure[Spectrum of the final image (after an oversampling, a shear and a subsampling, coupled with a low-pass filter)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
+		\caption{{Spectrum of an image, resampled by a shear with the multi-pass resampling method (cf. section \ref{label_des_deux_prems_fig_de_szeli}). Experiment figure \ref{experiments_decompoSzeliski_sinc} }
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
 	
-	Ces trois opérations sont toutes des \emph{shears} (éventuellement réduits à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
+	%Ces trois opérations sont toutes des \emph{shears} (éventuellement réduits à une dilatation) et seront nommées $\mathcal R$ ; selon qu'elles modifient l'image verticalement (en laissant l'abscisse inchangée) ou horizontalement (en laissant l'ordonnée inchangée), on parlera de $\mathcal R_v$ ou de $\mathcal R_h$ . Ces opérations $\mathcal R$ sont réalisées par une convolution par un noyau d'interpolation, en l'occurrence une fonction de type \emph{raised cosine-weighted sinc}, pour pouvoir atténuer, voire supprimer, les fréquences au-delà d'un certain seuil.
+	
+	Those three operations are all shears (eventually reduced to a dilatation) and will be called $\mathcal R$ ; depending on what direction they modify (vertically or horizontally), 	they are called $\mathcal R_v$ or $\mathcal R_h$. Those operations $\mathcal R$ are done by convolving with a interpolation kernel, a raised cosine-weighted sinc, to extenuate or delete frequences beyond a threshold.
+	
 	\begin{equation}
 	h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}
 	\label{szeliski_definition_raisedCosineWeightedSinc}

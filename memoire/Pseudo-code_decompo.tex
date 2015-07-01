@@ -1,0 +1,57 @@
+\subsection{Pseudo-code pour la décomposition d'une homographie}
+ 
+ On rappelle que dans les algorithmes qui suivent, on prend la convention suivante : $H = \pmatrice{a&b&p\\c&d&q\\r&s&t}$ est la matrice carrée de taille 3 (ou l'application homographique) telle que si $img$ est l'image d'entrée et $img_f$ est l'image de sortie, $img_f(x) = img(H(x))$. Ainsi, la décomposition $H \sim T_{c} R_{\psi}  \tilde H R_{\phi}$ est exécutée de gauche à droite. On notera cette décomposition $A \tilde H B$, et ces trois matrices seront les objets renvoyés par $decomposition$.
+ 
+ Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Arbitrairement, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ : pour cela, on rappelle que $(x_2,y_2)$ (nommés $t_0,t_1$ dans l'algorithme) doivent vérifier
+ \[\Delta_H(x_2 , y_2 ) \stackrel{\text{déf}}{=} \hat r ((rc+sd)-(r^2 + s^2)y_2) - \hat s ((ar+sb)-(r^2 + s^2 )x_2) = 0 \]
+ On prend donc $t_0 = x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}, t_1 = y_2 = 0$ ou $t_0 = x_2 = 0, t_1 = y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$, en choisissant de sorte à ne pas diviser par zéro.
+ 
+   \begin{algorithme}
+     \label{pseudoCodeDecompo}
+     \caption{$decomposition(H)$}
+     \KwData{Une matrice d'homographie $H \in \mathcal M_{3,3}$}
+     \eIf{$as-br\neq0$}{
+      $t_0 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}$\;
+      $t_1 = 0$\;
+     }{
+      $t_0 = 0$\;
+      $t_1 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$\;
+     }
+     $N_\phi = \sqrt{r^2+s^2}$\;
+     $R_\phi = \pmatrice{
+      \frac{r}{N_\phi} & \frac{s}{N_\phi} & 0\\
+      -\frac{s}{N_\phi} & \frac{r}{N_\phi} & 0\\
+      0 & 0 & 1}$\;
+     $N_\psi = \sqrt{((a+t_0r)s-(b+t_0s)r)^2+((c+t_1r)s-(d+t_1s)r)^2}$\;
+     $R_\psi = \pmatrice{
+      \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & \frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & 0\\
+      -\frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & 0\\
+      0 & 0 & 1}$\;
+     $A = T^{-1}R_\psi$\;
+     $\tilde H = \pmatrice{
+      -\frac{((a+t_0r)(d+t_1s)-(b+t_0s)(c+t_1r))N_\phi}{N_\psi} & 0 & \frac{p'((c+t_1r)s-(d+t_1s)r)-q'((a+t_0r)s-(b+t_0s)r)}{N_\psi}\\
+      0 & -\frac{N_\psi}{N_\phi} & \frac{p'((a+t_0r)s-(b+t_0s)r)+q'((c+t_1r)s-(d+t_1s)r)}{N_\psi}\\
+      N_\phi & 0 & t'}$\;
+     $B = R_\phi$\;
+     \KwRet{$A,\tilde H,B$}
+   \end{algorithme}
+   Dans une implémentation pratique, on n'inverse pas la matrice $H$ pour obtenir les valeurs de $t_0$ et $t_1$, car les quantités susmentionnées se simplifient en
+ \[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(as-br)}\]
+ \[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(cs-dr)}\]
+ De plus, en pratique, la condition $as-br=0$ n'est jamais vérifiée, on préfère donc la remplacer par une condition $as-br<cs-dr$.
+
+\subsection{Traitement d'une homographie quelconque}
+ \label{translainsta}
+ À partir de la décomposition, en utilisant les algorithmes de traitement d'homographie et d'affinités des sections suivantes, on peut donc traiter une homographie quelconque :
+ 
+ On crée des images intermédiaires pour entre chaque étape (entre affinité et homographie et entre homographie et affinité) d'une taille suffisamment grande pour contenir toute l'image entre les transformations. Chaque image (d'entrée, intermédiaire ou de sortie) se situe dans un rectangle du plan, $rect$, qui peut être caractérisé par ses tailles (largeur, hauteur) et sa position dans le plan, par exemple par les coordonnées $(\mu,\nu)$ de son origine (son pixel supérieur gauche). On peut donc caractériser la portion du plan qui contient l'information d'une image intermédiaire, et donc minimiser la taille de celles-ci ou encore traiter les translations uniquement en changeant les paramètres $\mu$ et $\nu$.
+ 
+ \begin{prop}
+  La taille nécessaire des images intermédiaires est bornée indépendamment de l'homographie traitée.
+ \end{prop}
+ 
+ La première image intermédiaire sera le plus petit rectangle du plan contenant le résultat de la première affinité. L'affinité appliquée étant $A^{-1}$, la taille et la position de la première image intermédiaire dans le plan sont données par $rect_{\text{inter},1} \supset A^{-1}(rect_\text{entrée})$, où $rect_\text{entrée}$ est le rectangle du plan où est stockée l'image d'entrée (sa taille est celle de l'image d'entrée, son origine a pour coordonnées $(\mu,\nu)=(0,0)$). Les translations étant prises en compte en choisissant la position $(\mu,\nu)$ de l'image intermédiaire, sa taille ne dépend plus que de la partie linéaire de $A^{-1}$, i.e. une rotation. Sa taille est donc bornée par $\sqrt{2}$ fois la plus grande dimension de l'image d'entrée (plus ou moins 1 pixel, pour avoir des tailles entières).
+ 
+ La seconde image intermédiaire devrait, a priori, être le plus petit rectangle du plan contenant $\tilde H^{-1}(rect_{\text{inter},1})$. Cependant, la taille d'un tel rectangle n'est pas bornée quand $\tilde H$ (et donc $H$) varie. Cependant, puisqu'il ne reste plus qu'une affinité après cette image intermédiaire, on peut s'autoriser à perdre les parties de l'image (et du plan) qui n'apparaitront pas dans la fenêtre de sortie. On peut donc définir $rect_{\text{inter},2} \supset B(rect_{\text{sortie}})$ le plus petit rectangle contenant l'antécédent de la fenêtre de sortie par la dernière affinité ($rect_{\text{sortie}}$ est le rectangle du plan où sera stockée l'image finale (sa taille est celle de la fenêtre de sortie, son origine a pour coordonnées $(\mu,\nu)=(0,0)$)). Dans ce cas, pour la même raison que plus haut, la taille de la seconde image intermédiaire est bornée par $\sqrt{2}$ fois la plus grande dimension de l'image de sortie (plus ou moins 1 pixel).
+ 
+On verra plus tard que, en supposant le rapport hauteur sur largeur borné, l'appel des fonctions qui effectue les affinités est l'homographie sont en $O(n_1+n_2)$ où $n_1$ est la taille de l'image intermédiaire d'entrée et $n_2$ celle de l'image intermédiaire de sortie. Ainsi comme les images intermédiaires sont en $O(N_1+N_2)$ où $N_1$ est l'image d'entrée et $N_2$ celle de sortie, on peut conclure que le calcul total est en $O(N_1+N_2)$.

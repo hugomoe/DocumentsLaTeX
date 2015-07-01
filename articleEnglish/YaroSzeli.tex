@@ -1,0 +1,93 @@
+% contient la description des différentes méthodes pour traiter les rotations de la décomposition
+
+Pour les deux rotations dans la décomposition, plusieurs méthodes sont possibles : la méthode de Yaroslavsky \cite{unser1995convolution} et la méthode de traitement des affinités multi-étapes \cite{szeliski2010high}.
+
+\subsubsection{Méthode de Yaroslavsky}
+
+La méthode de Yaroslavsky consiste à décomposer une rotation en trois cisaillements.
+
+Sous forme matricielle une rotation s'écrit de manière générale :
+\begin{equation*}
+	R=\begin{pmatrix}
+	\cos \theta&-\sin \theta\\\sin \theta&\cos \theta
+	\end{pmatrix}
+	\end{equation*}
+\begin{prop}
+Toute rotation se décompose en trois cisaillements de la manière suivante :
+\begin{equation*}
+	R=\begin{pmatrix}
+	\cos \theta&-\sin \theta\\\sin \theta&\cos \theta
+	\end{pmatrix}=\begin{pmatrix}
+	1&-\tan \frac{\theta}{2}\\0&1
+	\end{pmatrix}\begin{pmatrix}
+	1&0\\\sin \theta&1
+	\end{pmatrix}\begin{pmatrix}
+	1&-\tan \frac{\theta}{2}\\0&1
+	\end{pmatrix}
+	\end{equation*}
+\end{prop}
+
+	Pour faire la rotation complète, on fait chaque cisaillement dans le domaine de Fourier et on recentre l'image à chaque étape. 
+	En pratique on se ramène toujours à des rotations d'angle dans $[\frac{-\pi}{4},\frac{\pi}{4}]$ (on peut en effet faire des rotations d'angle $\pi$ et $\frac{\pi}{2}$ de manière exacte)  
+
+
+\subsubsection{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
+
+%A voir peut être dans les expériences ?
+	Dans les deux paragraphes suivants, l'erreur \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
+
+	Afin d'observer de réelles différences entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (si on fait trop peu de rotations, on ne voit pas de différence à l'oeil entre les méthodes, car les erreurs sont trop faibles). On obtient les résultats figure  \ref{troiscentrotations}.  On remarque que la méthode de traitement des affinités multi-étapes avec une interpolation par b-spline d'ordre 9 est la plus proche de l'image initiale, cependant elle est beaucoup plus longue que les autres méthodes.  La méthode de traitement des affinités multi-étapes avec une interpolation par b-spline d'ordre 3 est assez floue. Celle de Yaroslavsky est beaucoup plus rapide, n'est pas floue, mais par contre on peut noter quelques erreurs dans les coins de droite. La méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation est aussi très rapide mais introduit beaucoup d'erreurs. Enfin la méthode par interpolation linéaire introduit beaucoup trop de flou.\\
+\label{pleinsderotations}
+
+	En pratique si on veut un algorithme qui s'exécute en temps court, seules la méthode par interpolation linéaire, la méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation semblent raisonnables. Étant donné que l'on ne fait que deux rotations dans la décomposition des homographies, pour comparer les deux méthodes on réalise seulement 10 rotations de l'image lena.png d'angle $\frac{\pi}{5}$. On compare aussi avec la méthode de Yaroslavsky qui est plus exacte sur 360 rotations. Les résultats sont sur la figure \ref{rotalena}. La méthode par interpolation linéaire floute beaucoup tandis que la méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation et la méthode de Yaroslavsky semblent parfaites. Il reste donc à choisir entre ces deux dernières méthodes. Les erreurs de la méthode de traitement des affinités multi-étapes (avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation) sont dans le tableau.  \\
+
+En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.\\
+
+Bien que pour 360 rotations la méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation donne de mauvais résultats (comparés à Yaroslavsky), sur dix rotations ses perfomances sont meilleures que Yaroslavsky.
+Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents pour deux rotations. 
+Bien entendu si le but est d'étre le plus précis possible sur beaucoup d'homographies successives sans se préoccuper du temps de calculs, on peut choisir d'autres méthodes de rotation comme la méthode de traitement des affinités multi-étapes  avec une interpolation par b-spline d'ordre 9.
+
+ \begin{figure}[h]
+ \centering
+   \subfigPDP{lena.png originale}{lena.png}
+   \subfigPDP{lena.png après 360 rotations par interpolation linéaire}{linear_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (filtre d'interpolation : \emph{raised cosine-weighted sinc}))}{raised-cosine_beta0-36_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes (interpolation par b-spline d'ordre 3)}{b-spline_order3_lena.png}
+   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (interpolation par b-spline d'ordre 9)}{b-spline_order9_double_lena.png}
+   \subfigPDP{lena.png après 360 rotations par Yaroslasky}{lena_360_rotations_yaro.png}
+  
+ \subfigure[Erreurs des 360 rotations de 1 degré]{\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Méthode & \emph{RMSE}  & Erreur L1 & erreur max & durée (sec) \\
+  \hline
+  interpolation linéaire & 38.090 & 27.526 & 184.13 &  \bf{17.909}\\
+  affinité multi-étape, b-spline d'ordre 9 & \bf{6.8430} &  \bf{4.0370} & \bf{86.855} &  6114.1\\
+  affinité multi-étape, b-spline d'ordre 3 & 14.869 & 8.5208 & 158.04 & 1268.1\\
+  Yaroslavsky & 14.187 & 7.7791 & 211.17 & 1839.9 \\
+  affinité multi-étapes, \emph{raised cosine-weighted sinc} &  828.85 & 503.15 & 13638 & 778.42\\
+  \hline
+\end{tabular}} 
+\caption{Effet de 360 rotations de 1 degré (cf. section \ref{pleinsderotations})}
+\label{troiscentrotations}
+ \end{figure}
+
+ \begin{figure}[h]
+   \centering
+   \subfigPDP{lena.png originale}{lena.png}
+   \subfigPDP{lena.png après dix rotations par interpolation linéaire }{linear_10rot_lena.png}
+   \subfigPDP{lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : \emph{raised cosine-weighted sinc})}{lena_10_rotations_szeli.png}
+   \subfigPDP{lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro.png}
+    \subfigPDP{différence entre lena.png et lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : \emph{raised cosine-weighted sinc})}{raised-cosine_beta0_36_10rot_lena_error.png}
+   \subfigPDP{différence entre lena.png et lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro_error.png}
+ \subfigure[Erreurs des 10 rotations de $\frac{\pi}{5}$ radians.]{\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Méthode & \emph{RMSE}  & Erreur L1 & erreur max  \\
+  \hline
+  Interpolation linéaire & 14.722 & 8.5485 & 147.43  \\
+  Yaroslavsky & 12.817 & 7.3749 & 159.84  \\
+  affinité multi-étapes, \emph{raised cosine-weighted sinc} &   \bf{5.9791} & \bf{3.6243} & \bf{72.129} \\
+  \hline
+ \end{tabular}}
+ \caption{Effet de dix rotations (cf. section \ref{pleinsderotations})}
+ \label{rotalena}
+ \end{figure}

@@ -1,108 +1,15 @@
 %pseudo-code mipmap/ripmap
 %Hugo s'en charge
-\sse{Pseudo-code pour le Mipmap}
-\label{pseudo_code_Mipmap}
-\ssse{Conventions}
 
-Un Mipmap est un tableau à trois dimensions, avec les deux axes usuels et une profondeur $d$.
-Ainsi $M[3]$ est le carré $4$ fois moins haut que l'image d'origine. On note $n=2^l$ la taille de l'image (qui est supposée carrée). On note $D$ la fonction de distance (à deux arguments).
 
-On utilise la convention suivante pour la profondeur : 
-\begin{itemize}
-\item Si $d = 1$ alors on considère l'image d'origine.
-\item Si $d = n$ alors on considère l'image d'un pixel qui est la moyenne de l'image.
-\end{itemize}
-%ici mettre une image symbolique, schéma de la pyramide avec u,v et d
-
-En pratique, on peut obtenir une image finale périodisée. 
-
-\ssse{Pseudo-code}
-
-\medbreak
-\medbreak
-\begin{algorithm}[H]
-\caption{$mainFunction(img,H,img_f)$}
-\label{Mipmap1}
-\KwData{Une image $img[1..n][1..n]$, Une homographie $H = \left( \begin{array}{ccc} a &b & p\\ c & d & q \\ r & s & t\\ \end{array}\right)$, une fenêtre d'arrivée $img_f[1..m][1..m]$}
-$M=builtMipMap(img)$ \tcc*{cf. algorithme \ref{buildMipmap}}
-Calculer l'homographie inverse $H^{-1}$ (et calculer la fonction $D$ de $x,y$ en même temps)
-\tcc*{On trouve les distances possibles en section \ref{fonctiondistance}}
-\For{$(x,y) \in \llb 1,m \rrb^2$}{
-Calculer $d=D(x,y)$ \;%préciser les équations
-$I[x][y] = evalPixel(H^{-1}(x,y),d,M)$\;
-}
-\KwRet{I}
-\end{algorithm}
-
-\medbreak
-\medbreak
-\medbreak
-\medbreak
-
-\begin{algorithm}[H]
-\caption{$evalPixel((u,v),d,M)$, on effectue l'interpolation trilinéaire (comme décrit en \ref{Mipmap})}
-\label{intertri1}
-\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une distance $d \in \mb{R}$, un Mipmap $M[1..l]$ où chaque élément est un image}
-\uIf{$d\leq1$}{\KwRet{$bilinearMipMap(u,v,M[1])$}}
-\uElseIf{$d>l$}{\KwRet{$M[l][1][1]$}}
-\Else{Trouver $m \in \mb{N}$ tels que $2^m \leq d < 2^{m+1}$\;
-$a=bilinearMipMap(\frac{u}{2^{m-1}}, \frac{v}{2^{m-1}},M[m])$\;
-$b= bilinearMipMap(\frac{u}{2^{m}}, \frac{v}{2^{m}},M[m+1])$\; 
-\KwRet{$ (m+1 - \log (d)) a + (\log (d) - m) b$}}
-
-\end{algorithm}
-
-\medbreak
-\medbreak
-\medbreak
-\medbreak
-
-\begin{algorithm}[H]
-\caption{$bilinearMipMap((u,v),M)$,  on effectue l'interpolation bilinéaire au niveau $d$ (comme décrit en \ref{Mipmap})}
-\label{intertri2}
-\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une image tirée du Mipmap $img[1..k][1..k]$}
-$u'=floor(u)$\;
-$v' = floor(v)$\;
-$x=u-u'$\;
-$y = v-v'$\;
-\KwRet{$(1-x)(1-y)*img[u'][v'] + (1-x)y*img[u'][v'+1] + x(1-y)*I[u'+1][v']+xy*img[u'+1][v'+1]$}\;
-\end{algorithm}
-
-\medbreak
-\medbreak
-Ce n'est qu'un algorithme générique, nous allons maintenant voir comment le spécifier pour permettre une implémentation réelle. Il faut examiner la construction du Mipmap. On s'est intéressé au problème de la fonction de distance dans la section \ref{fonctiondistance}.
-
-\ssse{Construction du Mipmap}
-
-C'est un exemple naïf de construction d'un Mipmap. On fait simplement la moyenne des quatre pixels concernés. Ce n'est pas une bonne méthode, en pratique on a fait précéder chaque moyennage par un filtrage gaussien de l'image. C'est une phase de précalcul, on tolère le fait qu'elle soit relativement coûteuse.
-
- \medbreak
-  \medbreak
- \begin{algorithm}[H]
- \caption{$buildMipMap(img)$}
- \label{buildMipmap}
- \KwData{Une image $img[1..n][1..n]$ (où $n = 2^l$)}
- \For{$(i,j)\in \llb1,n\rrb^2$}{
- 	$M[1][i][j]=img[i][j]$\;
- }
- \For{$u \in \llb 2,l+1\rrb$}{
- 	\For{$(i,j)\in \llb1,\frac{n}{2^{u-1}}\rrb^2$}{
-		$M[u][i][j]=\frac{M[u-1][2i][2j][u-1]+M[u-1][2i-1][2j]+M[u-1][2i][2j-1]+M[u-1][2i-1][2j-1]}{4}$\;
-	}
- }
- \end{algorithm}
- \medbreak
-  \medbreak
-
-\sse{Le Ripmap}
 \label{pseudo_code_Ripmap}
 
 
-\ssse{Conventions}
+\sse{Conventions}
 
-Le Ripmap $R$ et quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $R[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine. On suppose l'image de départ carrée de taille $n=2^l$.
+Le Ripmap $R$ est quadri-dimensionnel  : les deux premiers indices indiquent le rectangle, les deux autres indiquent le pixel du rectangle. Ainsi appeler $R[2][4]$ appelle une image simple, de largeur $\frac{1}{2}$ et de hauteur $\frac{1}{16}$ de l'image d'origine. On suppose l'image de départ carrée de taille $n=2^l$.
 
-\ssse{Pseudo-code pour le Ripmap}
+\sse{Pseudo-code pour le Ripmap}
 
 \medbreak
 \medbreak
@@ -142,10 +49,10 @@ $u_2=\frac{u-(2^{m_{12}}-1)/2}{2^{m_{12}}}$\;
 $v_1=\frac{v-(2^{m_{21}}-1)/2}{2^{m_{21}}}$\;
 $v_2=\frac{v-(2^{m_{22}}-1)/2}{2^{m_{22}}}$\;
 
-$a=bilinearMipMap(u_1,v_1,R[m_{11}+1][m_{21}+1])$\;
-$b=bilinearMipMap(u_2,v_1,R[m_{12}+1][m_{21}+1])$\;
-$c=bilinearMipMap(u_1,v_2,R[m_{12}+1][m_{22}+1])$\;
-$d=bilinearMipMap(u_2,v_2,R[m_{12}+1][m_{22}+1])$\;
+$a=bilinearRipmap(u_1,v_1,R[m_{11}+1][m_{21}+1])$\;
+$b=bilinearRipmap(u_2,v_1,R[m_{12}+1][m_{21}+1])$\;
+$c=bilinearRipmap(u_1,v_2,R[m_{12}+1][m_{22}+1])$\;
+$d=bilinearRipmap(u_2,v_2,R[m_{12}+1][m_{22}+1])$\;
 
 $x = m_{12} - \log_2(d_1)$\;
 $y = m_{22} - \log_2(d_2)$\;
@@ -154,7 +61,20 @@ $y = m_{22} - \log_2(d_2)$\;
 \end{algorithm}
 
 
-\ssse{La construction du Ripmap}
+\begin{algorithm}[H]
+\caption{$bilinearRipmap((u,v),M)$,  on effectue l'interpolation bilinéaire au niveau $(d_1,d_2)$ (comme décrit en \ref{Mipmap})}
+\label{intertri2}
+\KwData{Des coordonnées $(u,v) \in \mb{R}^2$, une image tirée du Mipmap $img[1..k][1..k]$}
+$u'=floor(u)$\;
+$v' = floor(v)$\;
+$x=u-u'$\;
+$y = v-v'$\;
+\KwRet{$(1-x)(1-y)*img[u'][v'] + (1-x)y*img[u'][v'+1] + x(1-y)*I[u'+1][v']+xy*img[u'+1][v'+1]$}\;
+\end{algorithm}
+
+
+
+\sse{La construction du Ripmap}
 \medbreak
 \medbreak
 \begin{algorithm}[H]
@@ -203,7 +123,7 @@ Ici les fonctions $convolution$ convolent dans la direction indiquée par une ga
 
 \sse{Complexité}
 
-On étudie la complexité du Mipmap et du Ripmap.
+On étudie la complexité du Ripmap.
 
 Pour l'évaluation d'un pixel de l'image d'arrivée, on effectue un nombre constant de calcul pour les $d_i$ et $c_i$ ou juste de $d$, puis on fait au plus 4 appels à $bilinearMipmap$, qui est elle même en temps constant. Ainsi le calcul d'une homographie est en temps linéaire en l'image d'arrivée.
 

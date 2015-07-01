@@ -1,63 +1,79 @@
-\subsubsection*{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
+%\subsubsection*{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
 
-%A voir peut être dans les expériences ?
-	Dans les deux paragraphes suivants, l'erreur \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
+\subsection{Comparaison between Yaroslavsky's method and multi-pass resampling method}
 
-	Afin d'observer des différences significatives entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (sur trop peu de rotations, les erreurs sont faibles). On obtient les résultats figure \ref{troiscentrotations}. On y voit que la méthode multi-étapes ne résiste pas à tant de rotations, mais que l'interpolation par les b-splines peut être substituée à la convolution par un \emph{raised cosine-weighted sinc} sans création d'\emph{aliasing}, car les rotations sont d'angles faible.
-\label{pleinsderotations}
-	
-	Dans la décomposition géométrique d'une homographie, on ne fait que deux rotations. Il est donc plus pertinent de réaliser seulement 10 rotations de l'image lena.png de 36 degrés.\\
+%	Dans les deux paragraphes suivants, l'erreur \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
 
-	On ne compare plus la méthode de traitement des affinités multi-étapes avec interpolation par b-spline car l'angle des rotations est cette fois trop grand pour considérer que $r_h$ et $r_v$ sont proches de 1.
-	
-	Les résultats sont sur la figure \ref{rotalena}. La méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation et la méthode de Yaroslavsky semblent parfaites. Il reste donc à choisir entre ces deux dernières méthodes.\\
+	In the following paragraphs, the RMSE (Root Mean Square Error) is the $L2$ norm of the difference between the initial image and the final image, the MAE (Mean Absolute Error) is the $L1$ norm of this difference and the maximal error is the $L\infty$ norm of this difference.\\
 
-En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.\\
+%	Afin d'observer des différences significatives entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (sur trop peu de rotations, les erreurs sont faibles). On obtient les résultats figure \ref{troiscentrotations}. On y voit que la méthode multi-étapes ne résiste pas à tant de rotations, mais que l'interpolation par les b-splines peut être substituée à la convolution par un \emph{raised cosine-weighted sinc} sans création d'\emph{aliasing}, car les rotations sont d'angles faible.
+%\label{pleinsderotations}
 
-Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents sur peu de rotations. 
-On pourrait remplacer l'interpolation par convolution par une b-spline si on accordait moins d'importance au temps de calcul et si on avait une assurance que les rotations seront faibles (par exemple, si les homographies sont déjà presque unidirectionnelles), .
+	To observe significative differences between rotation methods, 360 rotations of 1 degree are done. The results are presented in figure \ref{troiscentrotations}. The multi-pass resampling method does not resist that much rotations, but is that case, b-splines can replace convolution without introducing aliasing, because the angle of the rotations are small.
+	\label{pleinsderotations}
 
  \begin{figure}[h]
  \centering
-   \subfigPDP{lena.png originale}{lena.png}
-   \subfigPDP{lena.png après 360 rotations par interpolation linéaire}{linear_lena.png}
-   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (filtre d'interpolation : \emph{raised cosine-weighted sinc}))}{raised-cosine_beta0-36_lena.png}
-   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes (interpolation par b-spline d'ordre 3)}{b-spline_order3_lena.png}
-   \subfigPDP{lena.png après 360 rotations par la méthode de traitement des affinités multi-étapes  (interpolation par b-spline d'ordre 9)}{b-spline_order9_double_lena.png}
-   \subfigPDP{lena.png après 360 rotations par Yaroslasky}{lena_360_rotations_yaro.png}
+   \subfigPDP{original lena.png}{lena.png}
+   \subfigPDP{lena.png after 360 rotations by linear interpolation}{linear_lena.png}
+   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0-36_lena.png}
+   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation by B-Spline of order 3)}{b-spline_order3_lena.png}
+   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation by B-Spline of order 9)}{b-spline_order9_double_lena.png}
+   \subfigPDP{lena.png after 360 rotations with Yaroslasky's method}{lena_360_rotations_yaro.png}
   
- \subfigure[Erreurs des 360 rotations de 1 degré]{\begin{tabular}{|c|c|c|c|c|}
+ \subfigure[Errors on the 360 rotations of 1 degree]{\begin{tabular}{|c|c|c|c|c|}
   \hline
-  Méthode & \emph{RMSE}  & Erreur L1 & erreur max & durée (sec) \\
+  Method & RMSE  & MAE & maximal error & duration (s) \\
   \hline
-  interpolation linéaire & 38.090 & 27.526 & 184.13 &  \bf{17.909}\\
-  affinité multi-étape, b-spline d'ordre 9 & \bf{6.8430} &  \bf{4.0370} & \bf{86.855} &  6114.1\\
-  affinité multi-étape, b-spline d'ordre 3 & 14.869 & 8.5208 & 158.04 & 1268.1\\
+  linear interpolation & 38.090 & 27.526 & 184.13 &  \bf{17.909}\\
+  multi-pass resampling, b-spline of order 9 & \bf{6.8430} &  \bf{4.0370} & \bf{86.855} &  6114.1\\
+  multi-pass resampling, b-spline of order 3 & 14.869 & 8.5208 & 158.04 & 1268.1\\
   Yaroslavsky & 14.187 & 7.7791 & 211.17 & 1839.9 \\
-  affinité multi-étapes, \emph{raised cosine-weighted sinc} &  828.85 & 503.15 & 13638 & 778.42\\
+  multi-pass resampling, raised cosine-weighted sinc &  828.85 & 503.15 & 13638 & 778.42\\
   \hline
 \end{tabular}} 
-\caption{Effet de 360 rotations de 1 degré (cf. section \ref{pleinsderotations})}
+\caption{360 rotations of 1 degree (cf. section \ref{pleinsderotations})}
 \label{troiscentrotations}
  \end{figure}
+	
+%	Dans la décomposition géométrique d'une homographie, on ne fait que deux rotations. Il est donc plus pertinent de réaliser seulement 10 rotations de l'image lena.png de 36 degrés.\\
+
+	In the geometric decomposition of an homography, only two rotations are necessary. It is more relevant to compute only 10 rotations of 36 degrees of the image lena.png.\\
+
+%	On ne compare plus la méthode de traitement des affinités multi-étapes avec interpolation par b-spline car l'angle des rotations est cette fois trop grand pour considérer que $r_h$ et $r_v$ sont proches de 1.
+
+	In that case, the multi-pass resampling method can not use b-spline to interpolate anymore : the angle is too large to consider $r_h$ and $r_v$ close to 1.
+	
+%	Les résultats sont sur la figure \ref{rotalena}. La méthode de traitement des affinités multi-étapes avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation et la méthode de Yaroslavsky semblent parfaites. Il reste donc à choisir entre ces deux dernières méthodes.\\
+
+	The result are on figure \ref{rotalena}. The multi-pass resampling method using raised cosine-weighted sinc as interpolation filter and Yaroslavsky's method seem perfect.
+
+%En terme de complexité, la méthode de Yaroslavsky est en $O(n log(n))$ (où $n$ est le nombre de pixel de l'image), tandis que la méthode de traitement des affinités multi-étapes est en $O(n)$. Ainsi pour des images de grande taille, il vaut mieux choisir la méthode de traitement des affinités multi-étapes.\\
+
+	Computationnally, Yaroslavksy's method is more expensive ($O(n \log(n))$, $n$ the number of pixels) than the multi-pass resampling method ($O(n)$). Thus, for large-sized images, the multi-pass resampling method is better.\\
+
+%Pour les expériences qui suivent, la méthode de traitement des affinités multi-étapes, avec le \emph{raised cosine-weighted sinc} comme filtre d'interpolation a été choisie pusiqu'elle est toujours dans les méthodes les plus rapides quelque soit la taille de l'image, et parce qu'elle donne des résultats excellents sur peu de rotations. 
+	In the following experiment, this method has been chosen, since it is quiet fast and still gives excellent results on few rotations.
+%On pourrait remplacer l'interpolation par convolution par une b-spline si on accordait moins d'importance au temps de calcul et si on avait une assurance que les rotations seront faibles (par exemple, si les homographies sont déjà presque unidirectionnelles), .
+	The convolution could be replaced by b-spline interpolation if the computation time had been less important and if the rotations had been ensured to have small angles.
 
  \begin{figure}[h]
    \centering
-   \subfigPDP{lena.png originale}{lena.png}
-   \subfigPDP{lena.png après dix rotations par interpolation linéaire }{linear_10rot_lena.png}
-   \subfigPDP{lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : \emph{raised cosine-weighted sinc})}{lena_10_rotations_szeli.png}
-   \subfigPDP{lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro.png}
-    \subfigPDP{différence entre lena.png et lena.png après dix rotations par la méthode de traitement des affinités multi-étapes (filtre d'interpolation : \emph{raised cosine-weighted sinc})}{raised-cosine_beta0_36_10rot_lena_error.png}
-   \subfigPDP{différence entre lena.png et lena.png après dix rotations par Yaroslasky }{lena_10_rotations_yaro_error.png}
- \subfigure[Erreurs des 10 rotations de $\frac{\pi}{5}$ radians.]{\begin{tabular}{|c|c|c|c|c|}
+   \subfigPDP{original lena.png}{lena.png}
+   \subfigPDP{lena.png after 10 rotations by linear interpolation}{linear_10rot_lena.png}
+   \subfigPDP{lena.png after 10 rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{lena_10_rotations_szeli.png}
+   \subfigPDP{lena.png after 10 rotations by Yaroslasky's method}{lena_10_rotations_yaro.png}
+   \subfigPDP{difference between lena.png and lena.png after dix rotations rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0_36_10rot_lena_error.png}
+   \subfigPDP{différence entre lena.png et lena.png after 10 rotations by Yaroslasky's method}{lena_10_rotations_yaro_error.png}
+ \subfigure[Errors on 10 rotations of 36 degrees]{\begin{tabular}{|c|c|c|c|c|}
   \hline
-  Méthode & \emph{RMSE}  & Erreur L1 & erreur max  \\
+  Méthode & RMSE  & MAE & maximal error  \\
   \hline
-  Interpolation linéaire & 14.722 & 8.5485 & 147.43  \\
-  Yaroslavsky & 12.817 & 7.3749 & 159.84  \\
-  affinité multi-étapes, \emph{raised cosine-weighted sinc} &   \bf{5.9791} & \bf{3.6243} & \bf{72.129} \\
+  Linear interpolation & 14.722 & 8.5485 & 147.43  \\
+  Yaroslavsky's method & 12.817 & 7.3749 & 159.84  \\
+  multi-pass resampling &   \bf{5.9791} & \bf{3.6243} & \bf{72.129} \\
   \hline
  \end{tabular}}
- \caption{Effet de dix rotations (cf. section \ref{pleinsderotations})}
+ \caption{Effect of 10 rotations (cf. section \ref{pleinsderotations})}
  \label{rotalena}
  \end{figure}

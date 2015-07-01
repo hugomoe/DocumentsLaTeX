@@ -10,7 +10,7 @@ Le principe du Mipmap est de précalculer des  moyennes locales de l'image à pl
 Pour cela on choisit de supposer que l'image est carrée de taille une puissance de 2 (quitte à faire un premier zoom). On calcule ensuite la valeur moyenne de certains carrés de l'image de taille une puissance de 2.
 Le Mipmap est donc représenté par une suite d'images chacune deux fois plus petite que la précédente. Ainsi c'est un suite de \emph{zoom-out} de l'image d'origine de facteur une puissance de 2. 
 
-Un exemple est représenté figure \ref{MipMap_real}. Un pseudo-code naïf qui effectue cette construction figure en annexe en \ref{pseudo_code_Mipmap}, c'est l'algorithme \ref{buildMipmap}.
+Un exemple est représenté figure \ref{MipMap_real}.
 \label{exemple_de_mipmap_figure}
 \begin{figure}[h!]
 \centering
@@ -31,7 +31,8 @@ On suppose que l'on dispose d'une formule qui nous donne la distance d'un point 
   \item d'autre part, dans chaque étage du Mipmap, on fait une interpolation bilinéaire entre les quatre carrés qui encadrent le pixel.
 \end{itemize}
 
-La figure \ref{intertrilineaire} schématise cette interpolation. Elle est décrite en annexe dans les algorithmes \ref{intertri1} et \ref{intertri2}, en section \ref{pseudo_code_Ripmap}.
+La figure \ref{intertrilineaire} schématise cette interpolation. 
+
 \label{figure_schema_inter_trilin}
 \begin{figure}[h!]
 \centering
@@ -43,10 +44,13 @@ La figure \ref{intertrilineaire} schématise cette interpolation. Elle est décr
 
 \sse{Les fonctions de distance}
 \label{fonctiondistance}
-Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
-On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
+
+On a supposer l'existence d'une fonction qui a un point associe une distance, on va maintenant s'intéresser au fonctions possibles.
 
 Le choix de la distance est crucial car si $d$ est trop grand, l'image est inutilement floutée (on parle d'\emph{over-blurring}), et si $d$ est trop petit, l'image est aliasée.
+
+Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
+On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
 
 Il est aisé de calculer les coefficients des dérivées partielles. On note $H$ l'homographie inverse.
 
@@ -56,10 +60,10 @@ Il est aisé de calculer les coefficients des dérivées partielles. On note $H$
 
 On a ainsi $(u,v)=H(x,y)$, et on note par exemple $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ par rapport à $x$.
 
-On a utilisé la méthode du plus grand côté.
-
+On donne ici sa formule.
 
 $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
+
 On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule vient d'un article de Heckbert \cite{heckbert1983texture}. On la représente figure \ref{methode_plus_grand_cote}.
 % On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
 
@@ -70,9 +74,6 @@ On prend le plus grand côté du parallélogramme comme côté du carré. Cette 
 \label{methode_plus_grand_cote}
 \end{figure}
 
-On a comparé les méthodes du déterminant, du plus grand côté, de la plus grande valeur singulière et de la plus grande diagonale.
-
-On préfère le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'\emph{aliasing}. L'implémentation finale utilise la méthode du plus grand côté, car elle est légèrement plus rapide.
 
 \sse{Algorithme amélioré : Le Ripmap}
 \label{Ripmap}

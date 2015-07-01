@@ -1,6 +1,6 @@
 % contient une description du fonctionnement de Szeliski, pour préciser qu'on possède une méthode "parfaite" dans le cas des affinités
 Le traitement par décomposition des homographies utilise une méthode de traitement des affinités. Elle est présentée dans la partie ci-dessous.
-\subsubsection{Principe général}
+\subsection{Principe général}
 	
 	Les affinités sont un cas particulier d'homographie. Elles peuvent être traitées par une méthode multi-étape proposée par Szeliski, Winder et Uyttendaele \cite{szeliski2010high}, qui ne crée pratiquement aucun \emph{aliasing}. Dans toute la suite nous l'appellerons "méthode multi-étapes".%shmuel veut garder ce nous
 
@@ -66,7 +66,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 	
 	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	
-\subsubsection{Étapes de l'algorithme}
+\subsection{Étapes de l'algorithme}
 	\label{szeliski_affine_section}
 	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (algorithmes \ref{szeliski_rh}, \ref{szeliski_rv} et \ref{szeliski_affine}).
 	
@@ -75,7 +75,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 	On notera
 	\[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
 	
-	\paragraph{Éventuelle transposition}
+	\subsubsection{Éventuelle transposition}
 		\label{szeliski_transpoOpt_section}
 		
 		Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} déjà connu \cite{wolberg1990digital}.
@@ -89,7 +89,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 		
 		Cette transposition correspond à l'algorithme \ref{szeliski_transpoOpt}.
 		
-	\paragraph{Décomposition de $A$}
+	\subsubsection{Décomposition de $A$}
 		\label{szeliski_decompositionDeA_section}
 		\label{szeliski_frequencesMax_section}
 		On introduit les fréquences conservées maximales $u_{max}$, $v_{max}$ : ce sont les fréquences, horizontales et verticales, au delà desquelles les fréquences seront effacées par l'application de $A$ ; elles sont donc définies dans le domaine de Fourier par la figure \ref{uMax_vMax}. Les fréquences au-delà de $u_{max}$ horizontalement et de $v_{max}$ verticalement peuvent donc être filtrées, cela ne changera pas le spectre de sortie. Ces définitions se font après après avoir ramené le spectre sur le carré $[-1,1]^2$.
@@ -133,7 +133,7 @@ Le traitement par décomposition des homographies utilise une méthode de traite
 		\]
 avec : $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{01}t_1}{a_{11}}$.
 \end{prop}
-	\paragraph{Applications des $\mathcal R$}
+	\subsubsection{Applications des $\mathcal R$}
 		
 		Il ne reste qu'à appliquer les quatre opérations $\mathcal R$.
 		

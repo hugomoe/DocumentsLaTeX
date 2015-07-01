@@ -1,25 +1,11 @@
 % contient une explication du fonctionnement du Mip Map et du Rip Map, et des schÃ©mas explicatifs. En bref, un rÃ©sumÃ© de l'article de Williams
 % parler Ã©ventuellement de la mÃ©thode naÃ¯ve, ou d'autres mÃ©thodes actuelles qui ne fonctionnent pas
-  Afin de traiter les homographies plusieures méthodes ont été développées. Cette partie présente de manière non-exhaustive des méthodes déjà existantes (une méthode naïve, le Mipmap et le Ripmap). Elles seront comparées avec la nouvelle méthode dans les expériences.
 
+\se{Mipmap}
 
-\ssse{Méthode naïve}
+  Afin de traiter les homographies plusieures méthodes ont été développées. Elles sont pour la plupart des variantes de Mipmap présentée par Williams en 1983 \cite{williams1983pyramidal}. Cette partie présente le Mipmap et le Ripmap. Le Ripmap comparé avec la nouvelle méthode dans les expériences.
 
-On peut imaginer une méthode naïve : on utilise simplement la formule de l'homographie. Ainsi pour chaque point de l'image d'arrivée, on peut calculer le point de l'image de départ correspondant via l'homographie inverse. On se heurte à un premier problème, en effet on ne tombe pas précisément sur un pixel de l'image de départ mais entre plusieurs pixels. 
-
-On peut par exemple prendre la couleur du pixel le plus proche. Il apparait alors de l'\emph{aliasing} : en effet les pixels qu'on a modélisés par des points ont visuellement une épaisseur. Ainsi quand il y a localement un \emph{zoom-out} il faudrait calculer une moyenne pondérée de l'image par un filtre anti-aliasing sur une zone de taille suffisante, et non trouver sa valeur en ce point, comme schématisé sur la figure \ref{imagereciproque}.
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{imagereciproque.jpg}
-\caption{Image réciproque d'un pixel}
-\label{imagereciproque}
-\end{figure}
-
-En pratique on utilise plutôt le Mipmap. C'est une méthode utilisée en \emph{texturing}, présentée par Williams en 1983 \cite{williams1983pyramidal}.
-
-\ssse{Présentation du Mipmap}
+\sse{Présentation du Mipmap}
 \label{Mipmap}
 Le principe du Mipmap est de précalculer des  moyennes locales de l'image à plusieurs échelles, pour pouvoir ensuite calculer en temps réel une homographie. 
 
@@ -57,7 +43,7 @@ La figure \ref{intertrilineaire} schématise cette interpolation. Elle est décr
 \end{figure}
 
 
-\ssse{Les fonctions de distance}
+\sse{Les fonctions de distance}
 \label{fonctiondistance}
 Toutes les fonctions de distance dépendent de la différentielle de l'homographie inverse.
 On note $(u,v)$ les coordonnées dans l'image d'origine et $(x,y)$ celles dans la fenêtre d'arrivée.
@@ -72,23 +58,9 @@ Il est aisé de calculer les coefficients des dérivées partielles. On note $H$
 
 On a ainsi $(u,v)=H(x,y)$, et on note par exemple $\frac{\dr u}{\dr x}$ la dérivée partielle de $u$ par rapport à $x$.
 
-\sssse{Méthode du déterminant}
-$$D(x,y) = \sqrt{ \left|\frac{\dr u}{\dr x}\frac{\dr v}{\dr y}-\frac{\dr u}{\dr y}\frac{\dr v}{\dr x}\right| }$$
-Cette formule est justifiée car le déterminant est l'aire du parallélogramme, donc un carré de côté $D(x,y)$ est de même aire que le parallélogramme qu'il approche. Elle est illustrée figure \ref{methode_determinant}.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{methode_determinant.jpg}
-\caption{Méthode du déterminant}
-\label{methode_determinant}
-\end{figure}
+On a utilisé la méthode du plus grand côté.
 
 
-Le résultat est relativement satisfaisant.
-
-%schéma avec un ârallélogramme et le carré correspondant
-
-\sssse{Méthode du plus grand côté}
 $$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
 On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule vient d'un article de Heckbert \cite{heckbert1983texture}. On la représente figure \ref{methode_plus_grand_cote}.
 % On prend le plus grand côté du parallélogramme comme côté du carré \cite{heckbert1983texture}. Le résultat est bon.
@@ -100,51 +72,11 @@ On prend le plus grand côté du parallélogramme comme côté du carré. Cette 
 \label{methode_plus_grand_cote}
 \end{figure}
 
-
-Ce résultat est satisfaisant.
-
-%schéma avec un ârallélogramme et le carré correspondant
-
-\sssse{Méthode des diagonales}
-$$D(x,y) = \max \left( \sqrt{\left(\frac{\dr v}{\dr x}-\frac{\dr  u}{\dr  x}\right)^2+\left(\frac{\dr v}{\dr y}-\frac{\dr  u}{\dr y}\right)^2}, \sqrt{\left(\frac{\dr u}{\dr x}+\frac{\dr  v}{\dr  x}\right)^2+\left(\frac{\dr u}{\dr y}+\frac{\dr  v}{\dr  y}\right)^2} \right)$$
-On prend la plus grande diagonale du parallélogramme. Ici l'image est trop floue. On voit que le carré approchant le parallélogramme est trop grand figure \ref{methode_grande_diagonale}.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{methode_grande_diagonale.jpg}
-\caption{Méthode de la plus grande diagonale}
-\label{methode_grande_diagonale}
-\end{figure}
-
-%schéma avec un parallélogramme et le carré correspondant
-
-\sssse{Méthode des valeurs singulières}
-
-On peut décomposer toute matrice $A$ en trois matrices $A = PDQ^{-1}$ où $P$ et $Q$ sont orthogonales et $D$ est diagonale.
-
-Pour cela on diagonalise $AA^t$ et $A^tA$, on prend $P$ et $Q$ des vecteurs propres normalisés de ces matrices, et $D$ la racine de leur diagonalisée. Il faut veiller à ce que $P$ et $Q$ correspondent bien \cite{abdi2007singular}.
-
-Les coefficients de $D$ sont appelés valeurs singulières de $A$. On prend $D(x,y)$ le maximum des deux valeurs singulières de $A$.
-
-On a schématisé cette méthode figure \ref{methode_valeur_singuliere}.
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.5]{methode_valeur_singuliere.jpg}
-\caption{Méthode de la valeur singulière}
-\label{methode_valeur_singuliere}
-\end{figure}
-
-On a une interprétation géométrique de ces valeurs à l'aide de mouvements de caméras situées à l'infini \cite{morel2009asift}.
-
-\sssse{Conclusion}
-
-Les méthodes du déterminant, du plus grand côté du parallélogramme et du maximum des valeurs singulières sont satisfaisantes.
+On a comparé les méthodes du déterminant, du plus grand côté, de la plus grande valeur singulière et de la plus grande diagonale.
 
 On préfère le plus grand côté et la valeur singulière, en effet le déterminant semble introduire un peu plus d'\emph{aliasing}. L'implémentation finale utilise la méthode du plus grand côté, car elle est légèrement plus rapide.
 
-\ssse{Algorithme amélioré : Le Ripmap}
+\sse{Algorithme amélioré : Le Ripmap}
 \label{Ripmap}
 Une des grandes faiblesses du Mipmap est l'isotropie : il ne privilégie aucune direction. Ainsi si le parallélogramme à approcher est un rectangle très plat, il n'y a pas d'approximation raisonnable à l'aide d'un carré.
 

@@ -1,7 +1,7 @@
 \subsubsection*{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
 
 %A voir peut être dans les expériences ?
-	Dans les deux paragraphes suivants, l'erreur \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
+	Dans les deux paragraphes suivants, la \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
 
 	Afin d'observer des différences significatives entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (sur trop peu de rotations, les erreurs sont faibles). On obtient les résultats figure \ref{troiscentrotations}. On y voit que la méthode multi-étapes ne résiste pas à tant de rotations, mais que l'interpolation par les b-splines peut être substituée à la convolution par un \emph{raised cosine-weighted sinc} sans création d'\emph{aliasing}, car les rotations sont d'angles faible.
 \label{pleinsderotations}

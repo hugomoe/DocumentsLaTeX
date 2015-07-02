@@ -8,12 +8,14 @@ This part briefly describes the experiments shown in figures \ref{Homo1}, \ref{H
 %Cette section décrit succintement les expériences représentées aux figures \ref{Homo1}, \ref{Homo2}, \ref{Homo3}, \ref{Homo4}, \ref{Homo5} et \ref{Homo5det}. On a choisit des homographies éloignées des cas dégénérés.
 
 
-One can notice that the decompostion reduces aliasing on some homographies (homographies 1, 4 and 5). For a diagonal transforms it reduces the blur (homographie 2). There exists however   
+One can notice that the decompostion reduces aliasing on some homographies (homographies 1, 4 and 5). For a diagonal transforms it reduces the blur (homographie 2).Nevertheless for some homographies both the new method and the Ripmap give similar results (homographie 2). 
 
 
-On peut remarquer que la décomposition permet pour certaines homographies de limiter l'\emph{aliasing} (Homographies 1, 4 et 5). Dans le cas d'une déformation en diagonale elle limite le flou (Homographie 2). Il existe néanmoins des cas où les deux méthodes ont des performances comparables (Homographie 3).
+%On peut remarquer que la décomposition permet pour certaines homographies de limiter l'\emph{aliasing} (Homographies 1, 4 et 5). Dans le cas d'une déformation en diagonale elle limite le flou (Homographie 2). Il existe néanmoins des cas où les deux méthodes ont des performances comparables (Homographie 3).
 
-Le programme a un temps d'éxecution de l'ordre d'une seconde sur une image $512\times 512$ avec un laptop à deux processeurs.
+The execution time of the program is about one second for an image of size $512\times 512$ on a dual-core laptop computer.
+
+%Le programme a un temps d'éxecution de l'ordre d'une seconde sur une image $512\times 512$ avec un laptop à deux processeurs.
 
 \begin{figure}
 \subfigure[Décomposition géométrique]{\includegraphics[scale=0.4]{img_f_1.png}}

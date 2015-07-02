@@ -1,8 +1,7 @@
 % contient l'introduction
 
 An homographies is a projective mapping on a two dimensional space which is a good model of camera motion and point of view's changes. Therefore they are used a lot in image processing such as in texturing \cite{heckbert1983texture} (for instance in video games, animation...), for panoramic image stitching \cite{brown2007automatic}. It is not easy to resample an image by an homography because it involves differents zoom-in or zoom-out for each pixel. Because of the need of zoom-out, splines can't be used for the resampling. Currently, homographies are resampled by the Mipmap method \cite{williams1983pyramidal} which is described in the appendix \ref{Mipmap_pseudo_code_jt} or by variants of this method. Sometimes it is combined
-with multiple-sample anisotropic filtering  \cite{barkans1997high}. The use of the Mipmap makes it possible to do zoom-out ; however it sometimes produces a lot of aliasing.
-
+with multiple-sample anisotropic filtering  \cite{barkans1997high}. The use of the Mipmap makes it possible to do zoom-out ; however it sometimes produces a lot of aliasing. Others filters such as the Elliptic Weighted Average (EWA) ones directly convolve the image with a gaussian filter \cite{greene1986creating}. Unfortunately gaussian filtering is known to create aliasing and to overblur. Besides this filter is isotropic in the warped coordinates, and it incorrectly filters out corner frequencies in the spectrum. In addition the EWA method is quite slow, even if faster algorithmes based on Mipmapping have been developped \cite{mccormack1999feline,huttner1999fast}. The new method of resempling presented in this article is compared (in the experiments part) to an anisotropic variant of the Mipmap : the Ripmap \cite{akenine2008real} which is described in the appendix\ref{Ripmap_pseudo_code_jt}.
 
 
 

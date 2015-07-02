@@ -1,6 +1,7 @@
 % contient l'introduction
 
-An homographies is a projective mapping on a two dimensional space which is a good model of camera motion and point of view's changes. Therefore they are used a lot in image processing such as in texturing \cite{heckbert1983texture} (for instance in video games, animation...), for panoramic image stitching \cite{brown2007automatic}. It is not easy to resample an image by an homography because it involves differents zoom-in or zoom-out for each pixel. Because of the need of zoom-out, splines can't be used for the resampling. Currently, homographies resampled by the Mipmap methode \cite{williams1983pyramidal}
+An homographies is a projective mapping on a two dimensional space which is a good model of camera motion and point of view's changes. Therefore they are used a lot in image processing such as in texturing \cite{heckbert1983texture} (for instance in video games, animation...), for panoramic image stitching \cite{brown2007automatic}. It is not easy to resample an image by an homography because it involves differents zoom-in or zoom-out for each pixel. Because of the need of zoom-out, splines can't be used for the resampling. Currently, homographies are resampled by the Mipmap method \cite{williams1983pyramidal} which is described in the appendix \ref{Mipmap_pseudo_code_jt} or by variants of this method. Sometimes it is combined
+with multiple-sample anisotropic filtering  \cite{barkans1997high}. The use of the Mipmap makes it possible to do zoom-out ; however it sometimes produces a lot of aliasing.
 
 
 

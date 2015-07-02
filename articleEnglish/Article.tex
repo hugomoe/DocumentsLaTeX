@@ -2,10 +2,10 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{stmaryrd}
-\usepackage[french,onelanguage,boxed]{algorithm2e}
+\usepackage[english,onelanguage,boxed]{algorithm2e}
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{dsfont}
@@ -122,14 +122,14 @@
 	\vspace*{\fill}
 
 		\vspace{0.3cm}
-		{\huge Échantillonage irrégulier par une homographie}\\
+		{\huge A high quality to transform an image by an homography}\\
 		\vspace{1.5cm}
 	\today
 	\vspace{1.5cm}
 
 
 		\large
-			\emph{Auteurs:}\\
+			\emph{Authors:}\\
 			Simon Barazer,\\
 			Jean-Thomas De La Roche Saint-André,\\
 			Hugo Moeneclaey, \\
@@ -143,7 +143,7 @@
 \medbreak
 
 		\large
-			\emph{Sous la direction de:}\\ 
+			\emph{Under the supervision of:}\\ 
 			Jean-Michel Morel \\
 			Enric Meinhardt-Llopis
 		
@@ -159,25 +159,25 @@
 		\input{Remerciements} %Jean-Thomas
 	\section*{Introduction}%Jean-Thomas
 		\input{Introduction}
-	\section{Affinité}
+	\section{Sampling affine map}
 		\label{Exposition_du_probleme}
 		\label{szeliski_section}
 		\input{Szeliski}%shmuel
-	\section{Décomposition géométrique d'une homographie}
+	\section{Irregular sampling for an homography}
 		\label{decomp_geo_hom}
-		\subsection{Décomposition d'une homographie en mouvement de caméra}
+		\subsection{Geometric decomposition}
 			\input{DecompositionGeometrique}%simon
-		\subsection{Traitement des homographies unidirectionnelles}
+		\subsection{A method for unidirectional homographies}
 			\label{HomoboxRipmap}
 			\input{HomoboxRipmap}%simon
-		\subsection{Traitement des rotations}
+		\subsection{A method for rotations}
 			\label{YaroSzeli}
 			\input{YaroSzeli} %Jean-Thomas à fait une partie sur Yaroslavsky...
 	\clearpage
 	\section*{Conclusion}
 			\input{Conclusion.tex}
 	\clearpage
-	\section{Expériences}
+	\section{Experiments}
 		\label{experiences}
 		\input{Experiments_Szeliski_Ectoplasma}
 		\input{Experiments_YaroSzeli}
@@ -185,14 +185,14 @@
 		\input{Experiments_convergence}
 	\clearpage
 	\appendix
-	\section{Mipmap et Ripmap}
+	\section{Mipmap and Ripmap}
            \label{Mipmap_pseudo_code_jt}
 		\input{MipMap}%hugo
 	\label{pseudo_code}
-	\section{Pseudo-code pour le Ripmap}
+	\section{Algorithm for the Ripmap}
                      \label{Ripmap_pseudo_code_jt}
 		\input{Pseudo-code_Mipmap}%hugo
-	\section{Pseudo-code pour la décomposition géométrique}
+	\section{Algorithm for the geometric decomposition}
 		\input{Pseudo-code_decompo}
 		\input{Pseudo-code_homo_box}%hugo
 		\input{Pseudo-code_Szeliski}%shmuel

@@ -79,33 +79,62 @@
 	With a larger $\beta$,some high frequencies which should disappear remains, however it does not much damage at the end of the process. Thus by increasing $\beta$ (figure \ref{experiments_decompoSzeliski}), one can allow some of the high frequencies that should disappear, as long as no artifacts appears. As the rise of $\beta$ increases the filter decay, it is possible to convolve on smaller supports, and as a consequence to reduce the computation time. With $\beta = 0.36$, only nine terms are useful for the convolution (figure \ref{szeliski_plotRaisedCosine}) (nine is the basic number of terms ; it increases for upsampling because the convolution's filter is adaptative). For all the next experiments, we will keep  $\beta = 0.36$. 
 	
 	%Avec un $\beta$ plus élevé, on conserve des hautes fréquences sur l'extérieur du spectre, mais leur impact est faible quand l'image reprend sa taille initiale ; en augmentant $\beta$ (figure \ref{experiments_decompoSzeliski}), on peut donc autoriser un peu plus de repliement du spectre, en veillant à ce que visuellement, on n'observe aucun artefact. Comme l'augmentation de $\beta$ augmente la vitesse à laquelle le filtre décroit, on peut alors convoler sur des supports plus réduits, et donc gagner du temps. Avec $\beta = 0.36$, on peut restreindre la convolution à une somme de fneu termes (figure \ref{szeliski_plotRaisedCosine}) (neuf est le nombre de termes de base ; il est plus grand lors des sur-échantillonnages car le support du filtre de convolution est adaptatif). Cette valeur $\beta = 0.36$ est celle qu'on utilise pour les autres expériences.
- 
-	\begin{figure}
+ 	\begin{figure}
 		\centering
-		\subfigure[Image initiale (échelle 3/8)]{
+		\subfigure[Initial image (scale 3/8)]{
 			{\includegraphics[scale=0.375]{decompoSzeliski_image_entree.png}}
 			{\includegraphics[scale=0.375]{decompoSzeliski_fourier_entree.png}}
 		}
-		\subfigure[Image plongée dans une image neuf fois plus grande (échelle 1/8)]{
+		\subfigure[Inital image in a nine times larger one (scale 1/8)]{
 			{\includegraphics[scale=0.125]{decompoSzeliski_image1.png}}
 			{\includegraphics[scale=0.125]{decompoSzeliski_fourier1.png}}
 		}
-		\subfigure[Après le premier $\mathcal R$ (échelle 1/8)]{
+		\subfigure[After the first $\mathcal R$ (scale 1/8)]{
 			{\includegraphics[scale=0.125]{decompoSzeliski_image2.png}}
 			{\includegraphics[scale=0.125]{decompoSzeliski_fourier2.png}}
 		}
-		\subfigure[Après le deuxième $\mathcal R$ (échelle 1/8)]{
+		\subfigure[After the second $\mathcal R$ (scale 1/8)]{
 			{\includegraphics[scale=0.125]{decompoSzeliski_image3.png}}
 			{\includegraphics[scale=0.125]{decompoSzeliski_fourier3.png}}
 		}
-		\subfigure[Après le troisième $\mathcal R$ (échelle 1/8)]{
+		\subfigure[After the third $\mathcal R$ (scale 1/8)]{
 			{\includegraphics[scale=0.125]{decompoSzeliski_image4.png}}
 			{\includegraphics[scale=0.125]{decompoSzeliski_fourier4.png}}
 		}
-		\subfigure[Image finale (échelle 3/8)]{
+		\subfigure[Final image (Scale 3/8)]{
 			{\includegraphics[scale=0.375]{decompoSzeliski_image_sortie.png}}
 			{\includegraphics[scale=0.375]{decompoSzeliski_fourier_sortie.png}}
 		}
-		\caption{Étapes du traitement des affinités présenté en \ref{szeliski_section} (à gauche l'image à chaque étape, à droite le logarithme du module de la transformée de Fourier de cette image). Le filtre d'interpolation est un \emph{raised cosine-weighted sinc} (de période 1, de \emph{roll-off factor} $\beta = 0.25$)}
+		\caption{teps of the multi-pass resampling method for an affine transform explained in \ref{szeliski_section} (on the left is the image at each steps, on the right is the logarithm of the modulus of the Fourier transform of this image). The interpolation filter is a raised cosine-weighted sinc (of period 1, with a roll-off factor $\beta = 0.25$)}
 		\label{experiments_decompoSzeliski}
 	\end{figure}
+
+	%\begin{figure}
+	%	\centering
+	%	\subfigure[Image initiale (échelle 3/8)]{
+	%		{\includegraphics[scale=0.375]{decompoSzeliski_image_entree.png}}
+	%		{\includegraphics[scale=0.375]{decompoSzeliski_fourier_entree.png}}
+	%	}
+	%	\subfigure[Image plongée dans une image neuf fois plus grande (échelle 1/8)]{
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_image1.png}}
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_fourier1.png}}
+	%	}
+	%	\subfigure[Après le premier $\mathcal R$ (échelle 1/8)]{
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_image2.png}}
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_fourier2.png}}
+	%	}
+	%	\subfigure[Après le deuxième $\mathcal R$ (échelle 1/8)]{
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_image3.png}}
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_fourier3.png}}
+	%	}
+	%	\subfigure[Après le troisième $\mathcal R$ (échelle 1/8)]{
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_image4.png}}
+	%		{\includegraphics[scale=0.125]{decompoSzeliski_fourier4.png}}
+	%	}
+	%	\subfigure[Image finale (échelle 3/8)]{
+	%		{\includegraphics[scale=0.375]{decompoSzeliski_image_sortie.png}}
+	%		{\includegraphics[scale=0.375]{decompoSzeliski_fourier_sortie.png}}
+	%	}
+	%	\caption{Étapes du traitement des affinités présenté en \ref{szeliski_section} (à gauche l'image à chaque étape, à droite le logarithme du module de la transformée de Fourier de cette image). Le filtre d'interpolation est un \emph{raised cosine-weighted sinc} (de période 1, de \emph{roll-off factor} $\beta = 0.25$)}
+	%	\label{experiments_decompoSzeliski}
+	%\end{figure}

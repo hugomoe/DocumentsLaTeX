@@ -1,14 +1,18 @@
 
 
 
-\subsection{Algorithm of  the multi-pass resampling method for an affine transform la méthode multi-étapes de traitement des affinités}
+\subsection{Algorithm of  the multi-pass resampling method for affine transforms}
 %\subsection{Pseudo-code pour la méthode multi-étapes de traitement des affinités}
 
  On définit des notations utilisées dans les pseudo-codes suivants :
  \begin{itemize}
  \item $x \ppcm y = \max(x,y)$, $x \pgcd y = \min(x,y)$
- \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ les parties positives et négatives de $x$
+ \item $x^+ = 0 \ppcm x$, $x^- = 0 \ppcm (-x)$ the positive and negative parts of $x$
  \end{itemize}
+ 
+ 	The folowing algorithms
+ 
+ 
  
  Les algorithmes qui suivent correspondent à l'implémentation de la méthode multi-étapes de traitement des affinités. La méthode proposée dans l'article de Szeliski, Winder et Uyttendaele \cite{szeliski2010high} effectue uniquement l'affinité, d'une image de taille donnée dans une autre de même taille. Ici, on évite que la première étape de la décomposition ne rogne une partie de l'image en agrandissant le tableau sur lequel on travaille. On veut donc pouvoir préciser la taille des tableaux d'entrée et de sortie qui stockeront les images.
   

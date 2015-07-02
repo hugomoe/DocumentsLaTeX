@@ -4,7 +4,7 @@
 
 Affinities are a particular case of homographies for which there exists a efficient anti-aliasing method, and which will be used later to resample all homographies.
 
-\subsection{Principe général}
+\subsection{Principle}
 	
 	This multi-pass resampling method has been introduced by Szeliski, Winder et Uyttendaele \cite{szeliski2010high}. It has been thought to minimize apparition of aliasing.
 
@@ -30,7 +30,7 @@ Affinities are a particular case of homographies for which there exists a effici
 		\subfigure[Spectrum of the image after oversampling]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
 		\subfigure[Spectrum of the image after an oversampling and a shear]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
 		\subfigure[Spectrum of the final image (after an oversampling, a shear and a subsampling, coupled with a low-pass filter)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
-		\caption{{Spectrum of an image, resampled by a shear with the multi-pass resampling method (cf. section \ref{label_des_deux_prems_fig_de_szeli}). Experiment figure \ref{experiments_decompoSzeliski_sinc} }
+		\caption{Spectrum of an image, resampled by a shear with the multi-pass resampling method (cf. section \ref{label_des_deux_prems_fig_de_szeli}). Experiment figure \ref{experiments_decompoSzeliski_sinc} }
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
 	
@@ -42,75 +42,111 @@ Affinities are a particular case of homographies for which there exists a effici
 	h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}
 	\label{szeliski_definition_raisedCosineWeightedSinc}
 	\end{equation}
-	La période $T$ est prise égale à 1 (taille d'un pixel).
-	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus neuf termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
+	The period $T$ is equal to one (the size of a pixel).
+	The parameter $\beta$, called roll-off factor, is a crucial choice. If $\beta$ is around $0.36$ (which the parameter used for most of the experiments in appendix), the support of $h$ can be reasonably approximate as contained in $[-4,4]$, and so the convolution reduce to a sum of nine terms (figure \ref{szeliski_plotRaisedCosine}), as long as the support is not modified.
+	
+	
+%	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus neuf termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
 	\label{label_figure_dom_reel_fourier_jt}
 	\begin{figure}
 		\centering
-		\subfigure[Domaine réel]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc.jpg}}
-		\subfigure[Domaine de Fourier]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc_spectrum.jpg}}
-		\caption{Représentation du \emph{raised cosine-weighted sinc} en fonction du paramètre $\beta$ (cf. partie \ref{label_figure_dom_reel_fourier_jt})}
+		\subfigure[Space domain]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc.jpg}}
+		\subfigure[Frequency domain]{\includegraphics[scale=0.3]{raisedCosine-weightedSinc_spectrum.jpg}}
+		\caption{Representations of the \emph{raised cosine-weighted sinc} filter with different parameters $\beta$ (cf. section \ref{label_figure_dom_reel_fourier_jt})}
 		\label{szeliski_plotRaisedCosine}
 	\end{figure}
 	
-	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
+	In practice, the support of the filter vary, depending on the zoom factor $s$, hence the formula to convolve with $h$ (here horizontally)
 	\begin{equation}
 	img_f[i][j] = \displaystyle{\sum_k}h\left(\frac{a_0i+a_1j+t-k}{s}\right)img[k][j]
 	\label{formule_convolution_discrete}
 	\end{equation}
-	où $img_f$ est l'image finale et $img$ l'image initiale.
+	where $img_f$ is the output image and $img$ the input image.
 	
-	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
-	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rh} et \ref{szeliski_rv} traitant les opérations $\mathcal R_h$ et $\mathcal R_v$. \label{szeliski_rv_rh_section}
+%	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
+%	où $img_f$ est l'image finale et $img$ l'image initiale.
 	
-	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
+	Multiplying by $s$ the size of support of support (by calling $h(\frac{x}{s})$ instead of $h(x)$, with $s\geq 1$) divide by $s$ the bandwidth of this filter. This protect against aliasing during downsamplings. The coefficient $s$ also depend on the \emph{maximal preserved frequencies} $u_{max}$ and $v_{max}$ which will be presented later.
+	
+%	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
+	
+	The algorithms \ref{szeliski_rh} and \ref{szeliski_rv} dealing with the $\mathcal R_h$ and $\mathcal R_v$ operations are obtained by applying this formula (\ref{formule_convolution_discrete}) for every $i$ and $j$ in the output image. \label{szeliski_rv_rh_section}
+	
+%	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rh} et \ref{szeliski_rv} traitant les opérations $\mathcal R_h$ et $\mathcal R_v$. \label{szeliski_rv_rh_section}
+	
+	So it is possible to compute, in three steps $\mathcal R$ and without aliasing, any shear. Since an affinity can be decomposed in two shears (proposition \ref{propositionDecompositionAffinite}), any affinity can be process without aliasing (algorithme \ref{szeliski_affine}).
+	
+%	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
 
 	\begin{thm}
-	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre.
+	The multi-pass resampling method \cite{szeliski2010high} prevent aliasing while preserving the spectrum. %SHMUEL RELIT STP, je ne savas pas traduire
+%	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre.
 	\end{thm}
 	\begin{proof}
-	L'effet des différentes étapes sur le spectre est présenté en figure \ref{szeliski_decompoSzeliski} et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}.
+	The effect of the different steps on the spectrum is presented figure \ref{szeliski_decompoSzeliski} and experimentally verified figure \ref{experiments_decompoSzeliski_sinc}.
 	
-	Le sous-échantillonnage est effectué sans repliement grâce à un élargissement du support du filtre $h$ (support adaptatif).
+	The downsampling is processed without aliasing by expanding the support of the filter $h$.
 	\end{proof}
 	
-	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
+	%\begin{proof}
+%	L'effet des différentes étapes sur le spectre est présenté en figure \ref{szeliski_decompoSzeliski} et vérifié en pratique figure \ref{experiments_decompoSzeliski_sinc}.
 	
-\subsection{Étapes de l'algorithme}
+%	Le sous-échantillonnage est effectué sans repliement grâce à un élargissement du support du filtre $h$ (support adaptatif).
+	%\end{proof}
+	
+	\emph{A priori} this method decompose any affinity in six steps $\mathcal R$ (three per shears). In fact it is possible to merge some $\mathcal R$ if they act in the same direction. The decomposition can then be reduced to four stapes $\mathcal R$ : a vertical up-sampling, an horizontal shear, a vertical shear and finally an horizontal downsampling.
+	
+%	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
+	
+\subsection{Steps of the algorithm}
 	\label{szeliski_affine_section}
-	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (algorithmes \ref{szeliski_rh}, \ref{szeliski_rv} et \ref{szeliski_affine}).
 	
-	On suppose avoir reçu en entrée une image à modifier et la matrice $A$ correspondant à l'affinité inverse de celle à effectuer : l'antécédent du point $(i,j)$ de l'image de sortie se situe donc en $A(i,j)$ sur l'image d'entrée.
+	The details of the processing of the steps of the multi-pass resampling algorithm for affinity are described in this section. The corresponding algorithm can be found in appendix (algorithms \ref{szeliski_rh}, \ref{szeliski_rv} and \ref{szeliski_affine}).
 	
-	On notera
-	\[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
+	Let $A$ be the matrix of the inverse affinity of the one supposed to be processed. Let's denote
+
+\[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
+
+%	On détaille donc ici les étapes de l'algorithme de traitement d'une affinité par cette méthode multi-étape. Le pseudo-code correspondant est présent en annexe (algorithmes \ref{szeliski_rh}, \ref{szeliski_rv} et \ref{szeliski_affine}).
 	
-	\subsubsection{Éventuelle transposition}
+%	On suppose avoir reçu en entrée une image à modifier et la matrice $A$ correspondant à l'affinité inverse de celle à effectuer : l'antécédent du point $(i,j)$ de l'image de sortie se situe donc en $A(i,j)$ sur l'image d'entrée.
+	
+%	On notera
+	
+	\subsubsection{Eventual transposition}
 		\label{szeliski_transpoOpt_section}
 		
-		Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} déjà connu \cite{wolberg1990digital}.
+		The $\mathcal R$ can compressed the image on a few pixels and then expand it (e.g. when $A$ is rotation of angle $\frac{\pi}{2}$), this is called the bottleneck problem \cite{wolberg1990digital}.
+
+%	Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} déjà connu \cite{wolberg1990digital}.
 		
-		On effectue donc éventuellement une transposition (de l'image et de la matrice) pour éviter cet effet : en notant
+		To prevent this the image and mateix can be transposed. Let's denote
+		
+	%	On effectue donc éventuellement une transposition (de l'image et de la matrice) pour éviter cet effet : en notant
 		\[\hat a_{00} = \frac{a_{00}}{\sqrt{a_{00}^2+a_{11}^2}}\]
 		\[\hat a_{01} = \frac{a_{01}}{\sqrt{a_{00}^2+a_{11}^2}}\]
 		\[\hat a_{10} = \frac{a_{10}}{\sqrt{a_{10}^2+a_{11}^2}}\]
 		\[\hat a_{11} = \frac{a_{11}}{\sqrt{a_{10}^2+a_{11}^2}}\]
-		on transpose dans le cas où $|\hat a_{00}|+|\hat a_{11}|<|\hat a_{01}|+|\hat a_{10}|$.
+		%on transpose dans le cas où $|\hat a_{00}|+|\hat a_{11}|<|\hat a_{01}|+|\hat a_{10}|$.
+		the transposition is done when $|\hat a_{00}|+|\hat a_{11}|<|\hat a_{01}|+|\hat a_{10}|$.
+		It corresponds to the algorithm \ref{szeliski_transpoOpt}.
+		%Cette transposition correspond à l'algorithme \ref{szeliski_transpoOpt}.
 		
-		Cette transposition correspond à l'algorithme \ref{szeliski_transpoOpt}.
-		
-	\subsubsection{Décomposition de $A$}
+	\subsubsection{Decomposition of $A$}
 		\label{szeliski_decompositionDeA_section}
 		\label{szeliski_frequencesMax_section}
-		On introduit les fréquences conservées maximales $u_{max}$, $v_{max}$ : ce sont les fréquences, horizontales et verticales, au delà desquelles les fréquences seront effacées par l'application de $A$ ; elles sont donc définies dans le domaine de Fourier par la figure \ref{uMax_vMax}. Les fréquences au-delà de $u_{max}$ horizontalement et de $v_{max}$ verticalement peuvent donc être filtrées, cela ne changera pas le spectre de sortie. Ces définitions se font après après avoir ramené le spectre sur le carré $[-1,1]^2$.
+		
+		The \emph{maximal preserved frequency}  $u_{max}$ and $v_{max}$ are the frequencies beyond which the spectrum will be erased by the application of $A$. They are defined in the frequency domain by the figure \ref{uMax_vMax}. Frenquencies beyond them can be filtered without altering the output spectrum. These definitions assume that the spectrum has been normalized on the square $[-1,1]^2$.
+		
+%		On introduit les fréquences conservées maximales $u_{max}$, $v_{max}$ : ce sont les fréquences, horizontales et verticales, au delà desquelles les fréquences seront effacées par l'application de $A$ ; elles sont donc définies dans le domaine de Fourier par la figure \ref{uMax_vMax}. Les fréquences au-delà de $u_{max}$ horizontalement et de $v_{max}$ verticalement peuvent donc être filtrées, cela ne changera pas le spectre de sortie. Ces définitions se font après après avoir ramené le spectre sur le carré $[-1,1]^2$.
 		
 		\begin{figure}
 		\centering
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{uMax_vMax_spectreEntree.png}}
-		\subfigure[Spectre de l'image de sortie]{\includegraphics[scale=0.5]{uMax_vMax_spectreSortie.png}}
-		\subfigure[Spectre de l'image d'entrée]{\includegraphics[scale=0.5]{uMax_vMax_spectreUtile.png}}
-		\caption{Fréquences conservées par l'affinité. Les zones noires sont les fréquences qui ne seront pas conservées par l'application de l'affinité}
+		\subfigure[Spectrum of the input image]{\includegraphics[scale=0.5]{uMax_vMax_spectreEntree.png}}
+		\subfigure[Spectrum of the output image]{\includegraphics[scale=0.5]{uMax_vMax_spectreSortie.png}}
+		\subfigure[Spectrum of the input image]{\includegraphics[scale=0.5]{uMax_vMax_spectreUtile.png}}
+		\caption{Frequencies preserved by the affinity. The dark areas corresponds to frequencies erased}
 		\label{uMax_vMax}
 		\end{figure}
 		

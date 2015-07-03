@@ -1,6 +1,6 @@
-This section presents a proof of theorem (\ref{thepropdecomp}).
+This section presents a proof of theorem \ref{thepropdecomp}.
 
-First some useful properties go homographies will be recalled. The link between projective space and homograhies will not be used here. An homography is a bijective map of form 
+First some useful properties of homographies will be recalled. The link between projective space and homograhies will not be used here. An homography is a bijective map of form 
 \[h:(x,y)\ra \left(\frac{ax+by+p}{rx+sy+t},\frac{cx+dy+q}{rx+sy+t}\right)\]
 (its target set is $\mathbb R^2$ minus a straight line)
 
@@ -21,11 +21,11 @@ Let's denote
  H^{-1}=\begin{pmatrix} \hat a&\hat b&\hat p\\ \hat c&\hat d&\hat q\\ \hat r&\hat s&\hat t \end{pmatrix}
  \end{equation*}
 
-$H$ is invertible since $h$ is, $H$ is not unique because $\lambda H$ correspond to the same homography for all $\lambda \in \mathbb{R}_+$.
+$H$ is invertible since $h$ is, $H$ is not unique because $\lambda H$ corresponds to the same homography for all $\lambda \in \mathbb{R}_+$.
 
 This notation makes composition of homographies and product of matrix compatible. So there is a morphism of group from $GL_{3}(\mathbb{R})$ to the group of the homographies of the plan. It is not an injection but a similar isomorphism can be defined on $SL_{3}(\mathbb{R})$
 
-Let's denote $\sim$ the equivalence relation on $GL_{3}(\mathbb{R})$ defined by \[A\sim B \iff \exists \lambda\in \mathbb{R}^{*} , A=\lambda B\] i.e $A\equiv B$ if and only if they defined the same homography.
+Let's denote $\sim$ the equivalence relation on $GL_{3}(\mathbb{R})$ defined by \[A\sim B \iff \exists \lambda\in \mathbb{R}^{*} , A=\lambda B\] i.e $A\sim B$ if and only if they defined the same homography.
 
 %Le but de cette partie est d'établir la théorème (\ref{thepropdecomp}).
 
@@ -49,12 +49,12 @@ Let's denote $\sim$ the equivalence relation on $GL_{3}(\mathbb{R})$ defined by 
 
 \begin{proof}
 
-Let $h$ be an homography and $H$ a matrix associated to it, assuming $\det (H)=1$ without loss of generality. Let's prove there exists some parameter $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ such that
+Let $h$ be an homography and $H$ a matrix associated to it, assuming $\det (H)=1$ without loss of generality. Let's prove there exists some parameters $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ such that
 \begin{equation*}
 h= \tau_{\cbf} \circ z_{\frac{\delta}{\delta'}}\circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \end{equation*}
 
-Since every transform in the decomposition are homographies, it can be written with matrix. So we want $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ such that
+Since every transform in the decomposition is an homography, it can be written with matrix. So we want $(\theta,\phi,\psi,\delta,\delta',\cbf,\xbf_v)$ such that
  \begin{equation*}
 H\sim T_{\cbf} Z_{\frac{\delta}{\delta'}}  R_{\psi}  H_{\theta,\delta'} R_{\phi}  T_{\xbf_v}
 \end{equation*}
@@ -71,11 +71,11 @@ R_{\alpha}=\begin{pmatrix}
 Z_{\lambda}=\begin{pmatrix}
 \lambda&0&0\\0&\lambda&0\\0&0&1
 \end{pmatrix}
-\text{and} T_{(\alpha,\beta)}=\begin{pmatrix}
+\text{ and } T_{(\alpha,\beta)}=\begin{pmatrix}
 1&0&-\alpha\\0&1&-\beta\\0&0&1
 \end{pmatrix}
 \end{equation*}
-First the translations are determined. Let $(x_1 , y_1 )$ and $(x_2 , y_2 )$ be two vectors and $H_t$ the matrix $T_{-(x_2 , y_2 )}  \cdot H \cdot T_{(x_1 , y_1 )}$. Let's determined  $(x_1 , y_1 )$ and $(x_2 , y_2 )$. It exists $(\theta,\phi,\psi,\delta,\delta')$ such that $H_t=Z_{\frac{\delta}{\delta'}} \cdot R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$.
+First the translations are determined. Let $(x_1 , y_1 )$ and $(x_2 , y_2 )$ be two vectors and $H_t$ the matrix $T_{-(x_2 , y_2 )}  \cdot H \cdot T_{(x_1 , y_1 )}$. Let's determine $(x_1 , y_1 )$ and $(x_2 , y_2 )$. There exists $(\theta,\phi,\psi,\delta,\delta')$ such that $H_t=Z_{\frac{\delta}{\delta'}} \cdot R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$.
 
 It can be obtained that for all $(\theta,\phi,\psi,\delta,\delta')$ the matrix $Z_{\frac{\delta}{\delta'}} \cdot R_{\psi} \cdot H_{\theta,\delta} \cdot R_{\phi}$  is equal to 
 
@@ -116,7 +116,7 @@ H_t
 \end{equation*}
 and
   \begin{equation*}
- -\frac{\sin(\theta)}{\delta'}\cos(\phi)=r(\hat r x_2 + \hat s y_2 +\hat t)\text{ et } -\frac{\sin(\theta)}{\delta'}\sin(\phi)=s(\hat r x_2 + \hat s y_2 +\hat t)
+ -\frac{\sin(\theta)}{\delta'}\cos(\phi)=r(\hat r x_2 + \hat s y_2 +\hat t)\text{ and } -\frac{\sin(\theta)}{\delta'}\sin(\phi)=s(\hat r x_2 + \hat s y_2 +\hat t)
  \end{equation*}
  
  $r^{2}+s^{2}=0$ if and only if $h$ is an affinity. This case will be treated indepently, it is assumed here that $h$ is nt affine. So it can be assumed that
@@ -131,7 +131,7 @@ and
  
  So
  \begin{equation*}
- \cos( \phi )= -\sgn(\hat r x_2 +\hat s y_2 +\hat t) \frac{r}{\sqrt{r^2 + s^2}} \text{and} \sin( \phi )= -\sgn(\hat r x_2 +\hat s y_2 +\hat t) \frac{s}{\sqrt{r^2 + s^2}}
+ \cos( \phi )= -\sgn(\hat r x_2 +\hat s y_2 +\hat t) \frac{r}{\sqrt{r^2 + s^2}} \text{ and } \sin( \phi )= -\sgn(\hat r x_2 +\hat s y_2 +\hat t) \frac{s}{\sqrt{r^2 + s^2}}
  \end{equation*}
  
  
@@ -220,7 +220,7 @@ Z_{\frac{\delta}{\delta'}}^{-1} \cdot R_{\psi}^{-1} \cdot H_t \cdot R_{\phi}^{-1
  \end{pmatrix}
  \end{equation*}
  
-This matrix has to be of form $H_{\theta,\delta'}$. In order to have that it is necessary to have
+This matrix has to be of form $H_{\theta,\delta'}$. In order to have that, it is necessary to have
  \begin{equation*}
   \lambda^2 + \lambda^2 \delta'^2 \frac{(\hat r^2 + \hat s^2)^2}{r^2 + s^2}=1
  \end{equation*}

@@ -3,7 +3,7 @@ Les homographies sont des applications projectives du plan ; elles correspondent
 
 	Une méthode efficace pour traiter les affinités, qui sont un cas particulier d'homographie, a été présentée récemment \cite{szeliski2010high}. Mais le traitement des homographies n'en découle pas trivialement puisqu'il s'agit de faire des zooms différents pour chaque point de l'image, et qu'il faut éviter le flou et l'\emph{aliasing}. Cela réclame un ré-échantillonnage d'une grande précision. Une méthode naïve de traitement des homographies comme décrite en première partie produit par exemple beaucoup d'\emph{aliasing}. Cet article présente une nouvelle méthode permettant de traiter toute homographie à l'aide d'une décomposition géométrique. Elle réduit le flou et l'\emph{aliasing}, mais elle est plus lente que le Ripmap.
 
-	La partie \label{szeliski_section} présente une méthode de traitement des affinités qui est utilisée dans la méthode par décomposition.
+	La partie \ref{szeliski_section} présente une méthode de traitement des affinités qui est utilisée dans la méthode par décomposition.
 
 	La partie \ref{decomp_geo_hom} présente une interprétation géométrique d'une homographie en terme de mouvement de caméra. Elle permet de comprendre la théorie qui justifie cette nouvelle méthode. Elle explique aussi comment décomposer une homographie à partir de cette interprétation.
 

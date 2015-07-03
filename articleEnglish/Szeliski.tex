@@ -150,27 +150,40 @@ Affinities are a particular case of homographies for which there exists a effici
 		\label{uMax_vMax}
 		\end{figure}
 		
-		En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image). Les algorithmes \ref{szeliski_intersectionsVerticales} et \ref{szeliski_intersectionsHorizontales} réalisent l'intersection d'un segment (d'extrémités $(U_1,V_1)$ et $(U_2,V_2)$) et d'un côté du carré $[-1,1]^2$. L'algorithme \ref{pseudo-code_umax_vmax} s'appuie sur ces algorithmes pour calculer $u_{max}$ et $v_{max}$.
+ 
+		 $u_{max}$ and $v_{max}$ can be found by finding the intersection of the input spectrum (that is to say the square $[-1,1]^2$) and the inverse image of the square by $^t\!A$ (because doing  $^t\!A$ in the frequency domain is equivalent to do $A^{-1}$ in the spatial domain ; as before $A$ is the inverse of the affinity applied to the input image). The algorithms \ref{szeliski_intersectionsVerticales} and \ref{szeliski_intersectionsHorizontales} make the intersection of a segment (which bounds are $(U_1,V_1)$ and $(U_2,V_2)$) and one of the sides of the square $[-1,1]^2$. Those two algorithms are used in the algorithm \ref{pseudo-code_umax_vmax} to compute $u_{max}$ and $v_{max}$.
+
+
+		%En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image). Les algorithmes \ref{szeliski_intersectionsVerticales} et \ref{szeliski_intersectionsHorizontales} réalisent l'intersection d'un segment (d'extrémités $(U_1,V_1)$ et $(U_2,V_2)$) et d'un côté du carré $[-1,1]^2$. L'algorithme \ref{pseudo-code_umax_vmax} s'appuie sur ces algorithmes pour calculer $u_{max}$ et $v_{max}$.
 		
-		À partir des coefficients de $A$ et des valeurs de $u_{max}$ et $v_{max}$, on peut en déduire les coefficients de sur-échantillonnage verticaux et horizontaux nécessaires \cite{szeliski2010high} :
+		From $A$'s coefficients and the values of $u_{max}$ and $v_{max}$, the coefficients of the vertical upsampling and the horizontal one can be deduced \cite{szeliski2010high} as follows,
 		\[r_v \geq \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))\]
-		\[r_h \geq \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))\]
-		Pour des raisons géométriques, on peut toujours réduire les sur-échantillonnages à $r_h \leq 3$ et $r_v \leq 3$. En effet, pour chacune des deux opérations unidirectionnelles (celles qui seront décomposées en trois $\mathcal R$), le $r_h$ (respectivement $r_v$) peut être réduit à 3, grâce au filtrage qui atténue les fréquences au delà de $u_{max}$ (respectivement $v_{max}$). La figure \ref{rvleq3} présente ce raisonnement géométrique pour une opération sur les colonnes (qui se traduit par une opération sur les lignes dans le domaine de Fourier).
+		\[r_h \geq \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max})).\]
+
+		%À partir des coefficients de $A$ et des valeurs de $u_{max}$ et $v_{max}$, on peut en déduire les coefficients de sur-échantillonnage verticaux et horizontaux nécessaires \cite{szeliski2010high} :
+		%\[r_v \geq \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))\]
+		%\[r_h \geq \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))\]
+
+		By geometric condiderations, one can always reduces the upsamplings to $r_h \leq 3$ and $r_v \leq 3$. Indeed, in both unidirectional mappings  ( (those splitted into three $\mathcal R$), $r_h$ and $r_v$ can be reduced to three, thanks to the filtering which attenuates the frequencies beyond $u_{max}$ and $v_{max}$ respectively. The figure \ref{rvleq3} presents that geometric reasoning for a mapping on columns (which is a mapping on rows in the frequencie domain).
+
+		%Pour des raisons géométriques, on peut toujours réduire les sur-échantillonnages à $r_h \leq 3$ et $r_v \leq 3$. En effet, pour chacune des deux opérations unidirectionnelles (celles qui seront décomposées en trois $\mathcal R$), le $r_h$ (respectivement $r_v$) peut être réduit à 3, grâce au filtrage qui atténue les fréquences au delà de $u_{max}$ (respectivement $v_{max}$). La figure \ref{rvleq3} présente ce raisonnement géométrique pour une opération sur les colonnes (qui se traduit par une opération sur les lignes dans le domaine de Fourier).
 		
 		\begin{figure}
 		\centering
-		\subfigure[$r_v$ non majoré]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
-		\subfigure[$r_v$ majoré par 3 ; on utilise le fait que les distances horizontales sont inchangées]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
-		\caption{Réduction de $r_v$ jusqu'à $r_v \leq 3$. Au-delà de $v_{max}$, le filtre efface (atténue) les fréquences via le paramètre $s$ qui amincit la bande passante ; on peut alors réduire le $r_v$ nécessaire au non-repliement. $r_v$ est le quotient de la longueur du rectangle pointillé (spectre après sur-échantillonnage) par celle du carré (spectre initial)}
+		\subfigure[$r_v$ not bounded]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
+		\subfigure[$r_v$ bounded by 3 ; the fact the horizontals spacings are unchanged has been used]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
+		\caption{Reduction of $r_v$ down to $r_v \leq 3$. Beyond $v_{max}$, the frequencies are filtered. $s$ is the prameter of the filter which reduces the bandwidth. Then the $r_v$ needed to avoid aliasing can be reduced. $r_v$ is the ratio of the length of the dotted rectangle (which is the spectrum after the upsampling) and that of the square (which is the initial spectrum)}
 		\label{rvleq3}
 		\end{figure}
 
 
 		\begin{prop}
 		\label{propositionDecompositionAffinite}
-		Soit $A$ une affinité donnée sous forme projective : $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ 0&0&1}$.
+		Let $A$ be an affine transform given with it's projective form, $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ 0&0&1}$.
+		%Soit $A$ une affinité donnée sous forme projective : $A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1\\ 0&0&1}$.
 		
-		$A$ se décompose de la manière suivante :
+		$A$ can be split as follows,
+		%$A$ se décompose de la manière suivante :
 		\[
 			A = 
 			\pmatrice{1 & 0 & 0\\ 0 & \frac{a_{11}}{r_v} & 0\\ 0 & 0 & 1}
@@ -178,15 +191,27 @@ Affinities are a particular case of homographies for which there exists a effici
 			\pmatrice{1 & 0 & 0\\ \frac{a_{10}r_v}{a_{11}r_h} & r_v & \frac{t_1r_v}{a_{11}}\\ 0 & 0 & 1}
 			\pmatrice{r_h & 0 & 0\\ 0 & 1 & 0\\ 0 & 0 & 1}
 		\]
-avec : $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{01}t_1}{a_{11}}$.
+where $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{01}t_1}{a_{11}}$.
 \end{prop}
-	\subsubsection{Applications des $\mathcal R$}
+	\subsubsection{The $\mathcal R$ mappings}
+	%\subsubsection{Applications des $\mathcal R$}
 		
-		Il ne reste qu'à appliquer les quatre opérations $\mathcal R$.
+		All that remains is to do the four $\mathcal R$ mapping.
+		%Il ne reste qu'à appliquer les quatre opérations $\mathcal R$.
 		
-		Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où :
-		\begin{itemize}
-		\item $\varphi$ parcourt $2^b$ nombres rationnels de $[0,1]$ avec $b$ le nombre de bit de précision voulu
-		\item $k$ parcourt les entiers tels que $\frac{k}{s}$ soit dans le support de $h$ ($h(x)$ étant presque nul quand $|x|$ est assez grand, on suppose $h$ à support compact)
+		For each ones, the first step is to keep in memory all the values of $h(\frac{k+\varphi}{s})$ whith
+		%Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où :
+		
+\begin{itemize}
+		\item $\varphi \in \frac{l}{2^b}$ with $l \in \rrbracket0,2^b-1\llbracket with $b$ the number of precision bit needed.
+		\item $k$ is an integer such that $\frac{k}{s}$ is in the support of $h$ ($h(x)$ being nearly zero if $|x|$ is large enough, one assumes that $h$ is compactly supported).
 		\end{itemize}
-		On a ainsi accès rapidement à toutes les valeurs de $h$ qui peuvent être nécessaires à la convolution.
+		Thus all the values of $h$ used for the convolution can be easily found.
+
+
+
+%\begin{itemize}
+%		\item $\varphi$ parcourt $2^b$ nombres rationnels de $[0,1]$ avec $b$ le nombre de bit de précision voulu
+%		\item $k$ parcourt les entiers tels que $\frac{k}{s}$ soit dans le support de $h$ ($h(x)$ étant presque nul quand $|x|$ est assez grand, on suppose %$h$ à support compact)
+%		\end{itemize}
+%		On a ainsi accès rapidement à toutes les valeurs de $h$ qui peuvent être nécessaires à la convolution.

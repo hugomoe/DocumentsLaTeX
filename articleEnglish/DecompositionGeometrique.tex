@@ -1,4 +1,4 @@
-The new method for homographiy resampling is based on the decomposition of an homography which can be seen as camera moves. The section below presents that decompostion.
+The new method for homographiy resampling is based on the decomposition of an homography which can be seen as camera movement. The section below presents that decompostion.
 
 
 %La nouvelle méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
@@ -161,7 +161,7 @@ with $a,p,c,q,r,t$ some reals numbers.
 
 
 \begin{proof}
-Using formula (\ref{formule_homographie_H}), definition (\ref{def_homographie_H}) and the formula (\ref{formul_lem_app_proj}) of the lemma (\ref{lem_app_proj}), we have
+Using formula \ref{formule_homographie_H}, definition \ref{def_homographie_H} and the formula \ref{formul_lem_app_proj} of the lemma \ref{lem_app_proj}, we have
 \begin{equation*}
 h((x,y))=\left( \delta \frac{\overrightarrow{XF}\cdot \ubf}{\overrightarrow{XF} \cdot \wbf} +\overrightarrow{CC_0 } \cdot \ubf, \delta \frac{\overrightarrow{XF}\cdot \vbf}{\overrightarrow{XF} \cdot  \wbf}+\overrightarrow{CC_0 }\cdot \vbf \right)
 \end{equation*}
@@ -234,7 +234,7 @@ h = \tau_{\cbf} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,
 
 
 \begin{remarque}
-The previous method does not modeled every affine transform. Indeed the function $h$ defined by 
+The previous method does not model every affine transform. Indeed the function $h$ defined by 
 \begin{equation*}
 h = \tau_{\cbf}   \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \end{equation*}
@@ -243,13 +243,13 @@ is affine if and only if $\theta=0$. In this case we have
 h= \tau_{\cbf} \circ z_{-\frac{\delta}{\delta'}} \circ R_{\phi+\psi} \circ \tau_{\xbf_{v}}
 =\tau' \circ z_{-\frac{\delta}{\delta'}} \circ  R_{\phi+\psi}
 \end{equation*}
-However the affinity can be seen as a limit case. Let $k$ be the ratio $\frac{\delta}{\delta'}$. If $\delta'$ and $\delta$ tense to $+\infty$, the function $h_{\theta,\delta'}$, the function $h_{\theta,\delta'}$ tense to $h_{\theta,\infty}$ defined by
+However the affinity can be seen as a limit case. Let $k$ be the ratio $\frac{\delta}{\delta'}$. If $\delta'$ and $\delta$ tend to $+\infty$, the function $h_{\theta,\delta'}$, the function $h_{\theta,\delta'}$ tends to $h_{\theta,\infty}$ defined by
 \begin{equation*}
 h_{\theta,\infty}=(x,y)=(-\cos(\theta)x,-y)
 \end{equation*}
-Physically, it is equivalent to moving away from the plane while increasing the focal distance in order to keep the size of the output image constant.
+Physically, it is equivalent to move away from the plane while increasing the focal distance in order to keep the size of the output image constant.
 
-If $h_\infty = z_{-\frac{\delta}{\delta'}} \circ \tau_{\xbf} \circ R_{\phi} \circ h_{\theta,\infty} \circ R_{\psi} \circ \tau_{\xbf_{v}}$, the linear part $h_{\infty}$ can be represented by a matrix $2\times2$
+If $h_\infty = z_{-\frac{\delta}{\delta'}} \circ \tau_{\xbf} \circ R_{\phi} \circ h_{\theta,\infty} \circ R_{\psi} \circ \tau_{\xbf_{v}}$, the linear part of $h_{\infty}$ can be represented by a matrix $2\times2$
 
 \begin{equation*}
 R_{\psi} \cdot 
@@ -275,15 +275,15 @@ Using the lemma (\ref{decomp_valeur_sing}) it can be deduced that for all biject
 
 
 \subsubsection{Application of the decomposition to homographies}
-The previous results show that all homographies can be decomposed using the following Theorem
+The previous results show that all homographies can be decomposed using the following theorem
 
 %Le résultat précédent montre que certaine homographie peuvent se décomposer de la
 \begin{thm}
-Let $h$ be an homography, if $h$ is not an affine map then there exists parameters $(\phi,\theta,\psi,\delta,\delta',(x_1,y_1),(x_2,y_2))$ such that
+Let $h$ be an homography. If $h$ is not an affine map, then there exists parameters $(\phi,\theta,\psi,\delta,\delta',(x_1,y_1),(x_2,y_2))$ such that
 \begin{equation*}
 h = \tau_{(x_2,y_2)} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{(-x_1,-y_1)}
 \end{equation*}
-This decomposition is not unique. More precisely for all $\lambda \in ]0,1[$,
+This decomposition is not unique. More precisely, for all $\lambda \in ]0,1[$,
 
   \begin{equation*}
 h = \tau_{(x_2,y_2)} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{(-x_1,-y_1)}
@@ -312,7 +312,7 @@ and this decomposition is not unique.
 		This formula is used in the algorithm \ref{pseudoCodeDecompo}.
 		
 		\begin{proof}
-	 Using theorem (\ref{thepropdecomp}),there exists $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf)$ such that 
+	 Using theorem \ref{thepropdecomp},there exists $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf)$ such that 
 	 \begin{equation*}
 	 h = \tau_{\cbf} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 	 \end{equation*}
@@ -339,7 +339,7 @@ and this decomposition is not unique.
 		\centering
 		{\includegraphics[scale=0.24]{vue_fps_rotation_psi.png}}
 		{\includegraphics[scale=0.35]{vue_tps_rotation_psi.png}}}
-		\caption{Steps to process an homography, represented as camera moves, on the left the view from the camera, on the left a motionless point of view. The translations are not represented to simplify the situation. On motionless views, $F$ is the focus of the camera, the red plane is the image plane of the camera. (cf. \ref{ref_schema_decomp_cool})}
+		\caption{Steps to process an homography, represented as camera movement, on the left the view from the camera, on the left a motionless point of view. The translations are not represented to simplify the situation. On motionless views, $F$ is the focus of the camera, the red plane is the image plane of the camera. (cf. \ref{ref_schema_decomp_cool})}
 		\label{schema_decomp_cool}
 		\label{SchemaEtapesDecompoGeometrique}
 	\end{figure}

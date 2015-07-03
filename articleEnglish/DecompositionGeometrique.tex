@@ -255,19 +255,24 @@ Grâce au lemme (\ref{decomp_valeur_sing}) on peut en déduire que pour toute ap
 \end{remarque}
 
 
-\subsubsection{Application à la décomposition des homographies :}
-Le résultat précédent montre que certaine homographie peuvent se décomposer de la
+
+
+
+\subsubsection{Application of the decomposition to homographies}
+The previous results show that all homographies can be decomposed using the following Theorem
+
+%Le résultat précédent montre que certaine homographie peuvent se décomposer de la
 \begin{thm}
-Soit $h$ une homographie, si $h$ n'est pas une application affine alors il existe des paramètres $(\phi,\theta,\psi,\delta,\delta',(x_1,y_1),(x_2,y_2))$ tels que 
+Let $h$ be an homography, if $h$ is not an affine map then there exists parameters $(\phi,\theta,\psi,\delta,\delta',(x_1,y_1),(x_2,y_2))$ such that
 \begin{equation*}
 h = \tau_{(x_2,y_2)} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{(-x_1,-y_1)}
 \end{equation*}
-Cette décomposition n'est pas unique et possède un degré de liberté.Plus précisément, pour tout $\lambda \in ]0,1[$,
+This decomposition is not unique. More precisely for all $\lambda \in ]0,1[$,
 
   \begin{equation*}
 h = \tau_{(x_2,y_2)} \circ z_{\frac{\delta}{\delta'}}  \circ R_{\psi} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{(-x_1,-y_1)}
   \end{equation*}
-  où 
+  where 
  \begin{equation*}
 x_2=\frac{ar+sb+\hat r \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+\hat s \lambda}{r^2 +s^2}, (x_1 , y_1) = h^{-1}(x_{2},y_{2})
   \end{equation*}
@@ -280,43 +285,45 @@ x_2=\frac{ar+sb+\hat r \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+\hat s \lambda}{r^2 +
 \label{thepropdecomp}
 \end{thm}
 
-\begin{corollaire}Si $h$ est une homographie et $h$ n'est pas une affinité, alors il existe une translation $\tau$, deux rotations $R_\phi ,R_\psi$ et une homographie unidirectionnelle $\tilde{h}$ telles que
+\begin{corollaire} If $h$ an homography and $h$ is not affine, then there exists a translation $\tau$, two rotations $R_\phi ,R_\psi$ and a unidirectional homography $\tilde{h}$ such that
 \begin{equation}
 h=\tau \circ R_\psi \circ \tilde{h} \circ R_\phi
 \label{formule_decomposition_effective}
 \end{equation}
-cette décomposition n'est pas unique .
+and this decomposition is not unique.
 \end{corollaire}
-		Cette formule est celle utilisé dans les pseudo code \ref{pseudoCodeDecompo}.
+
+		This formula is used in the algorithm \ref{pseudoCodeDecompo}.
+		
 		\begin{proof}
-	 On part du théorème (\ref{thepropdecomp}), on sait qu'il existe $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf)$ tels que 
+	 Using theorem (\ref{thepropdecomp}),there exists $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf)$ such that 
 	 \begin{equation*}
 	 h = \tau_{\cbf} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 	 \end{equation*}
-	 On peut faire commuter $R_\psi$ et $z_{\frac{\delta}{\delta'}}$ et poser $\tau'$ la translation telle que $\tau' \circ R_\phi =  R_\phi \circ \tau_{\xbf_v}$.\\
-	 On pose alors $\tilde{h} = z_{\frac{\delta}{\delta'}} \circ 
-	 h_{\theta,\delta'} \circ \tau'$ on peut vérifier que $\tilde{h}$ est bien une homographie unidirectionnelle.
+	 $R_\psi$ and $z_{\frac{\delta}{\delta'}}$ commute. Let $\tau'$ be the theorem such that $\tau' \circ R_\phi =  R_\phi \circ \tau_{\xbf_v}$.\\
+	 Then with $\tilde{h} = z_{\frac{\delta}{\delta'}} \circ 
+	 h_{\theta,\delta'} \circ \tau'$ it can be easily verified that $\tilde{h}$ is indeed a unidirectional homography.
 	 \end{proof}
 	\label{ref_schema_decomp_cool}
 	\begin{figure}
 		\centering
-		\subfigure[Vue de départ]{
+		\subfigure[Input image]{
 		\centering
 		{\includegraphics[scale=0.24]{vue_fps_identity.png}}
 		{\includegraphics[scale=0.35]{vue_tps_identity.png}}}
-		\subfigure[Vue après une première rotation (d'angle $\phi$)]{
+		\subfigure[After a first rotation (of angle $\phi$)]{
 		\centering
 		{\includegraphics[scale=0.24]{vue_fps_rotation_phi.png}}
 		{\includegraphics[scale=0.35]{vue_tps_rotation_phi.png}}}
-		\subfigure[Vue après l'homographie unidirectionnelle]{
+		\subfigure[After the unidirectional homography]{
 		\centering
 		{\includegraphics[scale=0.24]{vue_fps_hom_part.png}}
 		{\includegraphics[scale=0.35]{vue_tps_hom_part.png}}}
-		\subfigure[Vue finale (après rotation d'angle $\psi$)]{
+		\subfigure[Output image (after the rotation of angle  $\psi$)]{
 		\centering
 		{\includegraphics[scale=0.24]{vue_fps_rotation_psi.png}}
 		{\includegraphics[scale=0.35]{vue_tps_rotation_psi.png}}}
-		\caption{Étapes de traitement d'une homographie, assimilées à des mouvements de caméra, à gauche la vue de la caméra, à droite une vue extérieure immobile. Les translations ont été omises pour plus de clarté. Sur les vues extérieures, $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. (cf \ref{ref_schema_decomp_cool})}
+		\caption{Steps to process an homography, represented as camera moves, on the left the view from the camera, on the left a motionless point of view. The translations are not represented to simplify the situation. On motionless views, $F$ is the focus of the camera, the red plane is the image plane of the camera. (cf. \ref{ref_schema_decomp_cool})}
 		\label{schema_decomp_cool}
 		\label{SchemaEtapesDecompoGeometrique}
 	\end{figure}

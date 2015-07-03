@@ -4,7 +4,7 @@
 %Je sais pas si on doit garder la partie sur l'interp de hermite
 \subsubsection{Separation of a unidirectional homography}
 
-By using formula \ref{formule_decomposition_effective} the problem of sampling homographies is reduced to sampling unidirectional homographies and rotations. This section deals with unidirectional homgraphies.
+By using formula \ref{formule_decomposition_effective} the problem of resampling homographies is reduced to resampling unidirectional homographies and rotations. This section deals with unidirectional homgraphies.
 
 
 %By using formula \ref{formule_decomposition_effective} à traiter des rotations et des homographies unidirectionnelles. Cette section présente une méthode de traitement pour les homograpghies unidirectionnelles.
@@ -21,19 +21,19 @@ h:(x,y)\mapsto \left(\frac{ax+p}{rx+t},\frac{dy+q}{rx+t}\right)
 $h$ can be split in two applications $h_1 , h_2$
 %On peut décomposer cette homographie en deux applications $h_1 , h_2$
 \begin{equation*}
-h_1:(x,y) \mapsto \left(\frac{ax+p}{rx+t},y\right) \text{and} h_2:(x,y) \mapsto \left(x,\frac{dy+q}{rx+t}\right)
+h_1:(x,y) \mapsto \left(\frac{ax+p}{rx+t},y\right) \text{ and } h_2:(x,y) \mapsto \left(x,\frac{dy+q}{rx+t}\right)
 \end{equation*}
 so that $h=h_1  \circ h_2$, allowing the following scheme
 \begin{equation*}
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2
 \end{equation*}
 
-Each of these applications transform the image in one direction, allowing a one-dimensional approach of the resampling. Then the filtering is in one dimension so the resampling is easier and can be computed faster.
+Each of these applications transforms the image in one direction, allowing a one-dimensional approach of the resampling. Then the filtering is in one dimension so the resampling is easier and can be computed faster.
 
 %Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimensionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.
 \begin{itemize}
-\item One each column the first transform is a one-dimensional homography.%Sur chaque colonne, la première transformation est une homographie en une dimension.
-\item One each row the second transform is a zoom (which factor is different for each row).%Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
+\item On each column the first transform is a one-dimensional homography.%Sur chaque colonne, la première transformation est une homographie en une dimension.
+\item On each row the second transform is a zoom (which factor is different for each row).%Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
 \end{itemize}
 
 The effect of the transforms $h,h_1$ and $h_2$ is shown figure \ref{image_separation_f14}.
@@ -52,7 +52,7 @@ The effect of the transforms $h,h_1$ and $h_2$ is shown figure \ref{image_separa
 %\paragraph{Sous-échantillonnage gaussien}
 \paragraph{Gaussian downsampling}
 \label{zoom_gaussien}
-The gaussian zoom is a method of downsampling which use the convolve $f*G_{d}$, where $G_d$ is a gaussian kernel of standard deviation $d$. Approximations of the standard deviation is briefly describe in this section, and are based on  \emph{SIFT is an invariant scale} \cite{morel2011sift}.
+The gaussian zoom is a method of downsampling which use the convolution $f*G_{d}$, where $G_d$ is a gaussian kernel of standard deviation $d$. Approximations of the standard deviation is briefly describe in this section, and are based on  \emph{SIFT is an invariant scale} \cite{morel2011sift}.
 
 %Le zoom gaussien est une méthode de sous-échantillonnage utilisant la convolution $f*G_{d}$ , où $G_d$ est un noyau gaussien d'écart type $d$. Dans nos algorithme on utilisera la méthode développée dans l'article \emph{SIFT is an invariant scale} \cite{morel2011sift}.
 
@@ -86,13 +86,13 @@ The parameter $c'$ is difficult to compute. Experiments show that it is between 
 %\paragraph{Ré-échantillonnage par les images intégrales}
 \label{4Integral}
 
-In this paragraph a method to resample a one-dimensional image is presented; this method relies on an approximation of the gaussian blur (cf. \ref{zoom_gaussien}) using integral images.
+In this paragraph a method to resample a one-dimensional image is presented ; this method relies on an approximation of the gaussian blur (cf. \ref{zoom_gaussien}) using integral images.
 
 %Dans ce paragraphe on présente une méthode permettant de ré-échantillonner une image 1D ; cette méthode s'appuie sur une approximation du zoom gaussien (cf. \ref{zoom_gaussien}) et utilise les images intégrales.
 
 Let $\Gcal_n^d$ be the kernel defined by
 \begin{equation*}
-\Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) \text{and} \Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d 
+\Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) \text{ and } \Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d 
 \label{formule_convol_n_int}
 \end{equation*}
 
@@ -161,7 +161,7 @@ $D_d^n$ can be developed using the binomial theorem since the two operators comm
 \end{equation*}
 \end{proof}
 
-In the algorithms, this property will be used for $n=3$ and the computation of $D_d^n$ is done by recurrence (cf. algorithm \ref{pseudo_code_convol_4_int}).
+In the algorithms, this property will be used for $n=3$ and the computation of $D_d^n$ is done by induction (cf. algorithm \ref{pseudo_code_convol_4_int}).
 
 An approximation of $F_{k}$ has to be made since only samples of $f$ are known.\\
 Let $(f_k){k=0...m-1}$ be a discret signal, let $F_0$ be defined by
@@ -184,10 +184,10 @@ F_{n}(x) &=& F_{n}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{
           &+&\mathds{1}_{[m,+\infty[}(x)\underset{1\le k \le n-1}{\sum}F_{k}(m) \frac{(x-m)^{n-1-k}}{(n-1-k)!}
 \end{eqnarray*}
 
-where values of $F_n$ on integers can be computed by recurrence
+where values of $F_n$ on integers can be computed by induction
 
 \begin{equation*}
-\forall k \in \llbracket 0 ;m-1 \rrbracket, F_{n}(k+1)=F_{n}(k)+\underset{0\le l < n}{\sum} \frac{F_{l}(k)}{(n-l)!}
+\forall k \in \llbracket 0 ; m-1 \rrbracket, F_{n}(k+1)=F_{n}(k)+\underset{0\le l < n}{\sum} \frac{F_{l}(k)}{(n-l)!}
 \end{equation*}
 
 %Dans nos algorithmes, on utilisera généralement cette propriété pour $n=3$ mais on calculera l'opérateur $D_d^n$ en faisant des différences successives (algorithme \ref{pseudo_code_convol_4_int}).
@@ -200,7 +200,7 @@ where values of $F_n$ on integers can be computed by recurrence
 
 %Où la valeur de $F_{n}$ se calcule par récurrence :
 
-So the values on integers and the value of a polynomial of degree $n$ has to be compute to interpolate on non-integer values.
+So the values on integers and the value of a polynomial of degree $n$ has to be computed to interpolate on non-integer values.
 
 In practice the formula is used for $n=4$. To compute the values of $F_4$ the value for integers is precompute then the following scheme is used
 
@@ -258,7 +258,6 @@ Where $F$ piecewise constant interpolation of $(f_k)$
 \begin{proof}
 
 \begin{equation*}
-We have
 \tilde{F}(x)=\displaystyle{\sum_{0\le k \le m-1}} f_k \Gcal_2^1 (x-k-\frac{1}{2})=(F_{0} *\Gcal_1^1 )(x)
 \end{equation*}
 so

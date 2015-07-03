@@ -10,11 +10,11 @@ Affinities are a particular case of homographies for which there exists a effici
 
 	%Le principe de cette méthode est d'abord de se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est ensuite effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse.
 	
-	The principle is to bring back the problem to a particular case of affine map, called shear, which only act towards one direction (their matrix form is $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Each shear is computed in three steps : an oversampling, a shear and a subsampling.
+	The principle is to bring back the problem to a particular case of affine map, called shear, which only act towards one direction (their matrix form is $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Each shear is computed in three steps : an upsampling, a shear and a downsampling.
 	
 	%Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
 	
-	The aim is to choose the oversampling factor large enough so that the global operation avoids aliasing (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
+	The aim is to choose the upsampling factor large enough so that the global operation avoids aliasing (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
 	\label{label_des_deux_prems_fig_de_szeli}
 	\begin{figure}
 		\centering
@@ -27,9 +27,9 @@ Affinities are a particular case of homographies for which there exists a effici
 	\begin{figure}
 		\centering
 		\subfigure[Spectrum of the initial image]{\includegraphics[scale=0.5]{szeliski_szeliskiEntree.png}}
-		\subfigure[Spectrum of the image after oversampling]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
-		\subfigure[Spectrum of the image after an oversampling and a shear]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
-		\subfigure[Spectrum of the final image (after an oversampling, a shear and a subsampling, coupled with a low-pass filter)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
+		\subfigure[Spectrum of the image after upsampling]{\includegraphics[scale=0.5]{szeliski_szeliskiSurechantillonnage.png}}
+		\subfigure[Spectrum of the image after an upsampling and a shear]{\includegraphics[scale=0.5]{szeliski_szeliskiShear.png}}
+		\subfigure[Spectrum of the final image (after an upsampling, a shear and a downsampling, coupled with a low-pass filter)]{\includegraphics[scale=0.5]{szeliski_szeliskiSortie.png}}
 		\caption{Spectrum of an image, resampled by a shear with the multi-pass resampling method (cf. section \ref{label_des_deux_prems_fig_de_szeli}). Experiment figure \ref{experiments_decompoSzeliski_sinc} }
 		\label{szeliski_decompoSzeliski}
 	\end{figure}
@@ -203,7 +203,7 @@ where $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{0
 		%Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où :
 		
 \begin{itemize}
-		\item $\varphi \in \frac{l}{2^b}$ with $l \in \rrbracket0,2^b-1\llbracket with $b$ the number of precision bit needed.
+		\item $\varphi \in \frac{l}{2^b}$ with $l \in \rrbracket0,2^b-1\llbracket$ with $b$ the number of precision bit needed.
 		\item $k$ is an integer such that $\frac{k}{s}$ is in the support of $h$ ($h(x)$ being nearly zero if $|x|$ is large enough, one assumes that $h$ is compactly supported).
 		\end{itemize}
 		Thus all the values of $h$ used for the convolution can be easily found.

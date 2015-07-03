@@ -4,7 +4,7 @@ La nouvelle méthode de traitement des homographies repose sur la décomposition
 \label{mouv_de_camera}
 On étudie ici un cas a priori particulier d'homographie $h$ : les homographies que l'on peut interpréter comme un mouvement de caméra idéale. On montrera par la suite que c'est en fait un cas général.
 
-Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale, les paramètres introduits sur ce schéma seront définis dans les définitions et notations \ref{defpoint}. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant les lentilles ou les dispositifs correcteurs présents dans les caméras réelles.
+Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant les lentilles ou les dispositifs correcteurs présents dans les caméras réelles.
 
 \begin{figure}[h!]
 
@@ -103,7 +103,7 @@ Si on note encore $D,D'$ les droites de $\mathbb{R}^2$ obtenue lorsque $P$ et $\
 \begin{remarque}
 A un point $X\in P$ de coordonnées $(x,y)$  l'application $h$ associe les coordonnées  du point $H^*(X)$ dans l'image numérique obtenue après acquisition par la caméra. 
 \end{remarque}
-L'orientation de la base $(\ubf,\vbf,\wbf)$ par rapport à la base $(\xbf_0,\ybf_0,\zbf_0)$ peut être définie grâce aux trois angles d'Euler $(\phi , \theta ,\psi )$ (figure \ref{image_graph})
+L'orientation de la base $(\ubf,\vbf,\wbf)$ par rapport à la base $(\xbf_0,\ybf_0,\zbf_0)$ peut être définie grâce aux trois angles d'Euler $(\phi , \theta ,\psi )$ (figure \ref{img_angles})
 \begin{itemize}
 \item $\phi$ est la précession autour de l'axe $(X_v ,\zbf_0)$
 \item $\theta$ est l'inclinaison par rapport à l'axe $(X_v , \zbf_0 )$
@@ -269,13 +269,14 @@ x_2=\frac{ar+sb+\hat r \lambda}{r^2 +s^2}, y_2=\frac{cr+sd+\hat s \lambda}{r^2 +
 \label{thepropdecomp}
 \end{thm}
 
-\begin{corollaire}Si $h$ est une homographie et $h$ n'est pas une application affine alors il existe une translation $\tau$, deux rotations $R_\phi ,R_\psi$ et une homographie unidirectionnelle $\tilde{h}$ telles que
+\begin{corollaire}Si $h$ est une homographie et $h$ n'est pas une affinité, alors il existe une translation $\tau$, deux rotations $R_\phi ,R_\psi$ et une homographie unidirectionnelle $\tilde{h}$ telles que
 \begin{equation}
 h=\tau \circ R_\psi \circ \tilde{h} \circ R_\phi
+\label{formule_decomposition_effective}
 \end{equation}
 cette décomposition n'est pas unique .
 \end{corollaire}
-		Cette formule est celle utilisée dans les pseudo code \ref{pseudoCodeDecompo}.
+		Cette formule est celle utilisé dans les pseudo code \ref{pseudoCodeDecompo}.
 		\begin{proof}
 	 On part du théorème (\ref{thepropdecomp}), on sait qu'il existe $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf)$ tels que 
 	 \begin{equation*}
@@ -285,6 +286,7 @@ cette décomposition n'est pas unique .
 	 On pose alors $\tilde{h} = z_{\frac{\delta}{\delta'}} \circ 
 	 h_{\theta,\delta'} \circ \tau'$ on peut vérifier que $\tilde{h}$ est bien une homographie unidirectionnelle.
 	 \end{proof}
+	\label{ref_schema_decomp_cool}
 	\begin{figure}
 		\centering
 		\subfigure[Vue de départ]{

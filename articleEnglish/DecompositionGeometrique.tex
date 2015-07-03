@@ -151,57 +151,66 @@ Où $a,p,c,q,r,t$ sont des réels.
 \label{decompgeo_rotationPropre}
 \end{figure}
 
+
+
+
+
 \begin{proof}
-Grâce à la formule (\ref{formule_homographie_H}) de la définition (\ref{def_homographie_H}) et la formule  (\ref{formul_lem_app_proj}) du lemme (\ref{lem_app_proj}) on obtient
+Using formula (\ref{formule_homographie_H}), definition (\ref{def_homographie_H}) and the formula (\ref{formul_lem_app_proj}) of the lemma (\ref{lem_app_proj}), we have
 \begin{equation*}
 h((x,y))=\left( \delta \frac{\overrightarrow{XF}\cdot \ubf}{\overrightarrow{XF} \cdot \wbf} +\overrightarrow{CC_0 } \cdot \ubf, \delta \frac{\overrightarrow{XF}\cdot \vbf}{\overrightarrow{XF} \cdot  \wbf}+\overrightarrow{CC_0 }\cdot \vbf \right)
 \end{equation*}
-où $X=x \xbf_0 + y \ybf_0 $.\\
-En introduisant le point visé $X_v$ (définition \ref{point_vise} formule \ref{formule_point_vise}) et la translation $\tau_c$ on obtient 
+where $X=x \xbf_0 + y \ybf_0 $.\\
+
+By introducing the target point $X_v$ (definition \ref{point_vise} formula \ref{formule_point_vise}) and the translation $\tau_c$ we have
 \begin{equation}
 (\tau_\cbf^{-1} \circ h)((x,y)) = \left ( -\delta \frac{\overrightarrow{X_vX}\cdot \ubf}{\delta' -\overrightarrow{X_vX} \cdot \wbf},-\delta \frac{\overrightarrow{X_vX}\cdot \vbf}{\delta' -\overrightarrow{X_vX} \cdot \wbf} \right)
 \label{decomp_formul_intermediaire_1}
 \end{equation}
-On peut définir les bases intermédiaires $(\xbf_1 ,\ybf_1 ,\zbf_1)$  $(\xbf_2 ,\ybf_2 ,\zbf_2)$ , afin de décomposer les trois rotations $\phi,\theta,\psi$ (figures \ref{img_angles} et \ref{decompgeo_rotationPropre} ).
-On obtient alors les relations
+
+
+Intermediate basis $(\xbf_1 ,\ybf_1 ,\zbf_1)$  $(\xbf_2 ,\ybf_2 ,\zbf_2)$ can be defined, in order to decompose the three rotations $\phi,\theta,\psi$ (figures \ref{img_angles} and \ref{decompgeo_rotationPropre} ).
+
+Then we have the relations
 \begin{equation*}
 \ubf=\cos(\psi)\xbf_{2}+\sin(\psi)\ybf_{2} , \vbf=-\sin(\psi)\xbf_{2}+\cos(\psi)\ybf_{2} \text{ et } \wbf=\zbf_2.
 \end{equation*}
-On pose $R_{s}$ la rotation d'angle $s$, on obtient alors grâce à la formule (\ref{decomp_formul_intermediaire_1}) 
+
+Denoting $R_{s}$ the rotation of angle $s$, we obtained, by using the formula (\ref{decomp_formul_intermediaire_1}) 
 \begin{equation*}
 (\tau_{\cbf}^{-1} \circ h)((x,y)) = R_{\psi}\left(\frac{\delta \overrightarrow{X_v X}\cdot \xbf_{2} }{\delta'-\zbf_2 \cdot \overrightarrow{X_v X}},\frac{\delta \overrightarrow{X_v X}\cdot \ybf_{2}}{\delta'-\zbf_2 \cdot \overrightarrow{X_v X}}  \right).
 \end{equation*}
-On pose $i$ l'application définie par $i(x,y)=x \xbf_0 + y \ybf_0$, comme $i(\xbf_v)=\overrightarrow{O X_v}$ on obtient alors 
+Let $i$ be the mapping such that $i(x,y)=x \xbf_0 + y \ybf_0$. Since $i(\xbf_v)=\overrightarrow{O X_v}$ we have
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{\cbf}^{-1}  \circ h)((x,y))=\delta \left(\frac{-i(\tau_{\xbf_v} ((x,y)))\cdot \xbf_{2} }{\delta'-\zbf_2 \cdot i(\tau_{\xbf_v} ((x,y)))},\frac{-i(\tau_{\xbf_v} ((x,y)))\cdot \ybf_{2}}{\delta'-\zbf_2 \cdot i(\tau_{\xbf_v} ((x,y)))}  \right) 
 \end{equation*}
 
-Comme $\zbf_{2}=cos(\theta)\zbf_{1}+sin(\theta)\xbf_{1}$, $\xbf_{2}=cos(\theta)\xbf_{1}-sin(\theta)\zbf_{1}$ (figure \ref{img_angles}) et $\zbf_{1}\perp P_{1}$, on a
+Since $\zbf_{2}=cos(\theta)\zbf_{1}+sin(\theta)\xbf_{1}$, $\xbf_{2}=cos(\theta)\xbf_{1}-sin(\theta)\zbf_{1}$ (figure \ref{img_angles}) and $\zbf_{1}\perp P_{1}$, we have
 
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{\cbf}^{-1}  \circ h)((x,y))=\frac{\delta}{\delta'}\left(\frac{-\cos(\theta)i(\tau_{\xbf_v} ((x,y)))\cdot \xbf_{1} }{1-\frac{sin(\theta)}{\delta'}\xbf_{1}\cdot i(\tau_{\xbf_v}((x,y)))}, \frac{-i(\tau_{\xbf_v} ((x,y)))\cdot \ybf_{1}}{1-\frac{sin(\theta)}{\delta'}\xbf_{1}\cdot i(\tau_{\xbf_v}((x,y)))}  \right) 
 \end{equation*}
 
-En définissant $h_{\theta,\delta'}$ par
+Let $h_{\theta,\delta'}$ be defined by
 
 \begin{equation*}
 h_{\theta,\delta'}(x',y')=\left(\frac{-\cos(\theta)x'}{1-\frac{\sin(\theta)}{\delta'}x'} ,\frac{-y'}{1-\frac{\sin(\theta)}{\delta'}x'}\right)
 \end{equation*}
 
-Alors 
+Then
 
 \begin{equation*}
 (R_{\psi}^{-1} \circ \tau_{\cbf}^{-1} \circ h)((x,y))= \frac{\delta}{\delta'}h_{\theta,\delta'}\left ( i(\tau_{\xbf_v}((x,y))) \cdot \xbf_{1}, i(\tau_{\xbf_v}((x,y))) \cdot \ybf_{1}\right)
 \end{equation*}
 \label{figure_de_rotations_18}
-Comme $\xbf_{1}=\cos(\phi)\xbf_{0}+\sin(\phi)\ybf_{0}$ et $\ybf_{1}=-\sin(\phi)\xbf_{0}+\cos(\phi)\ybf_{0}$ (figure \ref{img_angles}), alors
+Since $\xbf_{1}=\cos(\phi)\xbf_{0}+\sin(\phi)\ybf_{0}$ et $\ybf_{1}=-\sin(\phi)\xbf_{0}+\cos(\phi)\ybf_{0}$ (figure \ref{img_angles}), we have
 
 \begin{eqnarray*}
 (R_{\psi}^{-1} \circ \tau_{\cbf}^{-1} \circ h)((x,y)) &=& \frac{\delta}{\delta'}h_{\theta,\delta'}\left ( R_{\phi}(i(\tau_{\xbf_v}((x,y))) \cdot \xbf_{0}, i(\tau_{\xbf_v}((x,y))) \cdot \ybf_{0})\right)\\
                                                &=&\frac{\delta}{\delta'} (h_{\theta,\delta'}\circ R_{\phi} \circ \tau_{\xbf_v})((x,y))
 \end{eqnarray*}
 
-Si on définit les dilatations $z_{\lambda}:X\rightarrow \lambda X$, alors on obtient la formule recherchée
+Denoting zooms $z_{\lambda}:X\rightarrow \lambda X$, the claim is verified since
 
 \begin{equation*}
 h = \tau_{\cbf} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
@@ -212,30 +221,30 @@ h = \tau_{\cbf} \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,
 
 \begin{remarques}
 \begin{itemize}
-\item Un ré-échantillonnage d'une image par l'homographie  $h$ permet de simuler un changement de prise de vue par rapport à l'image initiale, cette opération est paramétré par  $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf_v)$, ces paramètres sont liées.
-\item Nous n'avons pas traité le cas où la caméra vise l'horizon, ce cas ne sera pas utile dans les paragraphe qui suivent, la translation $\tau_\cbf$ permet de l'éviter.
+\item Resampling an image by the homography $h$ simulate a change of the point of view on the input image. This has parameters $(\phi,\theta,\psi,\delta,\delta',\xbf_v,\cbf_v)$, which are not independent.
+\item The case in which the camera is targeting the horizon has not been discussed, translations $\tau_\cbf$ allow to avoid this.
 \end{itemize}
 \end{remarques}
 
 
 
 \begin{remarque}
-La modélisation précédente ne permet pas de reconstruire toutes les applications affines. En effet la fonction $h$ définie par 
+The previous method does not modeled every affine transform. Indeed the function $h$ defined by 
 \begin{equation*}
 h = \tau_{\cbf}   \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \end{equation*}
-est une application affine si seulement si $\theta=0$. Dans ce cas, on obtient  
+is affine if and only if $\theta=0$. In this case we have
 \begin{equation*}
 h= \tau_{\cbf} \circ z_{-\frac{\delta}{\delta'}} \circ R_{\phi+\psi} \circ \tau_{\xbf_{v}}
 =\tau' \circ z_{-\frac{\delta}{\delta'}} \circ  R_{\phi+\psi}
 \end{equation*}
-On peut cependant obtenir les application affine comme un cas limite : fixons le rapport  $k=\frac{\delta}{\delta'}$ ; si l'on fait tendre $\delta'$ et $\delta$ vers $+\infty$, la fonction $h_{\theta,\delta'}$ tend vers une limite $h_{\theta,\infty}$ définie par
+However the affinity can be seen as a limit case. Let $k$ be the ratio $\frac{\delta}{\delta'}$. If $\delta'$ and $\delta$ tense to $+\infty$, the function $h_{\theta,\delta'}$, the function $h_{\theta,\delta'}$ tense to $h_{\theta,\infty}$ defined by
 \begin{equation*}
 h_{\theta,\infty}=(x,y)=(-\cos(\theta)x,-y)
 \end{equation*}
-Physiquement, cela revient à s'éloigner de la scène tout en augmentant la focale afin de ne pas modifier la taille de l'image en sortie de l'appareil.
+Physically, it is equivalent to moving away from the plane while increasing the focal distance in order to keep the size of the output image constant.
 
-Si on pose $h_\infty = z_{-\frac{\delta}{\delta'}} \circ \tau_{\xbf} \circ R_{\phi} \circ h_{\theta,\infty} \circ R_{\psi} \circ \tau_{\xbf_{v}}$, la partie linéaire de $h_{\infty}$ peut être représentée par la matrice $2\times2$
+If $h_\infty = z_{-\frac{\delta}{\delta'}} \circ \tau_{\xbf} \circ R_{\phi} \circ h_{\theta,\infty} \circ R_{\psi} \circ \tau_{\xbf_{v}}$, the linear part $h_{\infty}$ can be represented by a matrix $2\times2$
 
 \begin{equation*}
 R_{\psi} \cdot 
@@ -246,13 +255,15 @@ R_{\psi} \cdot
 \cdot R_{\phi}
 \end{equation*}
 
-Si  $M$ est une matrice $2\times 2$ inversible, on a alors le lemme suivant qui provient de la décomposition en valeurs singulières \cite{morel2009asift}
+If $M$ is an invertible matrix $2\times 2$, then we have the following lemma using the singular value decomposition \cite{morel2009asift}.
 \begin{lem}
-Il existe deux matrices de rotations $R_1$ et $R_2$  et une matrice diagonale $D$ telles que $M = R_1 \cdot D \cdot R_2$.
+There exists two rotation matrix $R_1$ and $R_2$ and a diagonal matrix $D$ such that $M = R_1 \cdot D \cdot R_2$.
 \label{decomp_valeur_sing}
 \end{lem}
-Grâce au lemme (\ref{decomp_valeur_sing}) on peut en déduire que pour toute application affine bijective $A$, il existe un changement de caméra $h$ tel que $h_\infty = A$ ; on peut de plus supposer que $h$ ne possède pas de translation de sortie.
+
+Using the lemma (\ref{decomp_valeur_sing}) it can be deduced that for all bijective affinity $A$, there exists a camera movement $h$ such that $h_\infty = A$. Moreover it can be assumed that $h$ has no output translation.
 \end{remarque}
+
 
 
 

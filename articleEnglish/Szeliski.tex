@@ -10,7 +10,7 @@ Affinities are a particular case of homographies for which there exists a effici
 
 	%Le principe de cette méthode est d'abord de se ramener à des affinités qui n'agissent que selon une direction (affinités de la forme $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Par abus de langage, on parlera de \emph{shear}, bien qu'il s'agisse de la composée d'un cisaillement, d'une dilatation unidirectionnelle et d'une translation, tous dans la même direction. Chacun des \emph{shears} est ensuite effectué en trois étapes : un sur-échantillonnage dans la direction transverse, un \emph{shear} et un sous-échantillonnage dans la direction transverse.
 	
-	The principle is to bring back the problem to a particular case of affine map, called shear, which only act towards one direction (their matrix form is $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ ou $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Each shear is computed in three steps : an upsampling, a shear and a downsampling.
+	The principle is to bring back the problem to a particular case of affine map, called shear, which only act towards one direction (their matrix form is $\pmatrice{a_0 & a_1 & t\\ 0 & 1 & 0}$ or $\pmatrice{1 & 0 & 0\\ a_1 & a_0 & t}$). Each shear is computed in three steps : an upsampling, a shear and a downsampling.
 	
 	%Le principe de la méthode est en fait de choisir le facteur de sur-échantillonnage suffisamment grand pour que l'opération globale se fasse sans \emph{aliasing}, i.e. sans repliement du spectre (figures \ref{szeliski_decompoNaive} et \ref{szeliski_decompoSzeliski}).
 	
@@ -43,7 +43,7 @@ Affinities are a particular case of homographies for which there exists a effici
 	\label{szeliski_definition_raisedCosineWeightedSinc}
 	\end{equation}
 	The period $T$ is equal to one (the size of a pixel).
-	The parameter $\beta$, called roll-off factor, is a crucial choice. If $\beta$ is around $0.36$ (which the parameter used for most of the experiments in appendix), the support of $h$ can be reasonably approximate as contained in $[-4,4]$, and so the convolution reduce to a sum of nine terms (figure \ref{szeliski_plotRaisedCosine}), as long as the support is not modified.
+	The parameter $\beta$, called roll-off factor, is a crucial choice. If $\beta$ is around $0.36$ (which the parameter used for most of the experiments in appendix), the support of $h$ can be reasonably approximated as contained in $[-4,4]$, and so the convolution reduces to a sum of nine terms (figure \ref{szeliski_plotRaisedCosine}), as long as the support is not modified.
 	
 	
 %	Le paramètre $\beta$, intitulé \emph{roll-off factor}, peut varier. En prenant $\beta$ autour de $0.36$ (paramètre utilisé pour la plupart des expériences en annexe), on peut considérer que le support de $h$ est compris dans $[-4,4]$, et donc réduire la convolution à une somme d'au plus neuf termes (figure \ref{szeliski_plotRaisedCosine}), tant que le support du filtre n'est pas modifié.
@@ -67,7 +67,7 @@ Affinities are a particular case of homographies for which there exists a effici
 %	En pratique, le support du filtre est adaptatif, et dépend d'un facteur de zoom $s$, d'où la formule de convolution par $h$ (ici convolution selon les abscisses) :
 %	où $img_f$ est l'image finale et $img$ l'image initiale.
 	
-	Multiplying by $s$ the size of support of support (by calling $h(\frac{x}{s})$ instead of $h(x)$, with $s\geq 1$) divide by $s$ the bandwidth of this filter. This protect against aliasing during downsamplings. The coefficient $s$ also depend on the \emph{maximal preserved frequencies} $u_{max}$ and $v_{max}$ which will be presented later.
+	Multiplying by $s$ the size of support of the filter function (by calling $h(\frac{x}{s})$ instead of $h(x)$, with $s\geq 1$) divides by $s$ the bandwidth of this filter. This protects against aliasing during downsamplings. The coefficient $s$ also depends on the \emph{maximal preserved frequencies} $u_{max}$ and $v_{max}$ which will be presented later.
 	
 %	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
@@ -95,14 +95,14 @@ Affinities are a particular case of homographies for which there exists a effici
 %	Le sous-échantillonnage est effectué sans repliement grâce à un élargissement du support du filtre $h$ (support adaptatif).
 	%\end{proof}
 	
-	\emph{A priori} this method decompose any affinity in six steps $\mathcal R$ (three per shears). In fact it is possible to merge some $\mathcal R$ if they act in the same direction. The decomposition can then be reduced to four stapes $\mathcal R$ : a vertical up-sampling, an horizontal shear, a vertical shear and finally an horizontal downsampling.
+	\emph{A priori} this method decomposes any affinity in six steps $\mathcal R$ (three per shears). In fact it is possible to merge some $\mathcal R$ if they act in the same direction. The decomposition can then be reduced to four steps $\mathcal R$ : a vertical up-sampling, an horizontal shear, a vertical shear and finally an horizontal downsampling.
 	
 %	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	
 \subsection{Steps of the algorithm}
 	\label{szeliski_affine_section}
 	
-	The details of the processing of the steps of the multi-pass resampling algorithm for affinity are described in this section. The corresponding algorithm can be found in appendix (algorithms \ref{szeliski_affine} and following).
+	The details of the processing of the steps of the multi-pass resampling algorithm for affinity are described in this section. The corresponding algorithms can be found in appendix (algorithms \ref{szeliski_affine} and following).
 	
 	Let $A$ be the matrix of the inverse affinity of the one supposed to be processed. Let's denote
 
@@ -117,11 +117,11 @@ Affinities are a particular case of homographies for which there exists a effici
 	\subsubsection{Eventual transposition}
 		\label{szeliski_transpoOpt_section}
 		
-		The $\mathcal R$ can compressed the image on a few pixels and then expand it (e.g. when $A$ is rotation of angle $\frac{\pi}{2}$), this is called the bottleneck problem \cite{wolberg1990digital}.
+		The $\mathcal R$ can compress the image on a few pixels and then expand it (e.g. when $A$ is a rotation of angle $\frac{\pi}{2}$), this is called the bottleneck problem \cite{wolberg1990digital}.
 
 %	Les $\mathcal R$ peuvent, si l'affinité est par exemple une rotation d'angle $\frac{\pi}{2}$, compresser l'image sur peu de pixels puis tenter de la dilater ; cet effet est un \emph{bottleneck problem} déjà connu \cite{wolberg1990digital}.
 		
-		To prevent this the image and mateix can be transposed. Let's denote
+		To prevent this, the image and the matrix can be transposed. Let's denote
 		
 	%	On effectue donc éventuellement une transposition (de l'image et de la matrice) pour éviter cet effet : en notant
 		\[\hat a_{00} = \frac{a_{00}}{\sqrt{a_{00}^2+a_{11}^2}}\]
@@ -164,7 +164,7 @@ Affinities are a particular case of homographies for which there exists a effici
 		%\[r_v \geq \max (1,|a_{01}|u_{max}+\min (1,|a_{11}|v_{max}))\]
 		%\[r_h \geq \max (1,|a_{10}/a_{11}|r_vv_{max}+\min (1,|b_0|u_{max}))\]
 
-		By geometric condiderations, one can always reduces the upsamplings to $r_h \leq 3$ and $r_v \leq 3$. Indeed, in both unidirectional mappings  ( (those splitted into three $\mathcal R$), $r_h$ and $r_v$ can be reduced to three, thanks to the filtering which attenuates the frequencies beyond $u_{max}$ and $v_{max}$ respectively. The figure \ref{rvleq3} presents that geometric reasoning for a mapping on columns (which is a mapping on rows in the frequencie domain).
+		By geometric condiderations, one can always reduces the upsamplings to $r_h \leq 3$ and $r_v \leq 3$. Indeed, in both unidirectional mappings (those splitted into three $\mathcal R$), $r_h$ and $r_v$ can be reduced to three, thanks to the filtering which attenuates the frequencies beyond $u_{max}$ and $v_{max}$ respectively. The figure \ref{rvleq3} presents that geometric reasoning for a mapping on columns (which is a mapping on rows in the frequencie domain).
 
 		%Pour des raisons géométriques, on peut toujours réduire les sur-échantillonnages à $r_h \leq 3$ et $r_v \leq 3$. En effet, pour chacune des deux opérations unidirectionnelles (celles qui seront décomposées en trois $\mathcal R$), le $r_h$ (respectivement $r_v$) peut être réduit à 3, grâce au filtrage qui atténue les fréquences au delà de $u_{max}$ (respectivement $v_{max}$). La figure \ref{rvleq3} présente ce raisonnement géométrique pour une opération sur les colonnes (qui se traduit par une opération sur les lignes dans le domaine de Fourier).
 		
@@ -172,7 +172,7 @@ Affinities are a particular case of homographies for which there exists a effici
 		\centering
 		\subfigure[$r_v$ not bounded]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
 		\subfigure[$r_v$ bounded by 3 ; the fact the horizontals spacings are unchanged has been used]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
-		\caption{Reduction of $r_v$ down to $r_v \leq 3$. Beyond $v_{max}$, the frequencies are filtered. $s$ is the prameter of the filter which reduces the bandwidth. Then the $r_v$ needed to avoid aliasing can be reduced. $r_v$ is the ratio of the length of the dotted rectangle (which is the spectrum after the upsampling) and that of the square (which is the initial spectrum)}
+		\caption{Reduction of $r_v$ down to $r_v \leq 3$. Beyond $v_{max}$, the frequencies are filtered. $s$ is the parameter of the filter which reduces the bandwidth. Then the $r_v$ needed to avoid aliasing can be reduced. $r_v$ is the ratio of the length of the dotted rectangle (which is the spectrum after the upsampling) and that of the square (which is the initial spectrum)}
 		\label{rvleq3}
 		\end{figure}
 
@@ -199,11 +199,11 @@ where $b_0 = a_{00} - \frac{a_{01}a_{10}}{a_{11}};$ et : $t_2 = t_0 - \frac{a_{0
 		All that remains is to do the four $\mathcal R$ mapping.
 		%Il ne reste qu'à appliquer les quatre opérations $\mathcal R$.
 		
-		For each ones, the first step is to keep in memory all the values of $h(\frac{k+\varphi}{s})$ whith
+		For each ones, the first step is to keep in memory all the values of $h(\frac{k+\varphi}{s})$ with
 		%Pour chacune, on commence par stocker les différentes valeurs de $h(\frac{k+\varphi}{s})$ où :
 		
 \begin{itemize}
-		\item $\varphi \in \frac{l}{2^b}$ with $l \in \rrbracket0,2^b-1\llbracket$ with $b$ the number of precision bit needed.
+		\item $\varphi \in \left\lbracket \frac{l}{2^b}, l \in \rrbracket0,2^b-1\llbracket \right\rbracket$ with $b$ the number of precision bit needed.
 		\item $k$ is an integer such that $\frac{k}{s}$ is in the support of $h$ ($h(x)$ being nearly zero if $|x|$ is large enough, one assumes that $h$ is compactly supported).
 		\end{itemize}
 		Thus all the values of $h$ used for the convolution can be easily found.

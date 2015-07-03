@@ -15,8 +15,8 @@
 
 The geometric decomposition allows a resampling by homography of higher quality and a stricter control of introduced aliasing and blurring. The solutions presented here to implement each step are computationally intensive but they are linear (with respect to the number of pixels) and since they act independently on rows or on columns, they can by efficiently parallelized.
 
-There can still be less rigorous but faster approximations, for example by adapting the 3-integral image for the multi-pass resampling of rotations. The resampling of the unidirectionnal homography can also by simplified, for example by integrating only on integer and using bilinear interpolation between them.
+There can still be less rigorous but faster approximations, for example by adapting the 3-integral image for the multi-pass resampling of rotations. The resampling of the unidirectionnal homography can also by simplified, for example by integrating only on integers and using bilinear interpolation between them.
 
-On the contrary, if the time for computation is not essential, spline of high order can be used to resample the unidirectionnal homography or the rotation, assuming the angle will be small.
+On the contrary, if the time for computation is not essential, spline of high order can be used to resample the unidirectionnal homography or the rotation, assuming the angles will be small.
 
 To conclude, we have proposed a geometric decomposition of homographies around which a lot of algorithms can be based.

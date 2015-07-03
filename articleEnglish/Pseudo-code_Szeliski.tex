@@ -86,9 +86,9 @@
 
  \subsubsection{Maximal frequencies $u_{max}, v_{max}$}
 
-In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies kept in the spectrum - are determined. This algorithm uses both $intersectionsVerticales$ and $intersectionsHorizontales$, which compute the intersections of a segment (whose bounds' coordinates are $(U_1,V_1)$ and $(U_2,V_2)$) and two parallel sides of the $[-1,1]^2$ square (either the two vertical ones, or the two horizontal ones). The knowledge of those intersections and the symmetry with respect to the $(0,0)$ point of the linear mapping are sufficient to know all the vertices of the polygon $[-1,1]^2 \cap \ ^t\!\!A^{-1}[-1,1]^2$, and thus all points of maximal coordinates.
+In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies kept in the spectrum - are determined. This algorithm uses both $verticalIntersections$ and $horizontalIntersections$, which compute the intersections of a segment (whose bounds' coordinates are $(U_1,V_1)$ and $(U_2,V_2)$) and two parallel sides of the $[-1,1]^2$ square (either the two vertical ones, or the two horizontal ones). The knowledge of those intersections and the symmetry with respect to the $(0,0)$ point of the linear mapping are sufficient to know all the vertices of the polygon $[-1,1]^2 \cap \ ^t\!\!A^{-1}[-1,1]^2$, and thus all points of maximal coordinates.
  
- % Dans $frequencesMax$, on détermine $u_{max}$ et $v_{max}$ les fréquences conservées maximales, au-delà desquelles appliquer l'affinité coupera le spectre. Ce pseudo-code s'appuie sur deux autres, $intersectionsVerticales$ et $intersectionsHorizontales$, qui intersectent un segment (dont les extrémités ont pour coordonnées $(U_1,V_1)$ et $(U_2,V_2)$) avec deux côtés parallèles du carré $[-1,1]^2$ (soit les deux côtés verticaux, soit les deux horizontaux). La connaissance de ces intersections et la symétrie par rapport au point $(0,0)$ de l'application linéaire suffisent à connaître la totalité des sommets du polygone $[-1,1]^2 \cap \ ^t\!\!A^{-1}[-1,1]^2$, et donc les points de coordonnées maximales.
+ % Dans $frequencesMax$, on détermine $u_{max}$ et $v_{max}$ les fréquences conservées maximales, au-delà desquelles appliquer l'affinité coupera le spectre. Ce pseudo-code s'appuie sur deux autres, $verticalIntersections$ et $horizontalIntersections$, qui intersectent un segment (dont les extrémités ont pour coordonnées $(U_1,V_1)$ et $(U_2,V_2)$) avec deux côtés parallèles du carré $[-1,1]^2$ (soit les deux côtés verticaux, soit les deux horizontaux). La connaissance de ces intersections et la symétrie par rapport au point $(0,0)$ de l'application linéaire suffisent à connaître la totalité des sommets du polygone $[-1,1]^2 \cap \ ^t\!\!A^{-1}[-1,1]^2$, et donc les points de coordonnées maximales.
   
   NB : $^t\!\!A^{-1}[-1,1]^2$ are all the frequencies kept by the affine transforme $A$.
 
@@ -109,32 +109,32 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
     \eIf{$v_1=-v_2$}{
      \KwRet{$(\min(|u_1|,1),\min(|v_1|,1)$}
     }{
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
-     Concatenate $M$ and $intersectionsVerticales(u_1,v_1,-u_2,-v_2)$\;
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,u_2,v_2)$\;
+     Concatenate $M$ and $verticalIntersections(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
     }
    }
    \uElseIf{$u_1=-u_2$}{
     \eIf{$v_1=v_2$}{
      \KwRet{$(\min(|u_1|,1),\min(|v_1|,1)$}
     }{
-     Concatenate $M$ ande $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
-     Concatenate $M$ and $intersectionsVerticales(u_1,v_1,u_2,v_2)$\;
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+     Concatenate $M$ ande $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $verticalIntersections(u_1,v_1,u_2,v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,u_2,v_2)$\;
     }
    }
    \Else{
-    Concatenate $M$ and $intersectionsVerticales(u_1,v_1,u_2,v_2)$\;
-    Concatenate $M$ and $intersectionsVerticales(u_1,v_1,-u_2,-v_2)$\;
+    Concatenate $M$ and $verticalIntersections(u_1,v_1,u_2,v_2)$\;
+    Concatenate $M$ and $verticalIntersections(u_1,v_1,-u_2,-v_2)$\;
     \uIf{$v_1=v_2$}{
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
     }
     \uElseIf{$v_1=-v_2$}{
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,u_2,v_2)$\;
     }
     \Else{
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,u_2,v_2)$\;
-     Concatenate $M$ and $intersectionsHorizontales(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,u_2,v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
     }
    }
    \tcc{At that stage, $M$ the list of nearly all the vertices $(M[1][i],M[2][i])$ of the polygon one want to know all maximal frequencies}
@@ -160,7 +160,7 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    \If{$|u_-|\leq1$ and $|v_-|\leq1$ et ($U_1 \leq u_- \leq U_2$ ou $U_2 \leq u_- \leq U_1$)}{
     Concatenate $l$ and $(u_-,v_-)^T$\;
    }
-   \caption{$intersectionsVerticales(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
+   \caption{$verticalIntersections(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
    \label{szeliski_intersectionsVerticales}
   \end{algorithme}
 
@@ -177,7 +177,7 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($V_1 \leq v_- \leq V_2$ ou $V_2 \leq v_- \leq V_1$)}{
     Concatenate $M$ et $(u_-,v_-)^T$\;
    }
-   \caption{$intersectionsHorizontales(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
+   \caption{$horizontalIntersections(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
    \label{szeliski_intersectionsHorizontales}
   \end{algorithme}
   

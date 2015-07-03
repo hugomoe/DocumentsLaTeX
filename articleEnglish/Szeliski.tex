@@ -71,16 +71,16 @@ Affinities are a particular case of homographies for which there exists a effici
 	
 %	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
-	The algorithms \ref{szeliski_rh} and \ref{szeliski_rv} dealing with the $\mathcal R_h$ and $\mathcal R_v$ operations are obtained by applying this formula (\ref{formule_convolution_discrete}) for every $i$ and $j$ in the output image. \label{szeliski_rv_rh_section}
+	The algorithms \ref{szeliski_rh} and \ref{szeliski_rv} dealing with the $\mathcal R_h$ and $\mathcal R_v$ operations are obtained by applying the formula \ref{formule_convolution_discrete} for every $i$ and $j$ in the output image. \label{szeliski_rv_rh_section}
 	
 %	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rh} et \ref{szeliski_rv} traitant les opérations $\mathcal R_h$ et $\mathcal R_v$. \label{szeliski_rv_rh_section}
 	
-	So it is possible to compute, in three steps $\mathcal R$ and without aliasing, any shear. Since an affinity can be decomposed in two shears (proposition \ref{propositionDecompositionAffinite}), any affinity can be process without aliasing (algorithme \ref{szeliski_affine}).
+	So it is possible to compute, in three steps $\mathcal R$ and without aliasing, any shear. Since an affinity can be decomposed in two shears (proposition \ref{propositionDecompositionAffinite}), any affinity can be processed without aliasing (algorithme \ref{szeliski_affine}).
 	
 %	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
 
 	\begin{thm}
-	The multi-pass resampling method \cite{szeliski2010high} prevent aliasing while preserving the spectrum. %SHMUEL RELIT STP, je ne savas pas traduire
+	The multi-pass resampling method \cite{szeliski2010high} prevents aliasing while preserving as much of the spectrum as possible. %SHMUEL RELIT STP, je ne savais pas traduire
 %	Le méthode multi-étapes \cite{szeliski2010high} empêche le repliement du spectre tout en conservant le maximum du spectre.
 	\end{thm}
 	\begin{proof}
@@ -102,7 +102,7 @@ Affinities are a particular case of homographies for which there exists a effici
 \subsection{Steps of the algorithm}
 	\label{szeliski_affine_section}
 	
-	The details of the processing of the steps of the multi-pass resampling algorithm for affinity are described in this section. The corresponding algorithm can be found in appendix (algorithms \ref{szeliski_rh}, \ref{szeliski_rv} and \ref{szeliski_affine}).
+	The details of the processing of the steps of the multi-pass resampling algorithm for affinity are described in this section. The corresponding algorithm can be found in appendix (algorithms \ref{szeliski_affine} and following).
 	
 	Let $A$ be the matrix of the inverse affinity of the one supposed to be processed. Let's denote
 

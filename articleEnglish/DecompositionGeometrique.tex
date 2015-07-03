@@ -1,10 +1,6 @@
-The new method of homographies resampling is based on the decomposition of an homographie which can be seen as camera moves. The section below presents that decompostion.
+La nouvelle méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
 
-
-%La nouvelle méthode de traitement des homographies repose sur la décomposition d'une homographie qui permet d'interpréter cette dernière en terme de mouvement de caméra. La partie ci-dessous présente cette décomposition.
-
-\ssse{Modelisation of a camera  mouvement}
-%\ssse{Modélisation de mouvement de caméra}
+\ssse{Modélisation de mouvement de caméra}
 \label{mouv_de_camera}
 On étudie ici un cas a priori particulier d'homographie $h$ : les homographies que l'on peut interpréter comme un mouvement de caméra idéale. On montrera par la suite que c'est en fait un cas général.
 
@@ -128,7 +124,14 @@ h_{\theta,\delta'}(x,y)=\left(\frac{-cos(\theta)x}{1-\frac{sin(\theta)}{\delta'}
 \end{equation}
 \label{prop_decomp}
 \end{prop}
-
+\begin{Def}
+Une homographie unidirectionnelle est une application $h:\mathbb{R}^{2} \ra \mathbb{R}^{2}$ définie par 
+\begin{equation*}
+h(x,y)=\left ( \frac{ax+p}{rx+t} , \frac{cy+p}{rx+t} \right)
+\end{equation*}
+Où $a,p,c,q,r,t$ sont des réels.
+\label{homo_uni_direc}
+\end{Def}
 \begin{figure}[h!]
 \centering
 \subfigure[rotation d'angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}

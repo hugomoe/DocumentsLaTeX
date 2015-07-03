@@ -6,67 +6,72 @@ The new method of homographies resampling is based on the decomposition of an ho
 \ssse{Modelisation of a camera mouvement}
 %\ssse{Modélisation de mouvement de caméra}
 \label{mouv_de_camera}
-On étudie ici un cas a priori particulier d'homographie $h$ : les homographies que l'on peut interpréter comme un mouvement de caméra idéale. On montrera par la suite que c'est en fait un cas général.
 
-Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant les lentilles ou les dispositifs correcteurs présents dans les caméras réelles.
+An \emph{a priori} special case of homographies $h$ that can be viewed as an ideal camera movement is studied there. It will be shown afterward the it is a general case.
+%On étudie ici un cas a priori particulier d'homographie $h$ : les homographies que l'on peut interpréter comme un mouvement de caméra idéale. On montrera par la suite que c'est en fait un cas général.
+
+Assume that the filmed scene is a plane. This assume that the filmed scene does not have any relief, or that it is negligible with respect to the distance between the plan and the camera, so that the relief is not seen. The figure \ref{shmdecomp} illustrates the modelisation used of the ideal camera. Therefore the ideal camera can be seen as the projection of a plane on another plan by going throughout the focus $F$, without taking all the lens and electronic systems that are in real camera into account.
+
+%Nous modéliserons la situation en supposant que la scène filmée est plane. Cela suppose que l'on filme une surface soit sans aucun relief, soit avec un relief négligeable devant la distance à la caméra, afin qu'il ne soit pas perceptible. La figure \ref{shmdecomp} illustre la modélisation utilisée pour la caméra idéale. La caméra idéale se modélise donc par la projection d'un plan sur un autre en passant par un foyer $F$, en négligeant les lentilles ou les dispositifs correcteurs présents dans les caméras réelles.
 
 \begin{figure}[h!]
 
 \centering
 \includegraphics[width=10cm]{shema_decomp.png}
-\caption{Illustration d'un mouvement de caméra $(X_v =0)$ (les translations ont été omises pour plus de clarté. $F$ représente le point focal de la caméra, le plan rouge est le plan image de la caméra. Un point du plan image est le projeté passant par $F$ d'un point du plan $(x,y)$. (cf. partie \ref{mouv_de_camera})}
+\caption{Illustration of a camera mouvement $(X_v =0)$ (In order to be clearer the translations have not been shown. $F$ is the focus of the camera, the red plane is the image plane of the camera.  One point of the image plane is obtained by the projection of a point of the plane $(x,y)$ through the point $F$. (cf. part \ref{mouv_de_camera})}
 \label{shmdecomp}
 \end{figure}
 
-
-On se place dans l'espace vectoriel $\mathbb{R}^{3}$ on note $O$ l'origine $(0,0,0)$ et $(\xbf_0,\ybf_0,\zbf_0)$ la base canonique.
+Let's consider the vector space $\mathbb{R}^{3}$  of $O$ the origin $(0,0,0)$  and $(\xbf_0,\ybf_0,\zbf_0)$ the standard basis.
+%On se place dans l'espace vectoriel $\mathbb{R}^{3}$ on note $O$ l'origine $(0,0,0)$ et $(\xbf_0,\ybf_0,\zbf_0)$ la base canonique.
 \begin{itemize}
-\item Soient $F$ et $C_0$ deux points distincts de  $\mathbb{R}^{3}$.
-\item Soit $\mathcal{P}$ le plan affine passant par $C_0$ de vecteur normal $\overrightarrow{FC_0}$.
-\item On note $\wbf$ le vecteur $\frac{\overrightarrow{FC_0}}{|| \overrightarrow{FC_0}||}$
-\item On note $\delta$ la distance  $|| \overrightarrow{FC_0}||$
+\item Let $F$ and $C_0$ be two diffrents points in $\mathbb{R}^{3}$.
+\item Let $\mathcal{P}$ be the affine plane through $C_0$ and of normal vector $\overrightarrow{FC_0}$.
+\item Let $\wbf$ be the vector $\frac{\overrightarrow{FC_0}}{|| \overrightarrow{FC_0}||}$
+\item Let $\delta$ be the distance $|| \overrightarrow{FC_0}||$
 \end{itemize}
 \begin{Def}
-L'application projective $H$, est l'application qui à un point $X$ de $\mathbb{R}^{3}$ associe le point d'intersection entre la droite $(XF)$ et le plan $\mathcal{P}$. $H$ dépend du triplet $(F,\wbf,\delta)$.
+The projective mapping $H$, is the mapping which receives a point $X$ in $\mathbb{R}^{3}$ and return point of intersection of the straight line $(XF)$ and the plane $\mathcal{P}$. $H$ depends on $(F,\wbf,\delta)$.
+%L'application projective $H$, est l'application qui à un point $X$ de $\mathbb{R}^{3}$ associe le point d'intersection entre la droite $(XF)$ et le plan $\mathcal{P}$. $H$ dépend du triplet $(F,\wbf,\delta)$.
 \end{Def}
 \begin{remarques}
 \begin{itemize}
-\item $F$ est la position de l'objectif de la caméra et le plan $\mathcal{P}$ est l'écran de la caméra sur lequel est projetée l'image. L'axe optique de la caméra est la droite $(FC_0)$ de vecteur directeur $\wbf$, $\delta$ est la distance entre l'objectif et l'écran.
-\item A un point de $\mathbb{R}^3$  l'application $H$ associe le  point de $\mathcal{P}$ correspondant à son image a travers la caméra.
+\item $F$ is the position of the focus of the camera and the plane $\mathcal{P}$ is the plane of the camera on which the image is projected. The optical axis of the camera is the straight line $(FC_0)$ of direction vector $\wbf$, $\delta$ is the the distance between the focus and the screen.
+\item A is a point in $\mathbb{R}^3$  the mapping $H$ return the point of $\mathcal{P}$ corresponding to it's image troughout the camera.
 \end{itemize}
 \end{remarques}
-Soit $\mathcal{P}'$ le plan affine de $\mathbb{R}^{3}$ passant par $F$ et parallèle au plan $\mathcal{P}$.
+Let $\mathcal{P}'$ be the affine plane of $\mathbb{R}^{3}$ containing $F$ and parallel to the plane $\mathcal{P}$.
 \begin{lem}
-$H$ est définit sur $\mathbb{R}^3 \setminus \mathcal{P}'$ et on a  
+$H$ is defined on $\mathbb{R}^3 \setminus \mathcal{P}'$ and,
 \begin{equation}
-H(X) = C_0 +  \delta \frac{\overrightarrow{XF}-(\overrightarrow{XF}\cdot \wbf )\wbf}{\wbf \cdot \overrightarrow{XF}} 
+H(X) = C_0 +  \delta \frac{\overrightarrow{XF}-(\overrightarrow{XF}\cdot \wbf )\wbf}{\wbf \cdot \overrightarrow{XF}.} 
 \label{formul_lem_app_proj}
 \end{equation}
 \label{lem_app_proj}
 \end{lem}
 \begin{proof}
-Si $X\in \mathbb{R}^3 \setminus \{F\}$ la droite $(XF)$ et admet un point d'intersection avec $\mathcal{P}$ si et seulement elle n'est pas parallèle à $\mathcal{P}$ donc si et seulement si $X\in \mathbb{R}^3 \setminus \mathcal{P}'$. Dans ce cas il existe $t_X\in \mathcal{R}$ tel que 
+If $X\in \mathbb{R}^3 \setminus \{F\}$ the straight ligne $(XF)$ and have an intersection point with $\mathcal{P}$ if and only if it is not parallel to  $\mathcal{P}$ so if and only if $X\in \mathbb{R}^3 \setminus \mathcal{P}'$. In that case there exist $t_X\in \mathcal{R}$ such that
 \begin{equation*}
 H(X)=X+t_{X}\overrightarrow{XF}.
 \end{equation*}
-Comme $H(X)\in P_{2}$ alors
+As $H(X)\in P_{2}$ then
 \begin{equation*}
 \overrightarrow{FH(X)}\cdot \wbf =\delta.
 \end{equation*}
-En réinjectant l'expression de $H(X)$ on obtient
+By using the formula of $H(X)$ one can obtain
 \begin{equation*}
 t_{X}=1+\frac{\delta}{\wbf \cdot \overrightarrow{XF}},
 \end{equation*}
- On en déduit que 
+ It then can be deduced that
 \begin{equation*}
 H(X) = C_0 +  \delta \frac{\overrightarrow{XF}-(\overrightarrow{XF}\cdot \wbf )\wbf}{\wbf \cdot \overrightarrow{XF}}.
 \end{equation*}
 \end{proof}
 \begin{remarque}
-Le plan $\mathcal{P}'$ correspond à un angle mort de la caméra, dans le cas d'une caméra réelle cet angle mort devrait occuper au moins un demi espace 
+The plane $\mathcal{P}'$ is the blindspot of the camera, in the case of a real camera that blindspot should be all what is behind the camera.
 \end{remarque}
-On note $P$ le plan $(O,\xbf_0,\ybf_0)$.
-\begin{Def} On appelle point visé le point d'intersection entre la droite $(FC_0)$ et le plan $P$ lorsqu'il existe. Le point visé existe si et seulement si $(FC_0)$ n'est pas parallèle à  $\mathcal{P}$. Lorsqu'il existe on le note $X_v$ et on a
+Let $P$ be the plan $(O,\xbf_0,\ybf_0)$.
+\begin{Def} Let's call target point the intersection point of the straight line $(FC_0)$ and the plane $P$ if it exists. The target point exist if and only if $(FC_0)$ is not parallel to $\mathcal{P}$. When it exists it is called $X_v$ and then
 \begin{equation*}
 X_v=F-\wbf \delta'~~~~~~\delta'=\frac{\overrightarrow{OF}\cdot \zbf_0}{\wbf \cdot \zbf_0}
 \label{formule_point_vise}
@@ -74,26 +79,26 @@ X_v=F-\wbf \delta'~~~~~~\delta'=\frac{\overrightarrow{OF}\cdot \zbf_0}{\wbf \cdo
 \label{point_vise}
 \end{Def}
 \begin{remarque}
-Le point visé est le point de $P$ visé par la caméra, les mouvements de la caméra se font autour de ce point. Il est possible qu'une caméra n'ait pas de point visé dans se cas il est situé à l'infini, la caméra vise l'horizon. 
+The targer point is the point $P$ targetted by the camera, the camera moves are so that the camera is always targetting that point. It is possible that a camera does not have a target point, in that case the point is at infinity, the camera targets the horizon.
 \end{remarque}
-On suppose dans la suite que le point visé existe.
+Assume for what's next the the target point exists.
 \begin{Def}
-L'application projective planaire $H^*$ associée à $H$ est la restriction de $H$ à $P\setminus (\mathcal{P}'\cap P)$ 
-Si $\wbf \perp P $ alors $H^*$ est définit sur $P$ sinon $H^*$ est définit sur $P\setminus D$ où $D$ est la droite
+The projective planar mapping $H^*$ related to $H$ is the restriction of $H$ to $P\setminus (\mathcal{P}'\cap P)$ 
+If $\wbf \perp P $ then $H^*$ is defined on $P$ otherwise $H^*$ is defined on $P\setminus D$ where $D$ is the straight line
 \begin{equation*}
-D=\left\{ X\in P | \overrightarrow{XF}\cdot \wbf = 0\right\}
+D=\left\{ X\in P | \overrightarrow{XF}\cdot \wbf = 0\right\}.
 \end{equation*}
 \end{Def}
 \begin{remarque}
 \begin{itemize}
-\item Si on suppose que la scène filmée est suffisamment plane pour que l'on puisse  négliger tout relief on peut l'assimiler au plan $P$ . Alors à un point $X\in P$  de la scène filmée, l'application $H^*$ associe le point de $P_2$ correspondant à son image à travers la caméra.
-\item La droite $D'=\{ X \in \mathcal{P} | \overrightarrow{XF} \cdot \zbf_0 =0 \}$ est appelé l'horizon de $H^*$.
+\item Let's say that the filmed scene is close enough to a plane so that any relief is negligible and can be interpreted as the plane $P$ . Then from a point $X\in P$ of the filmed scene, the mapping $H^*$ return the point in $P_2$ which is it's image troughout the camera.
+\item The straight line $D'=\{ X \in \mathcal{P} | \overrightarrow{XF} \cdot \zbf_0 =0 \}$ is called the horizon of $H^*$.
 \end{itemize}
 
 \end{remarque}
-On peut munir le plan affine $\mathcal{P}$ d'un repère orthonormé direct $(C,\ubf,\vbf)$ 
+Let's give to the affine plan $\mathcal{P}$ a direct normalized basis $(C,\ubf,\vbf)$ 
 \begin{Def}
- L'homographie associée à $H^*$ dans le repère $(C,\ubf,\vbf)$ est l'application
+ The homography related with $H^*$ in the basis $(C,\ubf,\vbf)$ is the mapping
 \begin{equation}
 h : (x,y)  \mapsto \left( \overrightarrow{CH^*(X)}\cdot \ubf , \overrightarrow{CH^*(X)}\cdot \vbf \right)
 \label{formule_homographie_H}
@@ -103,25 +108,25 @@ h : (x,y)  \mapsto \left( \overrightarrow{CH^*(X)}\cdot \ubf , \overrightarrow{C
 où $X=x~\xbf_0 + y~\ybf_0 $.
 \label{def_homographie_H}
 \end{Def}
-Si on note encore $D,D'$ les droites de $\mathbb{R}^2$ obtenue lorsque $P$ et $\mathcal{P}$ sont munit des repère $(O,\xbf,\ybf)$ et $(C,\ubf,\vbf)$ alors $h:\mathbb{R}^2  \setminus D \mapsto \mathbb{R}^2  \setminus D'$ est une bijection.
+Let $D,D'$ be the sraight lines in $\mathbb{R}^2$ obtained when $P$ and $\mathcal{P}$ have the basis $(O,\xbf,\ybf)$ and $(C,\ubf,\vbf)$ then $h:\mathbb{R}^2  \setminus D \mapsto \mathbb{R}^2  \setminus D'$ is a bijective mapping.
 \begin{remarque}
-A un point $X\in P$ de coordonnées $(x,y)$  l'application $h$ associe les coordonnées  du point $H^*(X)$ dans l'image numérique obtenue après acquisition par la caméra. 
+From a point $X\in P$ of coordinates $(x,y)$  the mapping $h$ return the coordinates of the point $H^*(X)$ of the numeric image coming from the camera. 
 \end{remarque}
-L'orientation de la base $(\ubf,\vbf,\wbf)$ par rapport à la base $(\xbf_0,\ybf_0,\zbf_0)$ peut être définie grâce aux trois angles d'Euler $(\phi , \theta ,\psi )$ (figure \ref{img_angles})
+The orientation of the basis $(\ubf,\vbf,\wbf)$ with respect to the basis $(\xbf_0,\ybf_0,\zbf_0)$ can be defined by the three Euler anglespeut être définie grâce aux trois angles d'Euler $(\phi , \theta ,\psi )$ (figure \ref{img_angles})
 \begin{itemize}
-\item $\phi$ est la précession autour de l'axe $(X_v ,\zbf_0)$
-\item $\theta$ est l'inclinaison par rapport à l'axe $(X_v , \zbf_0 )$
-\item $\psi$ est la rotation propre autour de l'axe $(X_v , \wbf )$
+\item $\phi$ est is the first rotation around the axis $(X_v ,\zbf_0)$
+\item $\theta$ is the second rotation around to the axis $(X_v , \zbf_0 )$
+\item $\psi$ est is the third rotation around the axis $(X_v , \wbf )$
 \end{itemize}
 On note $\cbf= \left (\overrightarrow{C_0 C}\cdot \ubf , \overrightarrow{C_0 C}\cdot \vbf \right)$ et $\xbf_v=\left( \overrightarrow{O X_v}\cdot \ubf , \overrightarrow{O X_v}\cdot \vbf \right )$.\\
 \begin{prop}
- L'homographie  $h$ se factorise sous la forme
+The homography $h$ can be factorized as follows
  
 \begin{equation}
 h = \tau_{\cbf}   \circ R_{\psi} \circ z_{\frac{\delta}{\delta'}} \circ h_{\theta,\delta'} \circ R_{\phi} \circ \tau_{\xbf_v}
 \label{formul_decomp}
 \end{equation}
-Où $R_{\alpha}$ est la rotation d'angle $\alpha$,$z_\lambda$ est la dilatation de facteur $\lambda$, $\tau_\ybf$ est  la translation du vecteur $-\ybf$ et $h_{\theta,\delta'}$ est l'homographie unidirectionnelle (cf. définition \ref{homo_uni_direc})
+ $R_{\alpha}$ is the rotation is the rotation of angle $\alpha$,$z_\lambda$ is the zoom of factor $\lambda$, $\tau_\ybf$ and the translation along the vector $-\ybf$ and $h_{\theta,\delta'}$ is the undirectional homography (cf. definition \ref{homo_uni_direc})
 \begin{equation}
 h_{\theta,\delta'}(x,y)=\left(\frac{-cos(\theta)x}{1-\frac{sin(\theta)}{\delta'}x} ,\frac{-y}{1-\frac{sin(\theta)}{\delta'}x}\right)
 \label{mise_perspective}
@@ -129,25 +134,25 @@ h_{\theta,\delta'}(x,y)=\left(\frac{-cos(\theta)x}{1-\frac{sin(\theta)}{\delta'}
 \label{prop_decomp}
 \end{prop}
 \begin{Def}
-Une homographie unidirectionnelle est une application $h:\mathbb{R}^{2} \ra \mathbb{R}^{2}$ définie par 
+A unidirectional homography is a mapping $h:\mathbb{R}^{2} \ra \mathbb{R}^{2}$ defined by
 \begin{equation*}
 h(x,y)=\left ( \frac{ax+p}{rx+t} , \frac{cy+p}{rx+t} \right)
 \end{equation*}
-Où $a,p,c,q,r,t$ sont des réels.
+with $a,p,c,q,r,t$ some reals numbers.
 \label{homo_uni_direc}
 \end{Def}
 \begin{figure}[h!]
 \centering
-\subfigure[rotation d'angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}
-\subfigure[rotation d'angle $\theta$]{\includegraphics[width=5cm]{graphe2.jpg}}
-\caption{(cf partie \ref{figure_de_rotations_18})}
+\subfigure[rotation of angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}
+\subfigure[rotation of angle $\theta$]{\includegraphics[width=5cm]{graphe2.jpg}}
+\caption{(cf part \ref{figure_de_rotations_18})}
 \label{img_angles}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=5cm]{graphe3.jpg}
-\caption{rotation propre (cf partie \ref{figure_de_rotations_18})}
+\caption{self rotation (cf part \ref{figure_de_rotations_18})}
 \label{decompgeo_rotationPropre}
 \end{figure}
 

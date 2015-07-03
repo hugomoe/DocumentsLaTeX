@@ -54,6 +54,7 @@
 	\KwRet{$img_4[m \ppcm m' .. (m \ppcm m') + m'][n \ppcm n' .. (n \ppcm n') + n']$}
     \caption{Multi-pass resampling method for affine transforms $applyAffinity(img,A)$}
     \label{algoPresqueAussiUniqueQueLesDeuxAutres}
+    \label{szeliski_affine}
    \end{algorithme}
    
  During the computation of the whole affine transform, the image (and the affinity) can be transposed so as to avoid the bottleneck problem.
@@ -181,7 +182,7 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    \label{szeliski_intersectionsHorizontales}
   \end{algorithme}
   
-  \subsubsection{Transormations whith type $\mathcal R$}
+  \subsubsection{Transformations $\mathcal R$}
   
 	Both ($\mathcal{R}_h$ and $\mathcal{R}_v$) algorithmes work in the following way : first the values of the filter $h(\frac{\dot{}}{s})$ on $\{k+p2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$ are kept in memory. $s$ is a parameter which can expand the support of the filtering mapping ; $b$ is a parameter which can change the computation precision. Then the values kept in memory are used to convolve along one direction with the filter.
 
@@ -209,8 +210,9 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
      }
     }
     \KwRet{$img$}
-    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (version modified from the algorithm \ref{szeliski_rh})}
+    \caption{$\mathcal{R}_h(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$}
     \label{algoUniqueEnSonGenre}
+    \label{szeliski_rh}
    \end{algorithme}
 
    \begin{algorithme}
@@ -229,8 +231,9 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
      }
     }
     \KwRet{$img_f$}
-    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$ (version modified from the algorithm \ref{szeliski_rv})}
+    \caption{$\mathcal{R}_v(img,s,a_0,a_1,(x_i,y_i),(x_f,y_f))$}
     \label{algoToutAussiUnique}
+    \label{szeliski_rv}
    \end{algorithme}
 
    \subsubsection{Computational complexity}

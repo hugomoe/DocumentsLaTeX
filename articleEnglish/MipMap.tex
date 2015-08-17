@@ -1,15 +1,15 @@
 % contient une explication du fonctionnement du Mip Map et du Rip Map, et des schÃ©mas explicatifs. En bref, un rÃ©sumÃ© de l'article de Williams
 % parler Ã©ventuellement de la mÃ©thode naÃ¯ve, ou d'autres mÃ©thodes actuelles qui ne fonctionnent pas
 
-A few methods have been developed to process homographies. There are inspired by the Mipmap method presented by Williams in 1983 \cite{williams1983pyramidal}. This section presents the Mipmap and one of its alternative, the Ripmap. In the Experiments section it is compared to the new method.
+Many fast methods implementing homographies are inspired by the Mipmap method presented by Williams in 1983 \cite{williams1983pyramidal}. This section presents the Mipmap and one of its alternative, the Ripmap. In the experimental section \ref{experiences} Ripmap will be compared to the method proposed in this paper.
 
   %Afin de traiter les homographies plusieurs méthodes ont été développées. Elles sont pour la plupart des variantes de Mipmap présentée par Williams en 1983 \cite{williams1983pyramidal}. Cette partie présente le Mipmap et le Ripmap. Le Ripmap comparé avec la nouvelle méthode dans les expériences.
 
 \sse{Presentation of the Mipmap}
 \label{Mipmap}
-The principle of the Mipmap method is to precompute local averaging of the input image at different scale, in order to compute an homography in real-time. To reach this goal it is assumed that the input image is a square with size a power of two.
+The principle of the Mipmap method is to precompute local averages of the input image at several scales, in order to compute a homography in real-time. To reach this goal it is assumed that the input image is a square with size a power of two.
 
-Then the average square of four pixels is compute to obtain a square two times smaller. This process is then iterate to build a sequence of images, each one being two times smaller than the previous one. An example of Mipmap is represented figure \ref{MipMap_real}.
+Pixels are grouped by $2\times 2$ disjoint blocks. The averages of these blocks form a twice smaller image. This process is iterated to build an image pyramid. An example of Mipmap is represented figure \ref{MipMap_real}. To compute the value of a pixel of the output image, the the corresponding region in the input image is approximated by applying to the square pixel the differential of the inverse homography. This yields a parallelogram which is itself approximated by a bounding square. The size of the approximation square is called distance since the "farther" a pixel, the bigger the square.
 
 %\sse{Présentation du Mipmap}
 %\label{Mipmap}
@@ -24,22 +24,10 @@ Then the average square of four pixels is compute to obtain a square two times s
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{MipMap_real} %scale=0.4 ça fait vachement petit, non ?
-\caption{An example of Mipmap (cf. section \ref{exemple_de_mipmap_figure})}
+\caption{An example of Mipmap (see section \ref{exemple_de_mipmap_figure})}
 \label{MipMap_real}
 \end{figure}
 
-To compute the value of a pixel of the output image, the area of the input image corresponding is approximated by using the differential of the inverse homography. Then the parallelogram obtained is approximate by squares.
-
-The size of the approximation square is called distance since the "farer" a pixel is, the bigger the squares that approximate it are.
-
-Assume there is a formula giving the distance of any points. The geometry of the Mipmap only allowed distances power of two, so a new interpolation scheme is required. It is the trilinear interpolation :
-
-\begin{itemize}
-\item On one hand, there is a linear interpolate between two level of the Mipmap
-\item On the other hand in each level there is a bilinear interpolation.
-\end{itemize}
-
-The Figure \ref{intertrilineaire} represent this interpolation.
 
 %Quand on cherche la valeur d'un pixel de l'image d'arrivée, on approche la zone de l'image de départ à laquelle il correspond à l'aide de la différentielle de l'homographie inverse. On obtient alors un parallélogramme, qu'on essaye d'approcher avec des carrés. 
 
@@ -65,11 +53,11 @@ The Figure \ref{intertrilineaire} represent this interpolation.
 \sse{Distance function}
 \label{fonctiondistance}
 
-The choice of the distance function is now discussed. It is a crucial point in the Mipmap method because if the distance $d$ is too large, the image is over blurred, and if it is too small the image is aliased.
+The choice of the distance function is now discussed. It is a crucial point in the Mipmap method because if the distance $d$ is overestimated, the image will be blurred, and if it is underestimated the image will be aliased.
 
-Every distance function is build using the differential of the inverse homographs. Let $(u,v)$ be the coordinate in the input image and $(x,y)$ the coordinate in the output image. Let $H$ be the inverse homography, then $(u,v)=H(x,y)$. $\frac{\dr u}{\dr x}$ is the partial derivative of $u$ with respect to $x$
+Let $(u,v)$ be the coordinate in the input image and $(x,y)$ the coordinate in the output image. Let $H$ be the inverse homography, so that $(u,v)=H(x,y)$. We denote by $\frac{\dr u}{\dr x}$ the partial derivative of $u$ with respect to $x$.
 
-A few distance have been tried, finally we choose the larger side method.
+After testing several methods to approximate the parallelogram by a square, as is required by Mipmap, we found that the best compromise was obtained by computing the largest side of the parallelogram, namely
 
 %\sse{Les fonctions de distance}
 %\label{fonctiondistance}
@@ -91,16 +79,16 @@ A few distance have been tried, finally we choose the larger side method.
 
 %On donne ici sa formule.
 
-$$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right)$$
+$$ D(x,y) = \max \left(\sqrt{\left(\frac{\dr u}{\dr x}\right)^2 + \left(\frac{\dr v}{\dr x}\right)^2},\sqrt{\left(\frac{\dr u}{\dr y}\right)^2 + \left(\frac{\dr v}{\dr y}\right)^2}\right).$$
 
-The distance is the larger side of the parallelogram. This formula is from an article by Heckbert \cite{heckbert1983texture}. It is represented figure \ref{methode_plus_grand_cote}.
+This formula is proposed in Heckbert \cite{heckbert1983texture} and is represented in figure \ref{methode_plus_grand_cote}.
 
 %On prend le plus grand côté du parallélogramme comme côté du carré. Cette formule vient d'un article de Heckbert \cite{heckbert1983texture}. On la représente figure \ref{methode_plus_grand_cote}.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{methode_plus_grand_cote.jpg}
-\caption{Larger side method (there it is A)}
+\caption{The method of the largest side  (here $A$).}
 \label{methode_plus_grand_cote}
 \end{figure}
 
@@ -108,13 +96,16 @@ The distance is the larger side of the parallelogram. This formula is from an ar
 \sse{An improved algorithm : the Ripmap}
 \label{Ripmap}
 
-On of the great weakness of the Mipmap is its isotropy. In fact if the parallelogram to approximate is a flat rectangle there is no reasonable approximation with a square.
+The main weakness of Mipmap is its isotropy. If the parallelogram to approximate is a flat rectangle there is no reasonable approximation with a square.
 
-To palliate this problem the Ripmap is used \cite{akenine2008real}. This is a Mipmap where the average  of all the rectangles of width and height a power of two has also been precompute. There is an example of Ripmap figure \ref{Ripmap_real}, and two algorithms to build one in appendix in \ref{pseudo_code_Ripmap}. The algorithm \ref{buildRipmap1} is naive, the real implementation use the algorithm \ref{buildRipmap2} which convolve images with a gaussian before each down-sampling.
+The Ripmap method \cite{akenine2008real} is an attempt to  palliate this problem. Ripmap is an extension of Mipmap computing averages of the image on rectangles with independent dyadic scales for their width and height. There is an example of Ripmap figure \ref{Ripmap_real}, and two algorithms to build one in appendix in \ref{pseudo_code_Ripmap}. 
 
-The distance function return two values, one for each side of the rectangle. Then a quadri-linear interpolation is compute (bilinear between the level and bilinear inside each level). This interpolation scheme is represented figure \ref{interbibilineaire}. The algorithm \ref{interbibi1} in appendix in \ref{pseudo_code_Ripmap} describe this interpolation.
+Ripmap is illustrated in figure \ref{Ripmap_real}. The full description of the building of a Ripamp is given by algorithms \ref{buildRipmap1} and \ref{buildRipmap2} in appendix \ref{pseudo_code_Ripmap}. Algorithm \ref{buildRipmap1}, which  uses block filtering is a naive implementaztion. The real, aliasing-free, implementation uses algorithm \ref{buildRipmap2}, convolving the image with the adequate Gaussian before each down-sampling. The distance function returns two values, one for each side of the rectangle. Then a quadri-linear interpolation is computed (it is bilinear between the levels and bilinear inside each level). This interpolation scheme is represented in figure \ref{interbibilineaire}. This implementation is described by algorithm \ref{interbibi1} in appendix \ref{pseudo_code_Ripmap}. The parallelogram is approximated by the smallest rectangle in which it is contained, so the distance function is defined by
 
+%On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est :
+$$D(x,y) = \left( \left|\frac{\dr u}{\dr x}\right|+\left|\frac{\dr u}{\dr y}\right|,\left|\frac{\dr v}{\dr x}\right|+\left|\frac{\dr v}{\dr y}\right|\right),$$
 
+\noindent and the reference point is translated in order for the rectangle to contain the parallelogram, as seen in figure \ref{methode_distance_ripmap}.
 
 
 %\sse{Algorithme amélioré : Le Ripmap}
@@ -130,7 +121,7 @@ The distance function return two values, one for each side of the rectangle. The
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{Ripmap_real}
-\caption{An example of Ripmap (cf. partie \ref{label_figure_Ripmap_jt})}
+\caption{An example of Ripmap (see section \ref{label_figure_Ripmap_jt})}
 \label{Ripmap_real}
 \end{figure}
 
@@ -139,30 +130,19 @@ The distance function return two values, one for each side of the rectangle. The
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{interbibilineaire.jpg}
-\caption{Quadri-linear interpolation (cf. section \ref{label_schema_interp_quadrilin_jt})}
+\caption{Quadri-linear interpolation (see section \ref{label_schema_interp_quadrilin_jt})}
 \label{interbibilineaire}
 \end{figure}
-
-The parallelogram is approximated by the smallest rectangle in which it is contained, so the distance function is defined by
-
-%On a utilisé le plus petit rectangle qui contient le parallélogramme. Ainsi la formule est :
-$$D(x,y) = \left( \left|\frac{\dr u}{\dr x}\right|+\left|\frac{\dr u}{\dr y}\right|,\left|\frac{\dr v}{\dr x}\right|+\left|\frac{\dr v}{\dr y}\right|\right)$$
-
-and the point considered has been translated in order for the rectangle to contain the parallelogram, as seen in the figure  \ref{methode_distance_ripmap}.
-
-%On a de plus décalé les points pour que le rectangle considéré soit bien celui qui contient le parallélogramme, comme on le voit sur la figure \ref{methode_distance_ripmap}.
 
 \label{label_meth_petit_rect_jt}
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{methode_distance_ripmap.jpg}
-\caption{Smallest rectangle method for the Ripmap (cf. section \ref{label_meth_petit_rect_jt})}
+\caption{Smallest rectangle method for the Ripmap (see section \ref{label_meth_petit_rect_jt})}
 \label{methode_distance_ripmap}
 \end{figure}
 
-The algorithm for the Ripmap is describe in section \ref{pseudo_code_Ripmap}.
-
-It is an improvement of the Mipmap, but it does not solve for instance the case of a thin rectangle in diagonal.
+Ripmap is an improvement of the Mipmap, but it does not solve for instance the case of a thin rectangle oriented in the $(1,1)$ direction.
 
 %On peut consulter le pseudo-code pour le Ripmap en section \ref{pseudo_code_Ripmap}.
 

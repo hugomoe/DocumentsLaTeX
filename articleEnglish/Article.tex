@@ -121,7 +121,7 @@
 	\vspace*{\fill}
 
 		\vspace{0.3cm}
-		{\huge A high quality method to resample an image by an homography}\\
+		{\huge A high quality method to resample an image by a homography}\\
 		\vspace{1.5cm}
 	\today
 	\vspace{1.5cm}
@@ -141,14 +141,14 @@
 \medbreak
 \medbreak
 
-		\large
-			\emph{Under the supervision of:}\\ 
-			Jean-Michel Morel \\
-			Enric Meinhardt-Llopis
+	%	\large
+	%		\emph{Under the supervision of:}\\ 
+	%		Jean-Michel Morel \\
+	%		Enric Meinhardt-Llopis
 		
 
 
-	\vfill
+%	\vfill
 	\end{center}
    	\section*{Abstract}
    		\input{Abstract}
@@ -158,15 +158,16 @@
 		\input{Remerciements} %Jean-Thomas
 	\section*{Introduction}%Jean-Thomas
 		\input{Introduction}
-	\section{Sampling affine map}
+	\section{Sampling affine maps}
 		\label{Exposition_du_probleme}
 		\label{szeliski_section}
 		\input{Szeliski}%shmuel
-	\section{Irregular sampling for an homography}
+	\section{Irregular sampling for a homography}
 		\label{decomp_geo_hom}
 		\subsection{Geometric decomposition}
+			\label{DecompositionGeometrique}
 			\input{DecompositionGeometrique}%simon
-		\subsection{A method for unidirectional homographies}
+		\subsection{Numerical implementation of unidirectional homographies}
 			\label{HomoboxRipmap}
 			\input{HomoboxRipmap}%simon
 		\subsection{A method for rotations}
@@ -191,10 +192,10 @@
            \label{Mipmap_pseudo_code_jt}
 		\input{MipMap}%hugo
 	\label{pseudo_code}
-	\section{Algorithm for the Ripmap}
-                     \label{Ripmap_pseudo_code_jt}
+	\section{The Ripmap algorithm}
+                 \label{Ripmap_pseudo_code_jt}
 		\input{Pseudo-code_Mipmap}%hugo
-	\section{Proof of the theorem \ref{thepropdecomp}}
+	\section{The Proof of theorem \ref{thepropdecomp}}
 	        \input{Proof_theorem}
 	\section{Algorithm for the geometric decomposition}
 		\input{Pseudo-code_decompo}

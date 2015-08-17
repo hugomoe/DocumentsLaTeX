@@ -1,4 +1,4 @@
-	Experiments done in c-code are presented here. First the spectral behaviour of the multi-pass resampling method for an affine transform is checked. Then the new geometric method is compared to the Ripmap.
+Our experiments were implemented in C. First the spectral behaviour of the multi-pass resampling method for an affine transform was checked. Then the new geometric method was compared to the Ripmap.
 
 %On présente ici des expériences réalisées en C. On vérifie d'abord le comportement spectral du traitement multi-étape d'une affinité. On compare ensuite la nouvelle méthode au Ripmap.
 
@@ -7,7 +7,7 @@
 %\subsection{Décomposition multi-étapes d'une affinité}
  
  
- The results of multi-pass resampling method for an affine transform \cite{szeliski2010high} (part \ref{szeliski_section}) as well as the image's spectrum at the diffrents steps are shown in this section. The affine transform being here a shear, the decompostion turn into three basic steps, instead of four for a general affine transform.  
+ The results of multi-pass resampling method for an affine transform \cite{szeliski2010high} (part \ref{szeliski_section}) as well as the image's spectrum at the successive steps are examined in this section. The affine transform being here a shear, the decomposition has three basic steps, instead of four for a general affine transform.  
  
  %On présente ici les résultats de la décomposition multi-étapes d'une affinité \cite{szeliski2010high} (section \ref{szeliski_section}), ainsi que le spectre de l'image aux différentes étapes. L'affinité utilisée étant elle-même un \emph{shear}, la décomposition se réduit à trois étapes élémentaires, au lieu des quatres d'une affinité quelconque.
  \begin{figure}
@@ -16,7 +16,7 @@
 			{\includegraphics[scale=0.375]{decompoSzeliski_sinc_image_entree.png}}
 			{\includegraphics[scale=0.375]{decompoSzeliski_sinc_fourier_entree.png}}
 		}
-		\subfigure[Inital image in a nine times larger one (scale 1/8)]{
+		\subfigure[Initial image in a nine times larger one (scale 1/8)]{
 			{\includegraphics[scale=0.125]{decompoSzeliski_sinc_image1.png}}
 			{\includegraphics[scale=0.125]{decompoSzeliski_sinc_fourier1.png}}
 		}
@@ -36,7 +36,7 @@
 			{\includegraphics[scale=0.375]{decompoSzeliski_sinc_image_sortie.png}}
 			{\includegraphics[scale=0.375]{decompoSzeliski_sinc_fourier_sortie.png}}
 		}
-		\caption{Steps of the multi-pass resampling method for an affine transform explained in \ref{szeliski_section} (on the left is the image at each steps, on the right is the logarithm of the modulus of the Fourier transform of this image). The interpolation filter is a sinc function (of period 1)}
+		\caption{Steps of the multi-pass resampling method for an affine transform explained in section \ref{szeliski_section} (on the left is the image at each steps, on the right is the logarithm of the modulus of the Fourier transform of this image). The interpolation filter is a sinc function (with period 1). To appreciate the quality of the final result it is advised to zoom  it in by a factor 3.}
 		\label{experiments_decompoSzeliski_sinc}
 	\end{figure}
 	%\begin{figure}
@@ -67,18 +67,14 @@
 	%	\caption{Étapes du traitement des affinités présenté en \ref{szeliski_section} (à gauche l'image à chaque étape, à droite le logarithme du module de la transformée de Fourier de cette image). Le filtre d'interpolation est un \emph{sinc} (de période 1)}
 	%	\label{experiments_decompoSzeliski_sinc}
 	%\end{figure}
-	For the figure \ref{experiments_decompoSzeliski_sinc} , a sinc function filter was used, which is a raised cosine-weighted sinc filter with $\beta = 0$. As a reminder, the filter is of the form
-		\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
-		There is no loss of visual quality if one reduces the convolution to a large enough finite number of terms.
+	For figure \ref{experiments_decompoSzeliski_sinc}, we used  a raised cosine-weighted sinc filter of the form (see formula \eqref{szeliski_definition_raisedCosineWeightedSinc}) 
+		\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\].
+		There is no loss of visual quality if one reduces the convolution with this filter to a large enough finite number of terms.
 		
 	%En figure \ref{experiments_decompoSzeliski_sinc}, le filtre utilisé est un \emph{sinc}, correspondant au \emph{raised cosine-weighted sinc} avec $\beta = 0$ ; pour rappel, le filtre a pour forme
 	%\[h : x \mapsto \sinc(\frac{x}{T})\frac{\cos(\frac{\pi\beta x}{T})}{1-\frac{4\beta^2x^2}{T^2}}\]
 	%On ne perd pas en qualité visuelle en réduisant la convolution à un nombre fini de termes suffisamment grand.
-	
-	
-	With a larger $\beta$,some high frequencies which should disappear remains, however it does not much damage at the end of the process. Thus by increasing $\beta$ (figure \ref{experiments_decompoSzeliski}), one can allow some of the high frequencies that should disappear, as long as no artifacts appears. As the rise of $\beta$ increases the filter decay, it is possible to convolve on smaller supports, and as a consequence to reduce the computation time. With $\beta = 0.36$, only nine terms are useful for the convolution (figure \ref{szeliski_plotRaisedCosine}) (nine is the basic number of terms ; it increases for upsampling because the convolution's filter is adaptative). For all the next experiments, we will keep  $\beta = 0.36$. 
-	
-	%Avec un $\beta$ plus élevé, on conserve des hautes fréquences sur l'extérieur du spectre, mais leur impact est faible quand l'image reprend sa taille initiale ; en augmentant $\beta$ (figure \ref{experiments_decompoSzeliski}), on peut donc autoriser un peu plus de repliement du spectre, en veillant à ce que visuellement, on n'observe aucun artefact. Comme l'augmentation de $\beta$ augmente la vitesse à laquelle le filtre décroit, on peut alors convoler sur des supports plus réduits, et donc gagner du temps. Avec $\beta = 0.36$, on peut restreindre la convolution à une somme de fneu termes (figure \ref{szeliski_plotRaisedCosine}) (neuf est le nombre de termes de base ; il est plus grand lors des sur-échantillonnages car le support du filtre de convolution est adaptatif). Cette valeur $\beta = 0.36$ est celle qu'on utilise pour les autres expériences.
+
  	\begin{figure}
 		\centering
 		\subfigure[Initial image (scale 3/8)]{
@@ -105,7 +101,7 @@
 			{\includegraphics[scale=0.375]{decompoSzeliski_image_sortie.png}}
 			{\includegraphics[scale=0.375]{decompoSzeliski_fourier_sortie.png}}
 		}
-		\caption{teps of the multi-pass resampling method for an affine transform explained in \ref{szeliski_section} (on the left is the image at each steps, on the right is the logarithm of the modulus of the Fourier transform of this image). The interpolation filter is a raised cosine-weighted sinc (of period 1, with a roll-off factor $\beta = 0.25$)}
+		\caption{Steps of the multi-pass resampling method for an affine transform explained in section \ref{szeliski_section} (on the left is the image at each step, on the right is the logarithm of the modulus of the Fourier transform of this image). The interpolation filter is a raised cosine-weighted sinc (with period 1 and with a roll-off factor $\beta = 0.25$).To appreciate the quality of the final result it is advised to zoom  it in by a factor 3. Compare with Figure \ref{experiments_decompoSzeliski_sinc}.}
 		\label{experiments_decompoSzeliski}
 	\end{figure}
 

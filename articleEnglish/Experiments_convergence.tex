@@ -16,10 +16,9 @@
 %\label{image_converge_building}
 %\end{figure}
 
-\subsection{Continuity of the decomposition when appoaching an affinity}
+\subsection{Continuity of the decomposition when approaching an affinity}
 
-The geometric decomposition can not resample an affinity (which is a limit case), the multi-pass resampling must be used. The following experiment shows the continuity of the geometric method when a homography sequence tends pointwise to an affinity (cf. figure \ref{image_converge_building}). The is no notable blurring neither aliasing just before the affinity, nor visual difference.
-
+The geometric decomposition proposed in section \ref{DecompositionGeometrique} cannot resample an affinity (which is a limit case). Thus the multi-pass resampling must be used. The following experiment shows the continuity of the geometric method when a sequence of homographies tends pointwise to an affinity (see figure \ref{image_converge_building}). It permits to verify the compatibility of both methods as there is no visible difference in blur or aliasing.
 \begin{figure}[h!]
 	\centering
 	\subfigure{
@@ -30,6 +29,6 @@ The geometric decomposition can not resample an affinity (which is a limit case)
 	{\includegraphics[width=40mm]{test_homo_conv5.png}}
 	{\includegraphics[width=40mm]{test_homo_conv6.png}}
 	{\includegraphics[width=40mm]{test_homo_conv9.png}}}\\
-	\caption{Convergence to an affinity ; the last image represent the affinity}
+	\caption{Convergence of simulated homographies to an affinity. The last image represents the affinity}
 	\label{image_converge_building}
 \end{figure}

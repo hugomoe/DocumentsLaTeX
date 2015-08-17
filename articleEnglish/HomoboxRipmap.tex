@@ -92,10 +92,10 @@ In this paragraph a method to resample a unidimensional image is presented. This
 %Dans ce paragraphe on présente une méthode permettant de ré-échantillonner une image 1D ; cette méthode s'appuie sur une approximation du zoom gaussien (cf. \ref{zoom_gaussien}) et utilise les images intégrales.
 
 In the following we denote $\Gcal_n^d$ the kernel defined by
-\begin{equation*}
+\begin{equation}
 \Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) \text{ and } \Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d .
 \label{formule_convol_n_int}
-\end{equation*}
+\end{equation}
 
 \begin{prop}
 The function $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformly on $\mathbb{R}$ to a Gaussian function .

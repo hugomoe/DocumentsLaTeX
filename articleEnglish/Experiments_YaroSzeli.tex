@@ -1,24 +1,25 @@
 %\subsubsection*{Comparaison entre la méthode de Yaroslavsky et la méthode de traitement des affinités multi-étapes}
 
-\subsection{Comparaison between Yaroslavsky's method and multi-pass resampling method}
+\subsection{Comparaison between Yaroslavsky's method and the multi-pass resampling method}
 
 %	Dans les deux paragraphes suivants, l'erreur \emph{RMSE} correspond à la norme L2 de la différence entre l'image initiale et l'image ayant subie une rotation, l'erreur L1 est la norme L1 de cette même différence, et l'erreur max est la norme sup de cette différence.\\
 
-	In the following paragraphs, the RMSE (Root Mean Square Error) is the $L2$ norm of the difference between the initial image and the final image, the MAE (Mean Absolute Error) is the $L1$ norm of this difference and the maximal error is the $L\infty$ norm of this difference.\\
+	In the following paragraphs, the RMSE (Root Mean Square Error) is the $L^2$ norm of the difference between the initial image and the final image, the MAE (Mean Absolute Error) is the $L^1$ norm of this difference and the maximal error is the $L^\infty$ norm of this difference.\\
 
 %	Afin d'observer des différences significatives entre les différentes méthodes de rotations, on effectue 360 rotations de 1 degré (sur trop peu de rotations, les erreurs sont faibles). On obtient les résultats figure \ref{troiscentrotations}. On y voit que la méthode multi-étapes ne résiste pas à tant de rotations, mais que l'interpolation par les b-splines peut être substituée à la convolution par un \emph{raised cosine-weighted sinc} sans création d'\emph{aliasing}, car les rotations sont d'angles faible.
 %\label{pleinsderotations}
 
-	To observe significative differences between rotation methods, 360 rotations of 1 degree are done. The results are presented in figure \ref{troiscentrotations}. The multi-pass resampling method does not resist that much rotations, but is that case, b-splines can replace convolution without introducing aliasing, because the angle of the rotations are small.
-	\label{pleinsderotations}
+	To enhance the difference between rotation methods, 360 rotations of 1 degree were performed on the same image. The results are presented in figure \ref{troiscentrotations}. The multi-pass resampling method does not resist that many rotations, but since with small rotations the zoom factor is small, B-splines can be used instead of convolutions without introducing aliasing.
+	
+\label{pleinsderotations}
 
  \begin{figure}[h]
  \centering
    \subfigPDP{original lena.png}{lena.png}
    \subfigPDP{lena.png after 360 rotations by linear interpolation}{linear_lena.png}
-   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0-36_lena.png}
-   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation by B-Spline of order 3)}{b-spline_order3_lena.png}
-   \subfigPDP{lena.png after 360 rotations by multi-pass resampling method (interpolation by B-Spline of order 9)}{b-spline_order9_double_lena.png}
+   \subfigPDP{lena.png after 360 rotations by the multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0-36_lena.png}
+   \subfigPDP{lena.png after 360 rotations by the multi-pass resampling method (interpolation by B-spline of order 3)}{b-spline_order3_lena.png}
+   \subfigPDP{lena.png after 360 rotations by the multi-pass resampling method (interpolation by B-spline of order 9)}{b-spline_order9_double_lena.png}
    \subfigPDP{lena.png after 360 rotations with Yaroslasky's method}{lena_360_rotations_yaro.png}
   
  \subfigure[Errors on the 360 rotations of 1 degree]{\begin{tabular}{|c|c|c|c|c|}
@@ -32,7 +33,7 @@
   multi-pass resampling, raised cosine-weighted sinc &  828.85 & 503.15 & 13638 & 778.42\\
   \hline
 \end{tabular}} 
-\caption{360 rotations of 1 degree (cf. section \ref{pleinsderotations})}
+\caption{Resampling error after applying 360 one degree interpolations (see section \ref{pleinsderotations})}
 \label{troiscentrotations}
  \end{figure}
 	
@@ -61,19 +62,19 @@
    \centering
    \subfigPDP{original lena.png}{lena.png}
    \subfigPDP{lena.png after 10 rotations by linear interpolation}{linear_10rot_lena.png}
-   \subfigPDP{lena.png after 10 rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{lena_10_rotations_szeli.png}
+   \subfigPDP{lena.png after 10 rotations by the multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{lena_10_rotations_szeli.png}
    \subfigPDP{lena.png after 10 rotations by Yaroslasky's method}{lena_10_rotations_yaro.png}
-   \subfigPDP{difference between lena.png and lena.png after dix rotations rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0_36_10rot_lena_error.png}
-   \subfigPDP{différence entre lena.png et lena.png after 10 rotations by Yaroslasky's method}{lena_10_rotations_yaro_error.png}
+   \subfigPDP{difference between lena.png and lena.png after ten rotations by multi-pass resampling method (interpolation filter : raised cosine-weighted sinc)}{raised-cosine_beta0_36_10rot_lena_error.png}
+   \subfigPDP{difference between lena.png and lena.png after 10 rotations by Yaroslasky's method}{lena_10_rotations_yaro_error.png}
  \subfigure[Errors on 10 rotations of 36 degrees]{\begin{tabular}{|c|c|c|c|c|}
   \hline
-  Méthode & RMSE  & MAE & maximal error  \\
+  Method & RMSE  & MAE & maximal error  \\
   \hline
-  Linear interpolation & 14.722 & 8.5485 & 147.43  \\
+  linear interpolation & 14.722 & 8.5485 & 147.43  \\
   Yaroslavsky's method & 12.817 & 7.3749 & 159.84  \\
   multi-pass resampling &   \bf{5.9791} & \bf{3.6243} & \bf{72.129} \\
   \hline
  \end{tabular}}
- \caption{Effect of 10 rotations (cf. section \ref{pleinsderotations})}
+ \caption{Effect for 10 rotations (see section \ref{pleinsderotations})}
  \label{rotalena}
  \end{figure}

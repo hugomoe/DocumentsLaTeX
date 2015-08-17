@@ -1,10 +1,10 @@
 %contient le pseudo-code de homo-box, simple et avec triple intégrale
 
-\sse{Algorithms for unidirectionnal homographies}
+\sse{Algorithms for unidirectional homographies}
 
 \ssse{Conventions}
 
-Images are matrices. The possible multiple levels of color are ignored, they are treated independently
+Images are encoded as matrices of real numbers. Indeed, each color is treated independently.
 
 There is in fact an origin $(\mu,\nu)$ given with images.
 
@@ -20,7 +20,7 @@ In this algorithm $img2D$ is the input image, $img$ is a column/row of size $wh$
 
 \begin{algorithm}[H]
 \caption{$applyHomography(img,imgf,H)$}
-\KwData{An input image $img2D[1..w][1..h]$, an output image $img2D_f[1..w_f][1..h_f]$, an homography $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
+\KwData{An input image $img2D[1..w][1..h]$, an output image $img2D_f[1..w_f][1..h_f]$, a homography $H = \left( \begin{array}{ccc} a_1 & 0 & t_1 \\ 0 & a_2 & t_2 \\  \lambda & 0 & t_3\\ \end{array} \right)$}
 $f_1 = x\mapsto \frac{a_1x + t_1}{\lambda x + t_3}$ \;
 $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 \For{$j \in \llbracket 1, h \rrbracket$}{
@@ -49,7 +49,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 
 
  \begin{algorithm}[H]
- \caption{$build4Integrale(img)$, which return the four first integral of $img$ (describe in \ref{4Integral})}
+ \caption{$build4Integrale(img)$, which returns the four first integrals of $img$ (described in \ref{4Integral})}
  \KwData{A row/column of the image $img[1..wh]$}
  \For{$i\in \llb 0,3 \rrb $}{
  $Imgwh[i(wh+1)+1]=0$\;
@@ -58,18 +58,18 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
  $Img[i+1]=Img[i]+img[i]$\tcc*{1-integral image} 
  $Img[wh+i+2]=Img[wh+i+1]+Img[i]+\frac{img[i]}{2}$\tcc*{2-integral image}
  $Img[2 wh+i+3]=Img[2 wh+i+2]+Img[wh+i+1]+\frac{Img[i]}{2}+\frac{img[i]}{6}$\tcc*{3-integral image}
- $Img[3 wh+i+4]=Img[wh+i+3]+Img[2wh+i+2]+\frac{Img[wh+i+1]}{2}+\frac{Img[i]}{6}+ \frac{img[i]}{24}$\tcc*{4-integral image}
+ $Img[3 wh+i+4]=Img[3wh+i+3]+Img[2wh+i+2]+\frac{Img[wh+i+1]}{2}+\frac{Img[i]}{6}+ \frac{img[i]}{24}$\tcc*{4-integral image}
  }
  \KwRet{Img}
  \label{pseudo_code_built_4_int}
  \end{algorithm}
  
  
- \ssse{Evaluating using the 4-integral image}
+ \ssse{Convolution using the 4-integral image}
  
  
   \begin{algorithm}[H]
- \caption{$convolImg(img,Img,xy,d)$, which convolve with a triple box (describe in \ref{4Integral})}
+ \caption{$convolImg(img,Img,xy,d)$, which convolves the image with $\Gcal_3^d * \Gcal_1^1$(define by \ref{formule_convol_n_int}) (described in \ref{4Integral})}
  \KwData{A row/column of the image $img[1..wh]$, its four first integrals $Img[1..4(wh+1)]$, the point of evaluation $xy\in\mb{R}$, the zoom factor $d\in\mb{R}$}
  \tcc{computation of $D$ the standard derivation of the box to be convolve, the thresholding is arbitrary}
  $d_{aux} = 0.64 * d^{2} - 0.49$\;
@@ -84,7 +84,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
  $a_{2i}=eval4Integrale(img,Img,xy_i-\frac{1}{2})$\; 
  $b_i = a_{2i-1} - a_{2i}$\; 
  }
-\tcc{Computation of the third discret derivative to convolve with the convolution of three boxes}
+\tcc{Computation of the third discret derivatives to convolve with the convolution of three boxes}
  $c_1 = \frac{b_1 - b_2}{D}; c_2=\frac{b_2 - b_3}{D}; c_2=\frac{b_3 - b_4}{D}$\; 
  $d_1 = \frac{c_1 - c_2}{D}; d_2=\frac{c_2 - c_3}{D}$\; 
  \KwRet{$\frac{d_1 - d_2}{D}$}
@@ -94,17 +94,17 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
  
  
   \begin{algorithm}[H]
- \caption{$eval4Integral(img,Img,xy)$, which evaluate in any given real point (describe in \ref{4Integral})}
- \KwData{A row/column of the image $img[1..wh]$, its four first integrals $Img[1..4(wh+1)]$, the point of evaluation $xy$}
- \uIf{$xy \ge wh$}{$r = xy - wh$\; 
+ \caption{$eval4Integral(img,Img,x)$, which evaluates in any given real point (described in \ref{4Integral})}
+ \KwData{A row/column of the image $img[1..wh]$, its four first integrals $Img[1..4(wh+1)]$, the point of evaluation $x$}
+ \uIf{$x \ge wh$}{$r = x - wh$\; 
  \KwRet{$Img[4wh+3] + r \left (Img[3wh+2] + \frac{r}{2}  \left(Img[2wh+1] + \frac{r}{3}  Img[wh]\right)\right)$}}
- \uElseIf{$xy<0$}{
+ \uElseIf{$x<0$}{
   \KwRet{$0$}
  }
  \Else{
-  $xys=\lfloor xy\rfloor$\; 
-  $r = xy-xys$\; 
-  \KwRet{$Img[3wh+3+xys] + r \left( Img[2wh+2+xys] + \frac{r}{2}  \left(Img[wh+1+xys] + \frac{r}{3}  \left(Img[xys]+ \frac{r}{4} img[xys] \right)\right)\right)$}}
+  $x_s=\lfloor x\rfloor$\; 
+  $r = x-x_s$\; 
+  \KwRet{$Img[3wh+3+x_s] + r \left( Img[2wh+2+x_s] + \frac{r}{2}  \left(Img[wh+1+x_s] + \frac{r}{3}  \left(Img[x_s]+ \frac{r}{4} img[x_s] \right)\right)\right)$}}
   \label{pseudo_code_eval_4_int}
  \end{algorithm}
 
@@ -113,7 +113,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 
 
 \ssse{Computational complexity}
-
+\label{decompCompexity}
 The function $eval4Integrale$ is constant in time, and so is $convolImg$. So in $applyHomography$ there is loop on constant functions and $build4Integral$. So the first loop is in $O(h(w+w_f))$ because the call to $build4Integral$ is on a column of size $w$. Similarly the second loop is in $O(w_f(h_f+h))$. So there is an unusual $O(w_f h)$. But on "reasonable" images, which are not too thin, it is linear.
 
 In fact assuming a bounded width/heights ratio, the algorithm is in $O(n_1+n_2)$ where $n_1$ is the size of the input image and $n_2$ the size of the output image. Notice that it does not depend on the homography being computed.

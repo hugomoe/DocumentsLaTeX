@@ -81,7 +81,7 @@
       $(m,n) = (n,m)$\;
      }
     }
-    \caption{The potential transposition $transpoOpt(img,A)$ (discribed in \ref{szeliski_transpoOpt_section})}
+    \caption{The potential transposition $transpoOpt(img,A)$ (discribed in section\ref{szeliski_transpoOpt_section})}
     \label{szeliski_transpoOpt}
    \end{algorithme}
 
@@ -100,11 +100,11 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    $\pmatrice{u_1\\v_1} =\ ^t\!\!A^{-1}\pmatrice{1\\1}$\;
    $\pmatrice{u_2\\v_2} =\ ^t\!\!A^{-1}\pmatrice{1\\-1}$\;
    $M = $Empty array which size is $2 \times 0$\;
-   \If{$|u_1|\leq1$ et $|v_1|\leq1$}{
-    Concatenate $M$ et $(u_1,v_1)^T$\;
+   \If{$|u_1|\leq1$ and $|v_1|\leq1$}{
+    Concatenate $M$ and $(u_1,v_1)^T$\;
    }
-   \If{$|u_2|\leq1$ et $|v_2|\leq1$}{
-    Concatenate $M$ et $(u_2,v_2)^T$\;
+   \If{$|u_2|\leq1$ and $|v_2|\leq1$}{
+    Concatenate $M$ and $(u_2,v_2)^T$\;
    }
    \uIf{$u_1=u_2$}{
     \eIf{$v_1=-v_2$}{
@@ -119,7 +119,7 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
     \eIf{$v_1=v_2$}{
      \KwRet{$(\min(|u_1|,1),\min(|v_1|,1)$}
     }{
-     Concatenate $M$ ande $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
+     Concatenate $M$ and $horizontalIntersections(u_1,v_1,-u_2,-v_2)$\;
      Concatenate $M$ and $verticalIntersections(u_1,v_1,u_2,v_2)$\;
      Concatenate $M$ and $horizontalIntersections(u_1,v_1,u_2,v_2)$\;
     }
@@ -155,10 +155,10 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    $v_+ = V_1+(u_+-U_1)\frac{V_2-V_1}{U_2-U_1}$\;
    $v_- = V_1+(u_--U_1)\frac{V_2-V_1}{U_2-U_1}$\;
    $l =$ array of size $2 \times 0$\;
-   \If{$|u_+|\leq1$ and $|v_+|\leq1$ et ($U_1 \leq u_+ \leq U_2$ ou $U_2 \leq u_+ \leq U_1$)}{
+   \If{$|u_+|\leq1$ and $|v_+|\leq1$ and ($U_1 \leq u_+ \leq U_2$ or $U_2 \leq u_+ \leq U_1$)}{
     Concatenate $l$ and $(u_+,v_+)^T$\;
    }
-   \If{$|u_-|\leq1$ and $|v_-|\leq1$ et ($U_1 \leq u_- \leq U_2$ ou $U_2 \leq u_- \leq U_1$)}{
+   \If{$|u_-|\leq1$ and $|v_-|\leq1$ and ($U_1 \leq u_- \leq U_2$ or $U_2 \leq u_- \leq U_1$)}{
     Concatenate $l$ and $(u_-,v_-)^T$\;
    }
    \caption{$verticalIntersections(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
@@ -172,30 +172,30 @@ In $MaxFrequencies$, $u_{max}$ et $v_{max}$ - which are the maximal frequencies 
    $u_+ = U_1+(v_+-V_1)\frac{U_2-U_1}{V_2-V_1}$\;
    $u_- = U_1+(v_--V_1)\frac{U_2-U_1}{V_2-V_1}$\;
    $M =$ array of size $2 \times 0$\;
-   \If{$|u_+|\leq1$ et $|v_+|\leq1$ et ($V_1 \leq v_+ \leq V_2$ ou $V_2 \leq v_+ \leq V_1$)}{
-    Concatenate $M$ et $(u_+,v_+)^T$\;
+   \If{$|u_+|\leq1$ and $|v_+|\leq1$ and ($V_1 \leq v_+ \leq V_2$ or $V_2 \leq v_+ \leq V_1$)}{
+    Concatenate $M$ and $(u_+,v_+)^T$\;
    }
-   \If{$|u_-|\leq1$ et $|v_-|\leq1$ et ($V_1 \leq v_- \leq V_2$ ou $V_2 \leq v_- \leq V_1$)}{
-    Concatenate $M$ et $(u_-,v_-)^T$\;
+   \If{$|u_-|\leq1$ and $|v_-|\leq1$ and ($V_1 \leq v_- \leq V_2$ or $V_2 \leq v_- \leq V_1$)}{
+    Concatenate $M$ and $(u_-,v_-)^T$\;
    }
-   \caption{$horizontalIntersections(U_1,V_1,U_2,V_2)$ (décrit en \ref{szeliski_frequencesMax_section})}
+   \caption{$horizontalIntersections(U_1,V_1,U_2,V_2)$ (described in section \ref{szeliski_frequencesMax_section})}
    \label{szeliski_intersectionsHorizontales}
   \end{algorithme}
   
-  \subsubsection{Transformations $\mathcal R$}
+  \subsubsection{Implementation of the transformations $\mathcal R$}
   
-	Both ($\mathcal{R}_h$ and $\mathcal{R}_v$) algorithmes work in the following way : first the values of the filter $h(\frac{\dot{}}{s})$ on $\{k+p2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$ are kept in memory. $s$ is a parameter which can expand the support of the filtering mapping ; $b$ is a parameter which can change the computation precision. Then the values kept in memory are used to convolve along one direction with the filter.
+	Both ($\mathcal{R}_h$ and $\mathcal{R}_v$) algorithms work in the following way : first the values of the filter $h(\frac{\dot{}}{s})$ on $\{k+p2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$ are kept in memory. The parameter $s$ expands the support of the filtering mapping ; $b$ is a parameter which can change the computation precision. Then the values kept in memory are used to convolve along one direction with the filter.
 
 
 %  Les deux algorithmes ($\mathcal{R}_h$ et $\mathcal{R}_v$) fonctionnent de la manière suivante : dans un premier temps, on stocke à l'avance les valeurs prises par le filtre $h(\frac{\dot{}}{s})$ sur $\{k+p2^{-b},(k,p)\in \llbracket -N,N \rrbracket \times \llbracket 0,2^b-1 \rrbracket\}$. $s$ est donc un paramètre pour élargir éventuellement le support de la fonction filtre ; $b$ est un paramètre de précision des calculs. Dans un second  temps on utilise ces valeurs stockées pour convoler selon une direction avec ledit filtre.
   
 
-In those algorithms, it is possible to call some values in the image $img[i][j]$ without checking if $i$ and $j$ are in the image boundaries. If not the value can be zero : even if it creates some ringing, it will occure only on the symetrized part of the image, which will not remain in the final image.
+In those algorithms, it is possible to call some values in the image $img[i][j]$ without checking if $i$ and $j$ are within the image boundaries. Otherwise, these values are fixed to zero. Even if it creates some ringing, this will only occur in the symetrized part of the image, which will not remain in the final image.
 
   % Dans ces pseudo-codes, on s'autorise à appeler des valeurs de l'image $img[i][j]$ sans vérifier que $i$ et $j$ sont compris dans l'image. On peut dans ce cas considérer le terme comme nul : même si cela crée de l'effet Gibbs, celui-ci ne sera visible que sur la réplique symétrisée de l'image, réplique qui sera mise à noir plus tard.
   
    \begin{algorithme}
-    \KwData{An input image $img[1..m][1..n]$, some coefficients $s, a_0, a_1 \in \mathbb{R}$, the coordinates (in the plan) of the center of the input image $x_i,y_i$, the coordinates (in the plan) of the center of the output image $x_f,y_f$, an interpolation filter $h$, $M$ such that $\supp h \subset [-M,M]$, a computation precision in bits $b$}
+    \KwData{An input image $img[1..m][1..n]$, some coefficients $s, a_0, a_1 \in \mathbb{R}$, the coordinates (in the plane) of the center of the input image $x_i,y_i$, the coordinates (in the plane) of the center of the output image $x_f,y_f$, an interpolation filter $h$, $M$ such that $\supp h \subset [-M,M]$, a computation precision in bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ an array of size $(2N+1) \times 2^b$\;
     Storage in $H$ of $h$ ($H[k][p] = h(\frac{k+2^{-b}p}{s}$) values\;\ \\
@@ -205,8 +205,8 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
       $i' = \frac{m}{2}-x_i+a_0(i+x_f-\frac{m}{2})+a_1(j+y_f-\frac{n}{2})$\;
       $k^* = \lfloor i' \rfloor$\;
       $\phi = i'-k^*$\;
-      $p = \lfloor 2^b\phi \rfloor$
-      $img_f[i][\red j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[k][\red j]$\;
+      $p = \lfloor 2^b\phi \rfloor$\;
+      $img_f[i][\red j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[k][\red j]$\tcc*{see \eqref{formule_convolution_discrete}}
      }
     }
     \KwRet{$img$}
@@ -216,18 +216,18 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
    \end{algorithme}
 
    \begin{algorithme}
-    \KwData{An image $img[1..m][1..n]$, some coefficients $s, a_0, a_1, t \in \mathbb{R}$, the coordinates (in the plan) of the center of the input image $x_i,y_i$, the coordinates (in the plan) of the center of the ouput image $x_f,y_f$, an interpolation filter $h$, $M$ such that $\supp h \subset [-M,M]$,  a computation precision in bits$b$}
+    \KwData{An image $img[1..m][1..n]$, some coefficients $s, a_0, a_1, t \in \mathbb{R}$, the coordinates (in the plane) of the center of the input image $x_i,y_i$, the coordinates (in the plane) of the center of the ouput image $x_f,y_f$, an interpolation filter $h$, $M$ such that $\supp h \subset [-M,M]$,  a computation precision in bits $b$}
     $N = \lceil sM \rceil$\;
     $H = $ an array of size $(2N+1) \times 2^b$\;
     Storage in $H$ of $h$ values\;\ \\
     $img_f = $ array of size $m \times n$\;
-    \bloc{Convolution (along $j$) with a kernel centered on $j'$ ; $\red i$ is constant(équation \ref{formule_convolution_discrete})}{
+    \bloc{Convolution (along $j$) with a kernel centered on $j'$ ; $\red i$ is constant(equation \eqref{formule_convolution_discrete}}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
       $j' = \frac{n}{2}-y_i-y+a_i(i+x_f-\frac{m}{2})+a_0(j+y_f-\frac{n}{2})$\;
       $k^* = \lfloor j' \rfloor$\;
       $\phi = j'-k^*$\;
-      $p = \lfloor 2^b\phi \rfloor$
-      $img_f[\red i][j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[\red i][k]$\;
+      $p = \lfloor 2^b\phi \rfloor$\;
+      $img_f[\red i][j]=\displaystyle{\sum_{k=k^*-N}^{k^*+N}} H[k^*-k][p]*img[\red i][k]$\tcc*{see \eqref{formule_convolution_discrete}}
      }
     }
     \KwRet{$img_f$}
@@ -238,13 +238,13 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
 
    \subsubsection{Computational complexity}
    
- $TranspoOpt$ has a computation cost is linear with the size of the input image. $frequenceMax$ has a constant input size, and has no loop, the computation time is then constant. Assuming that the ratio height/width is bounded , the allocation and filling of $img_0$ has a computation time in $O(n_1+n_2)$ with $n_1$ the size of the input image and $n_2$ the size of the output image.
+ $TranspoOpt$ has a computation cost that is linear with the size of the input image. $frequenceMax$ has a constant input size, and has no loop, its computation time is therefore constant. Assuming that the ratio height/width is bounded, the allocation and filling of $img_0$ has a computation time in $O(n_1+n_2)$ where $n_1$ is the size of the input image and $n_2$ the size of the output image.
   % $TranspoOpt$ est clairement linéaire en l'image d'entrée. $frequenceMax$ a une entrée de taille constante, et n'a pas de boucle, elle s'évalue donc en temps constant. En supposant le rapport hauteur/largeur borné, $img_0$ se déclare en $O(n_1+n_2)$ où $n_1$ est la taille de l'image d'entrée et $n_2$ celle de l'image de sortie.
-  In ${\mathcal R}_v$ for instance, each pixel evalation as a computation time in $O(N)$, that is to say in $O(s)$. Thus the function seems to be in $O(mns)$, but in the algorithm $s$ is either equal to $r_v$ which is bounded by $3$, or $\frac{1}{v_{max}}$. In the second case, the number of pixels to evaluate is proportional to $v_{max}$. Thus ${\mathcal R}_v$ and ${\mathcal R}_h$ have a computational cost linear in their input image for this algorithm. In our algorithms, we evaluate at every pixels (even those for which it is unneccesary) but since $u_{max} = v_{max} = 1$ for a rotation, $\frac{1}{v_{max}}$ is still bounded.
+  In ${\mathcal R}_v$ for instance, each pixel evaluation has a computation time in $O(N)$, that is to say in $O(s)$. Thus the function seems to be in $O(mns)$, but in the algorithm $s$ is either equal to $r_v$ which is bounded by $3$, or $\frac{1}{v_{max}}$. In the second case, the number of pixels to evaluate is proportional to $v_{max}$. Thus ${\mathcal R}_v$ and ${\mathcal R}_h$ have a computational cost linear in their input image for this algorithm. In our algorithms, we evaluate at every pixel (even those for which it is unneccesary) but since $u_{max} = v_{max} = 1$ for a rotation, $\frac{1}{v_{max}}$ is still bounded.
 
  %  Pour ${\mathcal R}_v$ par exemple, chaque pixel s'évalue en $O(N)$, c'est-à-dire en $O(s)$. Ainsi la fonction est a première vue en $O(mns)$, mais dans l'algorithme $s$ vaut soit $r_v$ qui est borné par $3$, ou $\frac{1}{v_{max}}$. Dans le second cas on n'évalue qu'un nombre proportionnel à $v_{max}$ de pixels. Ainsi les ${\mathcal R}_v$ et ${\mathcal R}_h$ sont linéaire en leur image d'entrée dans cet algorithme.
    
-    the $img_i$ have sizes which are a $O(n_1+n_2)$
+    Notice that the auxiliary images $img_i$ have sizes which are in $O(n_1+n_2)$.
   % Or on voit que les $img_i$ sont de taille $O(n_1+n_2)$.
    \medbreak
    Finally, the algoritm has a computational cost in $O(n_1+n_2)$ with $n_1$ the size of the input image and $n_2$ the size of the output image.

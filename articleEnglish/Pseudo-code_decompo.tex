@@ -4,54 +4,54 @@
  
  %On rappelle que dans les algorithmes qui suivent, on prend la convention suivante : $H = \pmatrice{a&b&p\\c&d&q\\r&s&t}$ est la matrice carrée de taille 3 (ou l'application homographique) telle que si $img$ est l'image d'entrée et $img_f$ est l'image de sortie, $img_f(x) = img(H(x))$. Ainsi, la décomposition $H \sim T_{c} R_{\psi}  \tilde H R_{\phi}$ est exécutée de gauche à droite. On notera cette décomposition $A \tilde H B$, et ces trois matrices seront les objets renvoyés par $decomposition$.
  
- The $decomposition$ algorithm (algorithm \ref{pseudoCodeDecompo}) implements the decomposition described in figure \ref{SchemaEtapesDecompoGeometrique}. The degree of freedom left in the decomposition of the theorem \ref{thepropdecomp} is set in order to cancel the translation $T_{(x_2,y_2)}$ on  the left of the decomposition. To achieve this we remind that $(x_2,y_2)$ (which we rename $t_0,t_1$ in the algorithm) verify
+ The $decomposition$ algorithm (algorithm \ref{pseudoCodeDecompo}) implements the decomposition described in figure \ref{SchemaEtapesDecompoGeometrique}. The degree of freedom left in the decomposition of the theorem \ref{thepropdecomp} is set in order to cancel the translation $T_{(x_2,y_2)}$ on  the left of the decomposition. To achieve this we remind that $(x_2,y_2)$ verify
  \begin{equation}
  \Delta_H(x_2 , y_2 ) \stackrel{\text{def}}{=} \hat r ((rc+sd)-(r^2 + s^2)y_2) - \hat s ((ar+sb)-(r^2 + s^2 )x_2) = 0,
  \label{equationAlgo6}
  \end{equation}
- so it is possible to choose $t_0 = x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}, t_1 = y_2 = 0$ or $t_0 = x_2 = 0, t_1 = y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$, depending on whether $\hat r$ or $\hat s$ is different from zero (if $\hat r=0$ and $\hat s=0$ then $H$ is an affine mapping). 
+ so it is possible to choose $x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}, y_2 = 0$ or $x_2 = 0, y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$, depending on whether $\hat r$ or $\hat s$ is different from zero (if $\hat r=0$ and $\hat s=0$ then $H$ is an affine mapping). 
  
- %Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Arbitrairement, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ : pour cela, on rappelle que $(x_2,y_2)$ (nommés $t_0,t_1$ dans l'algorithme) doivent vérifier
+ %Cet algorithme $decomposition$ (algorithme \ref{pseudoCodeDecompo}) présente la décomposition correspondant aux schémas \ref{SchemaEtapesDecompoGeometrique}. Arbitrairement, on choisit le degré de liberté de sorte à annuler une des translations (verticale ou horizontale) de $T_c$ : pour cela, on rappelle que $(x_2,y_2)$ (nommés $x_2,y_2$ dans l'algorithme) doivent vérifier
 % \[\Delta_H(x_2 , y_2 ) \stackrel{\text{déf}}{=} \hat r ((rc+sd)-(r^2 + s^2)y_2) - \hat s ((ar+sb)-(r^2 + s^2 )x_2) = 0 \]
-% On prend donc $t_0 = x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}, t_1 = y_2 = 0$ ou $t_0 = x_2 = 0, t_1 = y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$, en choisissant de sorte à ne pas diviser par zéro.
+% On prend donc $x_2 = x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}, y_2 = y_2 = 0$ ou $x_2 = x_2 = 0, y_2 = y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$, en choisissant de sorte à ne pas diviser par zéro.
  
    \begin{algorithme}
      \label{pseudoCodeDecompo}
      \caption{$decomposition(H)$}
      \KwData{A homography matrix which is not affine $H = \pmatrice{a&b&p\\c&d&q\\r&s&t} \in \mathcal M_{3,3}$, its inverse $H^{-1}=\pmatrice{\hat a&\hat b&\hat p\\ \hat c&\hat d&\hat q\\ \hat r&\hat s&\hat t} $.}
      \eIf{$as-br\neq0$}{
-      $t_0 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}$\tcc*{see \eqref{equationAlgo6}}
-      $t_1 = 0$\;
+      $x_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s}$\tcc*{see \eqref{equationAlgo6}}
+      $y_2 = 0$\;
      }{
-      $t_0 = 0$\;
-      $t_1 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$\tcc*{see \eqref{equationAlgo6}}
+      $x_2 = 0$\;
+      $y_2 = -\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r}$\tcc*{see \eqref{equationAlgo6}}
      }
      $N_\phi = \sqrt{r^2+s^2}$\;
      $R_\phi = \pmatrice{
       \frac{r}{N_\phi} & \frac{s}{N_\phi} & 0\\
       -\frac{s}{N_\phi} & \frac{r}{N_\phi} & 0\\
       0 & 0 & 1}$\;
-     $N_\psi = \sqrt{((a+t_0r)s-(b+t_0s)r)^2+((c+t_1r)s-(d+t_1s)r)^2}$\;
+     $N_\psi = \sqrt{((a+x_2r)s-(b+x_2s)r)^2+((c+y_2r)s-(d+y_2s)r)^2}$\;
      $R_\psi = \pmatrice{
-      \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & \frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & 0\\
-      -\frac{(a+t_0r)s-(b+t_0s)r}{N_\psi} & \frac{(c+t_1r)s-(d+t_1s)r}{N_\psi} & 0\\
+      \frac{(c+y_2r)s-(d+y_2s)r}{N_\psi} & \frac{(a+x_2r)s-(b+x_2s)r}{N_\psi} & 0\\
+      -\frac{(a+x_2r)s-(b+x_2s)r}{N_\psi} & \frac{(c+y_2r)s-(d+y_2s)r}{N_\psi} & 0\\
       0 & 0 & 1}$\;
-     $A = T^{-1}R_\psi$\;
+     $A = \pmatrice{1&0&-x_2\\0&1&-y_2\\0&0&1}R_\psi$\;
      $\tilde H = \pmatrice{
-      -\frac{((a+t_0r)(d+t_1s)-(b+t_0s)(c+t_1r))N_\phi}{N_\psi} & 0 & \frac{p'((c+t_1r)s-(d+t_1s)r)-q'((a+t_0r)s-(b+t_0s)r)}{N_\psi}\\
-      0 & -\frac{N_\psi}{N_\phi} & \frac{p'((a+t_0r)s-(b+t_0s)r)+q'((c+t_1r)s-(d+t_1s)r)}{N_\psi}\\
+      -\frac{((a+x_2r)(d+y_2s)-(b+x_2s)(c+y_2r))N_\phi}{N_\psi} & 0 & \frac{p'((c+y_2r)s-(d+y_2s)r)-q'((a+x_2r)s-(b+x_2s)r)}{N_\psi}\\
+      0 & -\frac{N_\psi}{N_\phi} & \frac{p'((a+x_2r)s-(b+x_2s)r)+q'((c+y_2r)s-(d+y_2s)r)}{N_\psi}\\
       N_\phi & 0 & t'}$\;
      $B = R_\phi$\;
      \KwRet{$A,\tilde H,B$}
    \end{algorithme}
    
-   In a practical implementation, the computation of $H^{-1}$ is not necessary to obtain $t_0$ and $t_1$ since we have
+   In a practical implementation, the computation of $H^{-1}$ is not necessary to obtain $x_2$ and $y_2$ since we have
    \[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(as-br)},\]
  \[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(cs-dr)}.\]
  ($\Delta_H$ is defined in \eqref{equationAlgo6}).
 %Moreover the condition $as-br=0$ is never true so it is replaced by a condition $as-br<cs-dr$.
    
- %  Dans une implémentation pratique, on n'inverse pas la matrice $H$ pour obtenir les valeurs de $t_0$ et $t_1$, car les quantités susmentionnées se simplifient en
+ %  Dans une implémentation pratique, on n'inverse pas la matrice $H$ pour obtenir les valeurs de $x_2$ et $y_2$, car les quantités susmentionnées se simplifient en
  %\[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat s} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(as-br)}\]
  %\[\frac{\Delta_H(0,0)}{(r^2+s^2)\hat r} = \frac{(as-br)(ar+bs)+(cs-dr)(cr+ds)}{(r^2+s^2)(cs-dr)}\]
 % De plus, en pratique, la condition $as-br=0$ n'est jamais vérifiée, on préfère donc la remplacer par une condition $as-br<cs-dr$.

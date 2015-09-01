@@ -223,7 +223,7 @@ In those algorithms, it is possible to call some values in the image $img[i][j]$
     $img_f = $ array of size $m \times n$\;
     \bloc{Convolution (along $j$) with a kernel centered on $j'$ ; $\red i$ is constant(equation \eqref{formule_convolution_discrete}}{
      \For{$(i,j)\in \llbracket 1,m \rrbracket \times \llbracket 1,n \rrbracket$}{
-      $j' = \frac{n}{2}-y_i-y+a_i(i+x_f-\frac{m}{2})+a_0(j+y_f-\frac{n}{2})$\;
+      $j' = \frac{n}{2}-y_i+a_1(i+x_f-\frac{m}{2})+a_0(j+y_f-\frac{n}{2})$\;
       $k^* = \lfloor j' \rfloor$\;
       $\phi = j'-k^*$\;
       $p = \lfloor 2^b\phi \rfloor$\;

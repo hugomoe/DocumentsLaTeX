@@ -63,7 +63,12 @@
   
 % À partir de la décomposition, en utilisant les algorithmes de traitement d'homographie et d'affinités des sections suivantes, on peut donc traiter une homographie quelconque :
  
- Auxiliary images are created for each step (between rotation and homography, and between homography and rotation). These auxiiliary images are large enough to contain the whole image. Each image (input, auxiliary or output) is in some rectangle of the plan $rect$, which is characterized by its size (width and height) and its position given by the coordinates $(\mu,\nu)$ of its origin (its top-left pixel). So it is possible to compute the part of the plane containing information and to minimize the size of the auxiliary images and process translation by only adjusting $(\mu,\nu)$.
+ Auxiliary images are created for each step (between rotation and homography, and between homography and rotation). These auxiiliary images are large enough to contain the whole image. Each image (input, auxiliary or output) is in some rectangle of the plan $rect$, which is characterized by
+ \begin{itemize}
+  \item its size (its width and its height are noted $w$ and $h$ in all algorithms)
+  \item its position in the plane, given by the coordinates of the origin of the rectangle (i.e. the coordinates of its top-left pixel in the plane). Those coordinates are noted $(\mu,\nu)$. By convention, the coordinates $(\mu,\nu)$ are $(0,0)$ for the input and the output images
+ \end{itemize}
+ It is possible to compute the smallest rectangle of the plane containing the information thus minimizing the size of the auxiliary images and processing translation only by adjusting $(\mu,\nu)$.
  
  \begin{prop}
  The size of auxiliary images is bounded independently of the homography.

@@ -4,7 +4,7 @@
 %Je sais pas si on doit garder la partie sur l'interp de hermite
 \subsubsection{Separation of a unidirectional homography}
 
-By using \eqref{formule_decomposition_effective} the problem of resampling homographies is reduced to the problem of resampling unidirectional homographies and rotations. This section deals with unidirectional homographies.
+By using \eqref{formule_decomposition_effective}, the problem of resampling homographies is reduced to the problem of resampling unidirectional homographies and rotations. This section deals with unidirectional homographies.
 
 
 %By using formula \ref{formule_decomposition_effective} à traiter des rotations et des homographies unidirectionnelles. Cette section présente une méthode de traitement pour les homograpghies unidirectionnelles.
@@ -28,15 +28,15 @@ so that $h=h_1  \circ h_2$, allowing the following scheme
 f\longrightarrow f'=f\circ h_1 \longrightarrow f''=f'\circ h_2.
 \end{equation*}
 
-Each of these mappings is unidimensionnal, resampling each row and each column independently. So the resampling can be computed efficiently.
+Each of these mappings is unidimensionnal, resampling each row and each column independently. So the resampling can be computed efficiently :
 
 %Chacune de ces deux transformations ne modifie l'image que dans une seule direction, cela permet d'effectuer des opérations sur des signaux unidimensionnels. Les méthodes de ré-échantillonnage sont donc plus simples, ce qui permet un gain de rapidité car les calculs sont moins coûteux. De plus, les transformations $h_1,h_2$ peuvent être appliquées en ne réalisant que des filtrages horizontaux et verticaux ; les direction de filtrage sont simples.
 \begin{itemize}
-\item On each column the first transform is a unidimensional homography.%Sur chaque colonne, la première transformation est une homographie en une dimension.
-\item On each row the second transform is a zoom (which factor is different for each row).%Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
+\item On each column, the first transform is a unidimensional homography.%Sur chaque colonne, la première transformation est une homographie en une dimension.
+\item On each row, the second transform is a zoom (which factor is different for each row).%Sur chaque ligne, la seconde transformation est un zoom (d'un facteur différent selon la ligne).
 \end{itemize}
 
-The effects of the transforms $h,h_1$ and $h_2$ are shown in figure \ref{image_separation_f14}.
+The effects of the transforms $h$, $h_1$ and $h_2$ are shown in figure \ref{image_separation_f14}.
 %On peut voir sur la figure \ref{image_separation_f14} l'effet des transformations $h,h_1,h_2$.
 
 \begin{figure}[h!]
@@ -52,18 +52,18 @@ The effects of the transforms $h,h_1$ and $h_2$ are shown in figure \ref{image_s
 %\paragraph{Sous-échantillonnage gaussien}
 \paragraph{Gaussian downsampling}
 \label{zoom_gaussien}
-The gaussian zoom is a method of downsampling which use the convolution $f*G_{d}$, where $G_d$ is a Gaussian kernel of standard deviation $d$. Approximations of the standard deviation required are briefly described in this section, and are based on \emph{SIFT is an invariant scale} \cite{morel2011sift}.
+The gaussian zoom is a method of downsampling which uses the convolution $f*G_{d}$, where $G_d$ is a Gaussian kernel of standard deviation $d$. Approximations of the required standard deviation are briefly described in this section, and are based on \emph{SIFT is an invariant scale} \cite{morel2011sift}.
 
 %Le zoom gaussien est une méthode de sous-échantillonnage utilisant la convolution $f*G_{d}$ , où $G_d$ est un noyau gaussien d'écart type $d$. Dans nos algorithme on utilisera la méthode développée dans l'article \emph{SIFT is an invariant scale} \cite{morel2011sift}.
 
 Let $f$ be an image, assume $f$ is of form $f=G_{c'} * f'$ where $f'$ is an infinite-resolution image. The parameter $c'$ is the Gaussian blur of the image $f$. Experiments show that the ideal blur is $c'=0.8$ \cite{morel2011sift}.\\
 Let $z$ be a real number such that $0<z\le 1$, consider $f''(x)=f'(zx)$.
-The Gaussian blur of the resampled function $x\mapsto f(zx)$ has to be $0.8$. We have
+The Gaussian blur of the resampled function $x\mapsto f(zx)$ has to be $0.8$. Since
 
 \begin{equation*}
-(f''*G_{c})(x)=(f'*G_{cz})(zx).
+(f''*G_{c})(x)=(f'*G_{cz})(zx)
 \end{equation*}
-Using this formula and 
+and 
 \begin{equation*}
 (f*G_d)(zx)=(f'*G_c'*G_d)(zx)=(f'*G_{\sqrt{c'^2 + d^2}})(zx),
 \end{equation*}
@@ -72,7 +72,7 @@ we conclude
 d=\sqrt{c^2 z^2 - c'^2}.
 \label{formule_zoom_gaussien}
 \end{equation}
-The parameter $c'$ is difficult to compute. Experiments show that it is between $0.8$ and $0.4$ for images reasonably sampled. A Gaussian blur of $0.7$ is assumed in our implementation.
+The parameter $c'$ (the Gaussian blur of the input image) is difficult to compute or to predict. Experiments show that it is between $0.8$ and $0.4$ for reasonably sampled images. A Gaussian blur of $0.7$ in the input image is assumed in our implementation.
 
 %Si $f$ est une image on suppose que $f$ peut s'écrire sous la forme $f=G_{c'} * f'$, où $f'$ est une image de résolution infinie. Le paramètre $c'$ est le facteur de flou gaussien idéal de l'image $f$. L'expérience montre que le facteur de flou gaussien idéal se situe autour de $c=0.8$ \cite{morel2011sift}.\\
 %Soit $z\le 1$ posons $f''(x)=f'(zx)$. Si on cherche à échantillonner la fonction  $x\mapsto f(zx)$,  on doit d'abord s'assurer qu'elle possède un facteur de flou gaussien égal à $0.8$. On sait que 
@@ -87,18 +87,18 @@ The parameter $c'$ is difficult to compute. Experiments show that it is between 
 %\paragraph{Ré-échantillonnage par les images intégrales}
 \label{4Integral}
 
-In this paragraph a method to resample a unidimensional image is presented. This method relies on an approximation of Gaussian blurs using integral images.%(cf. \ref{zoom_gaussien})
+In this paragraph, a method to resample a unidimensional image is presented. This method relies on an approximation of Gaussian blurs using integral images.%(cf. \ref{zoom_gaussien})
 
 %Dans ce paragraphe on présente une méthode permettant de ré-échantillonner une image 1D ; cette méthode s'appuie sur une approximation du zoom gaussien (cf. \ref{zoom_gaussien}) et utilise les images intégrales.
 
-In the following we denote $\Gcal_n^d$ the kernel defined by
+In the following, we denote $\Gcal_n^d$ the kernel defined by
 \begin{equation}
 \Gcal_1^d(x)=\frac{1}{d}\mathds{1}_{]-\frac{d}{2},\frac{d}{2}[}(x) \text{ and } \Gcal_{n+1}^d= \Gcal_n^d * \Gcal_1^d .
 \label{formule_convol_n_int}
 \end{equation}
 
 \begin{prop}
-The function $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformly on $\mathbb{R}$ to a Gaussian function .
+The function $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converges uniformly on $\mathbb{R}$ to a Gaussian function .
 \end{prop}
 
 %Soit $\Gcal_n^d$ le noyau définit par 
@@ -113,13 +113,13 @@ The function $x\mapsto \sqrt{n}~\Gcal_n^d(\sqrt{n}~x)$ converge uniformly on $\m
 \caption{Comparison between $\Gcal_3^{20}$ and $G_{10}$ (centered on $50$)}
 \end{figure}
 
-From now on we denote $D_d$ the "discret differentiation" operator defined by $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$ and if $f$ is a piecewise continuous function compactly supported, we denote \begin{equation*}
+From now on we denote $D_d$ the "discret differentiation" operator defined by $D_d f(x)=\frac{f(x+\frac{d}{2})-f(x-\frac{d}{2})}{d}$ and if $f$ is a compactly supported piecewise continuous function, we denote \begin{equation*}
 F_{n+1}(x)= \int_{-\infty}^{x}F_{n}(y)dy~~~ \txt{ and }~~~F_{0}(x)= f(x).
 \end{equation*}
 
-Then we have the following proposition for the continuous case :
+Then, we have the following proposition for the continuous case :
 
-\begin{prop} If $f$ piecewise continuous function compactly supported then
+\begin{prop} If $f$ is a compactly supported piecewise continuous function then
 \begin{equation}
  (f*\Gcal_n^d)(y)=D_d^n F_{n}(y)= \frac{1}{d^n}\underset{0 \le k\le n}{\sum} \binom{n}{k}(-1)^{k} F_{n}(y+\frac{(n-2k)d}{2}).
 \end{equation}
@@ -141,8 +141,8 @@ Let $f$ be a compactly supported piecewise continuous function, then
 \end{eqnarray*}
 
 
-\noindent Let us show by induction on $n$ that $ f*\Gcal_n^d=D_d^n F_{n}$.\\
-It is true for $n=1$, if it is true for $n$ then
+\noindent Let's prove by induction on $n$ that $ f*\Gcal_n^d=D_d^n F_{n}$.\\
+It is true for $n=1$. If it is true for $n$ then
 \begin{equation*}
 f*\Gcal_{n+1}^{d}=(f * \Gcal_{n}^d) * \Gcal_{1}^{d}= (D_d^n F_{n})*\Gcal_1^d.
 \end{equation*}
@@ -154,7 +154,7 @@ $D_d^n$ is the sum of translation operators
 \begin{equation*}
 f\mapsto f(\cdot+\frac{d}{2})~~~\txt{ and }~~~f\mapsto f(\cdot-\frac{d}{2})?
 \end{equation*}
-so it can be developed using the binomial theorem because the two operators commute. Therefore
+so it can be developed using the binomial theorem (since those two operators commute). Therefore
 
 %On peut développer $D_d^n$ à l'aide du binome de Newton car les deux opérateurs commutent. On obtient donc
 \begin{equation*}
@@ -165,9 +165,9 @@ so it can be developed using the binomial theorem because the two operators comm
 
 %In the implementation, the computation of $D_d^n$ is done by induction (see algorithm \ref{pseudo_code_convol_4_int}).
 
-To adapt proposition \ref{continuous_approx} to discret signal, an approximation of $F_{k}$ is required in order to use these formulas.\\
+An approximation of $F_{k}$ is required in order to adapt proposition \ref{continuous_approx} to a discrete signal and use these formulas.\\
 \medbreak
-Let $(f_k)_{k=0...m-1}$ be a discret signal, we define $(F_n)$ by
+Let $(f_k)_{k=0...m-1}$ be a discrete signal, define $(F_n)$ by
 
 \begin{equation}
 F_{0} (x) =\underset{0\le k \le m-1}{\sum}f_{k} \mathds{1}_{[k,k+1[}(x) \txt{ and }  F_{n}(x)=\int_{-\infty}^{x}F_{n-1}(y)dx.
@@ -243,10 +243,10 @@ In practice the implementation uses $\Gcal_3^d * \Gcal_1^1$, and therefore appro
 
 
 
-To compute the values of $F_n$ for $n=1...4$, values for integers are precomputed and then polynomials are evaluated.
+To compute the values of $F_n$ for $n=1...4$, integer values are precomputed and then polynomials are evaluated.
 
 
-To precompute the values on integers the relations
+To precompute the values on integers, the relations
 \begin{eqnarray*}
 F_{1}(k+1)&=&  F_{1}(k)+f_{k} , \\
 F_{2}(k+1)&=&  F_{2}(k)+F_{1}(k)+\frac{f_{k}}{2} ,  \\
@@ -258,7 +258,7 @@ are used (see algorithm \ref{pseudo_code_built_4_int}).
 
 %On doit calculer une composante constante par morceaux afin d'avoir la valeur de $F_{n}$ aux entiers ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.
 
-To compute the non-integers value the following scheme is used :
+To compute the non-integer values, the following scheme is used :
 
 \begin{itemize}
 \item If $x\le 0$ then $F_{4}(x)=0$.
@@ -286,14 +286,14 @@ These formulas are used in the algorithm \ref{pseudo_code_eval_4_int}.
 \medbreak
 
 
-To implement this method the parameter $d$ have to be chosen with respect to the local zoom $z$ in the point considered. We use the derivative of the transform as $z$.\\
-The result from de previous paragraph (cf. \ref{zoom_gaussien}) are used since $\Gcal_3^d$ is a good approximation of Gaussian curve. The standard derivation $\sigma$ of $\Gcal_3^d$ is given by the formula $\sigma=\frac{d}{2}$. By \eqref{formule_zoom_gaussien}, if $z\ge 1$, then
+To implement this method, the parameter $d$ has to be chosen with respect to the local zoom $z$ in the point considered. The zoom factor $z$ is given by the derivative of the transform.\\
+The results from the previous paragraph (cf. \ref{zoom_gaussien}) are used since $\Gcal_3^d$ is a good approximation of a Gaussian function. The standard derivation $\sigma$ of $\Gcal_3^d$ is given by the formula $\sigma=\frac{d}{2}$. By \eqref{formule_zoom_gaussien}, if $z\ge 1$, then
 
 \begin{equation*}
 d=2\sqrt{c^2 z^2 - c'^2} \text{ with } c=0.8 \text{ and } c'=0.7.
 \end{equation*}
 
-The value of $c'$ is fixed to $0.7$ in our implementation, but it could be chosen accordingly to the input image : for sharp image it has to be around $0.5$ to avoid aliasing. A too small value introduce an excessive blur.
+The value of $c'$ is fixed to $0.7$ in our implementation, but it could be chosen accordingly to the input image : for sharp image, it has to be around $0.5$ to avoid aliasing. A too small value introduces an excessive blur.
 
 %L'interpolation supplémentaire peut donc être obtenue en évaluant $F_{n+1}$. La méthode de calcul est donc la même que dans le cas précédent, la convolution avec $\Gcal_3^d$ nécessite l'utilisation l'intégrale quatrième de l'image dans la pratique.\\
 %Il est possible d'utiliser cette méthode pour obtenir une représentation plus régulière du signal de départ mais la courbe $F_0 * \Gcal_p^1~$ n'est pas interpolante si $2\le p$.\\

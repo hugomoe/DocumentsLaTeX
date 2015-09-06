@@ -204,7 +204,7 @@ F_{n}(x) &=& F_{n}(\lfloor x\rfloor \wedge m)~~+\mathds{1}_{[0,m[}(x) \underset{
 
 %Où la valeur de $F_{n}$ se calcule par récurrence :
 
-\noindent So the values on integers and the value of a polynomial of degree $n$ has to be computed to interpolate on non-integer values.
+\noindent So the values on integers and the value of a polynomial of degree $n$ has to be computed to interpolate on non-integers.
 
 \medbreak
 With this method the signal $(f_k)$ could be resampled by interpolating it with $F_{0}$ in the first place, and then by convolving with a kernel $\Gcal_n^d$.
@@ -243,7 +243,7 @@ In practice the implementation uses $\Gcal_3^d * \Gcal_1^1$, and therefore appro
 
 
 
-To compute the values of $F_n$ for $n=1...4$, integer values are precomputed and then polynomials are evaluated.
+To compute the values of $F_n$ for $n=1...4$, values on integers are precomputed and then polynomials are evaluated.
 
 
 To precompute the values on integers, the relations
@@ -258,7 +258,7 @@ are used (see algorithm \ref{pseudo_code_built_4_int}).
 
 %On doit calculer une composante constante par morceaux afin d'avoir la valeur de $F_{n}$ aux entiers ainsi qu'un terme polynomial de degré $n$ pour effectuer l'interpolation sur des valeurs non-entières.
 
-To compute the non-integer values, the following scheme is used :
+To compute values on non-integers, the following scheme is used :
 
 \begin{itemize}
 \item If $x\le 0$ then $F_{4}(x)=0$.

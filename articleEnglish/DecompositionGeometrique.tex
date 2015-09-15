@@ -131,18 +131,31 @@ with $X=x~\xbf_0 + y~\ybf_0 $.
 \label{def_homographie_H}
 \end{Def}
 
-Let $D,D'$ be the straight lines in $\mathbb{R}^2$ obtained when $P$ and $\mathcal{P}$ have the basis $(O,\xbf,\ybf)$ and $(C,\ubf,\vbf)$, then $h:\mathbb{R}^2  \setminus D \mapsto \mathbb{R}^2  \setminus D'$ is a bijective mapping.
+Let $D,D'$ be the straight lines in $\mathbb{R}^2$ obtained when $P$ and $\mathcal{P}$ have the basis $(O,\xbf,\ybf)$ and $(C,\ubf,\vbf)$. Then $h:\mathbb{R}^2  \setminus D \mapsto \mathbb{R}^2  \setminus D'$ is a bijective mapping.
 
 %\begin{remarque}
 %From a point $X\in P$ of coordinates $(x,y)$, the mapping $h$ returns the coordinates of the point $H^*(X)$ of the numeric image coming from the camera. 
 %\end{remarque}
 
-The orientation of the basis $(\ubf,\vbf,\wbf)$ with respect to the basis $(\xbf_0,\ybf_0,\zbf_0)$ can be defined by the three Euler angles $(\phi , \theta ,\psi )$ (figure \ref{img_angles}).
+\begin{Def}
+\label{decompogeo_def_angles}
+Let $(\phi , \theta ,\psi )$ be the three Euler angles defining the orientation of the basis $(\ubf,\vbf,\wbf)$ with respect to the basis $(\xbf_0,\ybf_0,\zbf_0)$ (figure \ref{img_angles}) :
 \begin{itemize}
 \item $\phi$ is the first rotation around the axis $(X_v ,\zbf_0)$
 \item $\theta$ is the second rotation around the axis $(X_v , \ybf_2 )$
 \item $\psi$ is the third rotation around the axis $(X_v , \wbf )$
 \end{itemize}
+\end{Def}
+
+\begin{figure}
+\centering
+\subfigure[rotation of angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}
+\subfigure[rotation of angle $\theta$]{\includegraphics[width=5cm]{graphe2.jpg}}
+\subfigure[self rotation (of angle $\psi$)]{\includegraphics[width=5cm]{graphe3.jpg}}
+\caption{Euler angles between the bases $(\ubf,\vbf,\wbf)$ and $(\xbf_0,\ybf_0,\zbf_0)$ (definition \ref{decompogeo_def_angles})}%j'ai vérifié, bases est le pluriel de basis
+\label{img_angles}
+\label{decompgeo_rotationPropre}
+\end{figure}
 
 In what follows we set $\cbf= \left (\overrightarrow{C_0 C}\cdot \ubf , \overrightarrow{C_0 C}\cdot \vbf \right)$ and $\xbf_v=\left( \overrightarrow{O X_v}\cdot \ubf , \overrightarrow{O X_v}\cdot \vbf \right )$.\\
 
@@ -170,20 +183,7 @@ h_{\theta,\delta'}(x,y)=\left(\frac{-cos(\theta)x}{1-\frac{sin(\theta)}{\delta'}
 \end{prop}
 
 
-\begin{figure}[h!]
-\centering
-\subfigure[rotation of angle $\phi$]{\includegraphics[width=5cm]{graphe1.jpg}}
-\subfigure[rotation of angle $\theta$]{\includegraphics[width=5cm]{graphe2.jpg}}
-\caption{(cf part \ref{figure_de_rotations_18})}
-\label{img_angles}
-\end{figure}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=5cm]{graphe3.jpg}
-\caption{self rotation (cf part \ref{figure_de_rotations_18})}
-\label{decompgeo_rotationPropre}
-\end{figure}
 
 
 

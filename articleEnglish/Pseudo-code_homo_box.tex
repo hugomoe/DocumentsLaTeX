@@ -49,7 +49,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
 
 
  \begin{algorithm}[H]
- \caption{$build4Integrale(img)$, which returns the four first integrals of $img$ (described in \ref{4Integral})}
+ \caption{$build4Integrale(img)$, which returns the four first integrals of $img$ (corresponds to the formulas \ref{formula_discret_integral_1}, \ref{formula_discret_integral_2}, \ref{formula_discret_integral_3} and \ref{formula_discret_integral_4} in section \ref{4Integral})}
  \KwData{A row/column of the image $img[1..wh]$}
  \For{$i\in \llb 0,3 \rrb $}{
  $Imgwh[i(wh+1)+1]=0$\;
@@ -69,7 +69,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
  
  
   \begin{algorithm}[H]
- \caption{$convolImg(img,Img,xy,d)$, which convolves the image with $\Gcal_3^d * \Gcal_1^1$(define by \ref{formule_convol_n_int}) (described in \ref{4Integral})}
+ \caption{$convolImg(img,Img,xy,d)$, which convolves the image with $\Gcal_3^d * \Gcal_1^1$ (defined by formula \ref{formule_convol_n_int} in \ref{4Integral})}
  \KwData{A row/column of the image $img[1..wh]$, its four first integrals $Img[1..4(wh+1)]$, the point of evaluation $xy\in\mb{R}$, the zoom factor $d\in\mb{R}$}
  \tcc{computation of $D$ the standard derivation of the box to be convolve, the thresholding is arbitrary}
  $d_{aux} = 0.64 * d^{2} - 0.49$\;
@@ -94,7 +94,7 @@ $f_2 = x,y\mapsto \frac{a_2y + t_2}{\lambda x + t_3}$ \;
  
  
   \begin{algorithm}[H]
- \caption{$eval4Integral(img,Img,x)$, which evaluates in any given real point (described in \ref{4Integral})}
+ \caption{$eval4Integral(img,Img,x)$, which evaluates in any given real point (using formulas \ref{formula_nonint_integral_case1}, \ref{formula_nonint_integral_case2} and \ref{formula_nonint_integral_case3} in \ref{4Integral})}
  \KwData{A row/column of the image $img[1..wh]$, its four first integrals $Img[1..4(wh+1)]$, the point of evaluation $x$}
  \uIf{$x \ge wh$}{$r = x - wh$\; 
  \KwRet{$Img[4wh+3] + r \left (Img[3wh+2] + \frac{r}{2}  \left(Img[2wh+1] + \frac{r}{3}  Img[wh]\right)\right)$}}

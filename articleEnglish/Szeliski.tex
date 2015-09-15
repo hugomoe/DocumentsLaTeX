@@ -2,7 +2,7 @@
 
 %Le traitement par décomposition des homographies utilise une méthode de traitement des affinités. Elle est présentée dans la partie ci-dessous.
 
-Affinities are a particular case of homography for which there exists an efficient anti-aliasing method, and which will be used later to resample all homographies.
+Affine maps are a particular case of homography for which there exists an efficient anti-aliasing method, and which will be used later to resample all homographies.
 
 \subsection{Principle}
 	
@@ -68,7 +68,7 @@ Affinities are a particular case of homography for which there exists an efficie
 %	où $img_f$ est l'image finale et $img$ l'image initiale.
 	
 	
-\noindent	Multiplying by $s$ the size of support of the filter function (by calling $h(\frac{x}{s})$ instead of $h(x)$, with $s\geq 1$) divides by $s$ the bandwidth of this filter. This protects against aliasing during downsamplings. The coefficient $s$ also depends on the \emph{maximal preserved frequencies} $u_{max}$ and $v_{max}$ which will be presented later.
+\noindent	Multiplying by $s$ the size of support of the filter function (by calling $h(\frac{x}{s})$ instead of $h(x)$, with $s\geq 1$) divides by $s$ the bandwidth of this filter. This protects against aliasing during downsamplings. The coefficient $s$ also depends on the maximal preserved frequencies $u_{max}$ and $v_{max}$ which will be defined in definition \ref{szeliski_def_maximal_preserved_frequencies}.
 	
 %	En multipliant par $s$ la taille du support du filtre (en appelant $h(\frac{x}{s})$ au lieu de $h(x)$, avec $s\geq 1$), on divise par $s$ la largeur de la bande passante de ce filtre. Cela permet, lors d'un sur-échantillonnage, d'avoir une protection contre l'\emph{aliasing}. Le coefficient $s$ dépend aussi des \emph{fréquences conservées maximales} $u_{max}$ et $v_{max}$ qui seront définies et expliquées plus loin.
 	
@@ -76,7 +76,7 @@ Affinities are a particular case of homography for which there exists an efficie
 	
 %	En appliquant la formule précédente pour toutes les valeurs de $i$ et $j$ de l'image d'arrivée, on obtient les algorithmes \ref{szeliski_rh} et \ref{szeliski_rv} traitant les opérations $\mathcal R_h$ et $\mathcal R_v$. \label{szeliski_rv_rh_section}
 	
-	\noindent It is possible in that way to compute $\mathcal R$ and therefore any shear  in three steps and without aliasing. Since any affinity can be decomposed in two shears (proposition \ref{propositionDecompositionAffinite}), any affinity can be processed without aliasing (algorithm \ref{szeliski_affine}).
+	\noindent It is possible in that way to compute $\mathcal R$ and therefore any shear  in three steps and without aliasing. Since any affine map can be decomposed in two shears (proposition \ref{propositionDecompositionAffinite}), any affine map can be processed without aliasing (algorithm \ref{szeliski_affine}).
 	
 %	On est ainsi capable d'effectuer, en trois étapes $\mathcal R$ et sans \emph{aliasing}, tous les \emph{shears}. Or une affinité se décompose toujours en deux \emph{shears} (proposition \ref{propositionDecompositionAffinite}), on peut donc toujours traiter une affinité quelconque, et ce, sans \emph{aliasing} (algorithme \ref{szeliski_affine}).
 
@@ -97,16 +97,16 @@ Affinities are a particular case of homography for which there exists an efficie
 	%\end{proof}
 
 
-	\emph{A priori} this method decomposes any affinity into six steps of type $\mathcal R$ (three per shear). In fact it is possible to merge some of these steps $\mathcal R$ if they act in the same direction. The decomposition can then be reduced to four steps $\mathcal R$ : a vertical up-sampling, a horizontal shear, a vertical shear and finally a horizontal downsampling.
+	\emph{A priori} this method decomposes any affine map into six steps of type $\mathcal R$ (three per shear). In fact it is possible to merge some of these steps $\mathcal R$ if they act in the same direction. The decomposition can then be reduced to four steps $\mathcal R$ : a vertical up-sampling, a horizontal shear, a vertical shear and finally a horizontal downsampling.
 	
 %	Cette méthode semble donc décomposer une affinité en six opérations $\mathcal R$ (trois pour chacun des deux \emph{shears}) ; en pratique, il est possible de réunir certains $\mathcal R$, s'ils sont dans la même direction. La décomposition peut alors se réduire à quatre opérations $\mathcal R$ : un sur-échantillonnage vertical, un \emph{shear} horizontal, un \emph{shear} vertical puis enfin un sous-échantillonnage horizontal.
 	
 \subsection{Steps of the algorithm}
 	\label{szeliski_affine_section}
 	
-	The details of the multi-pass resampling algorithm for affinity an are described in this section. The corresponding algorithms can be found in appendix (algorithms \ref{szeliski_affine} and following).
+	The details of the multi-pass resampling algorithm for an affine map are described in this section. The corresponding algorithms can be found in appendix (algorithms \ref{szeliski_affine} and following).
 	
-	Let $A$ be the matrix of the inverse affinity of the one supposed to be processed. Let us denote
+	Let $A$ be the matrix of the inverse affine map of the one supposed to be processed. Let us denote
 
 \[A = \pmatrice{a_{00} & a_{01} & t_0\\ a_{10} & a_{11} & t_1}\]
 
@@ -137,7 +137,14 @@ Affinities are a particular case of homography for which there exists an efficie
 		\label{szeliski_decompositionDeA_section}
 		\label{szeliski_frequencesMax_section}
 		
-		The \emph{maximal preserved frequencies}  $u_{max}$ and $v_{max}$ are the frequencies beyond which the spectrum will be erased by the application of $A$. They are defined in the frequency domain by figure \ref{uMax_vMax}. Frequencies beyond them can be filtered out without altering the output spectrum. These definitions assume that the spectrum has been normalized on the square $[-1,1]^2$.
+		\begin{Def}
+		\label{szeliski_def_maximal_preserved_frequencies}
+		The maximal preserved frequencies $u_{max}$ and $v_{max}$ are the horizontal and vertical frequencies beyond which the spectrum will be erased by the application of $A$.
+		
+		They are defined in the frequency domain by figure \ref{uMax_vMax} ; in this definition, the spectrum has been normalized on the square $[-1,1]^2$. Thus, $(u_{max},v_{max})\in [0,1]^2$.
+		\end{Def}
+		
+		Frequencies beyond the maximal preserved frequencies can be filtered out without altering the output spectrum. 
 		
 %		On introduit les fréquences conservées maximales $u_{max}$, $v_{max}$ : ce sont les fréquences, horizontales et verticales, au delà desquelles les fréquences seront effacées par l'application de $A$ ; elles sont donc définies dans le domaine de Fourier par la figure \ref{uMax_vMax}. Les fréquences au-delà de $u_{max}$ horizontalement et de $v_{max}$ verticalement peuvent donc être filtrées, cela ne changera pas le spectre de sortie. Ces définitions se font après après avoir ramené le spectre sur le carré $[-1,1]^2$.
 		
@@ -146,12 +153,12 @@ Affinities are a particular case of homography for which there exists an efficie
 		\subfigure[Spectrum of the input image]{\includegraphics[scale=0.5]{uMax_vMax_spectreEntree.png}}
 		\subfigure[Spectrum of the output image]{\includegraphics[scale=0.5]{uMax_vMax_spectreSortie.png}}
 		\subfigure[Spectrum of the input image]{\includegraphics[scale=0.5]{uMax_vMax_spectreUtile.png}}
-		\caption{Frequencies preserved by the affinity. The dark areas correspond to the erased frequencies}
+		\caption{Maximal preserved frequencies (definition \ref{szeliski_def_maximal_preserved_frequencies}). The black areas correspond to the frequencies erased by the application of the affine map}
 		\label{uMax_vMax}
 		\end{figure}
 		
  
-		 The frequencies $u_{max}$ and $v_{max}$ can be found by finding the intersection of the input spectrum (that is to say the square $[-1,1]^2$) with the inverse image of the square by $^t\!A$ Indeed applying $^t\!A$ in the frequency domain is equivalent to applying $A^{-1}$ in the spatial domain. As before $A$ is the inverse of the affinity applied to the input image. The algorithms \ref{szeliski_intersectionsVerticales} and \ref{szeliski_intersectionsHorizontales} compute the intersection of a segment (which bounds are $(U_1,V_1)$ and $(U_2,V_2)$) with one of the sides of the square $[-1,1]^2$. Both algorithms are used in algorithm \ref{pseudo-code_umax_vmax} to compute $u_{max}$ and $v_{max}$.
+		 The frequencies $u_{max}$ and $v_{max}$ can be computed by finding the intersection of the input spectrum (that is to say the square $[-1,1]^2$) with the inverse image of the square by $^t\!A$ Indeed applying $^t\!A$ in the frequency domain is equivalent to applying $A^{-1}$ in the spatial domain. As before $A$ is the inverse of the map applied to the input image. The algorithms \ref{szeliski_intersectionsVerticales} and \ref{szeliski_intersectionsHorizontales} compute the intersection of a segment (which bounds are $(U_1,V_1)$ and $(U_2,V_2)$) with one of the sides of the square $[-1,1]^2$. Both algorithms are used in algorithm \ref{pseudo-code_umax_vmax} to compute $u_{max}$ and $v_{max}$.
 
 
 		%En pratique, $u_{max}$ et $v_{max}$ s'obtiennent en intersectant le spectre d'entrée (le carré $[-1,1]^2$) et l'image réciproque du carré $[-1,1]^2$ par $^t\!A$ (qui correspond à l'opération dans Fourier ; comme précédemment $A$ désigne l'inverse de l'affinité qu'on applique à l'image). Les algorithmes \ref{szeliski_intersectionsVerticales} et \ref{szeliski_intersectionsHorizontales} réalisent l'intersection d'un segment (d'extrémités $(U_1,V_1)$ et $(U_2,V_2)$) et d'un côté du carré $[-1,1]^2$. L'algorithme \ref{pseudo-code_umax_vmax} s'appuie sur ces algorithmes pour calculer $u_{max}$ et $v_{max}$.
@@ -171,7 +178,7 @@ Affinities are a particular case of homography for which there exists an efficie
 		\begin{figure}
 		\centering
 		\subfigure[$r_v$ not bounded]{\includegraphics[width=120mm]{rvleq3_notrvleq3.png}}
-		\subfigure[$r_v$ bounded by 3 ; the fact the horizontals spacings are unchanged has been used]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
+		\subfigure[$r_v$ bounded by 3 ; the fact the horizontal spacings are unchanged has been used]{\includegraphics[width=120mm]{rvleq3_rveq3.png}}
 		\caption{Reduction of $r_v$ down to $r_v \leq 3$. Beyond $v_{max}$, the frequencies are filtered out. We done by $s$ the parameter of the filter which reduces the bandwidth. Then the value of $r_v$ required to avoid aliasing can be reduced. We can take for $r_v$ the ratio of the length of the dotted rectangle (which is the spectrum after the upsampling) to that of the square (which is the initial spectrum)}
 		\label{rvleq3}
 		\end{figure}

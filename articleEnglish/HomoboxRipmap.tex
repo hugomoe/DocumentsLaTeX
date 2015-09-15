@@ -247,12 +247,12 @@ To compute the values of $F_n$ for $n=1...4$, values on integers are precomputed
 
 
 To precompute the values on integers, the relations
-\begin{eqnarray*}
-F_{1}(k+1)&=&  F_{1}(k)+f_{k} , \\
-F_{2}(k+1)&=&  F_{2}(k)+F_{1}(k)+\frac{f_{k}}{2} ,  \\
-F_{3}(k+1)&=&  F_{3}(k)+F_{2}(k)+\frac{F_{1}(k)}{2}+\frac{f_{k}}{6}  , \\
-F_{4}(k+1)&=&  F_{4}(k)+F_{3}(k)+\frac{F_{2}(k)}{2}+\frac{F_{1}(k)}{6}+\frac{f_{k}}{24}  ,
-\end{eqnarray*}
+\begin{eqnarray}
+F_{1}(k+1)&=&  F_{1}(k)+f_{k}, \label{formula_discret_integral_1}\\
+F_{2}(k+1)&=&  F_{2}(k)+F_{1}(k)+\frac{f_{k}}{2}, \label{formula_discret_integral_2}\\
+F_{3}(k+1)&=&  F_{3}(k)+F_{2}(k)+\frac{F_{1}(k)}{2}+\frac{f_{k}}{6}, \label{formula_discret_integral_3}\\
+F_{4}(k+1)&=&  F_{4}(k)+F_{3}(k)+\frac{F_{2}(k)}{2}+\frac{F_{1}(k)}{6}+\frac{f_{k}}{24}, \label{formula_discret_integral_4}
+\end{eqnarray}
 are used (see algorithm \ref{pseudo_code_built_4_int}).
 
 
@@ -261,12 +261,26 @@ are used (see algorithm \ref{pseudo_code_built_4_int}).
 To compute values on non-integers, the following scheme is used :
 
 \begin{itemize}
-\item If $x\le 0$ then $F_{4}(x)=0$.
-\item If $x\in ]0 , m[$ then $F_{4}(x)-F_{4}(\lfloor x \rfloor)=P_{\lfloor x \rfloor}(x-\lfloor x \rfloor)$ where $P_k$ is the polynomial of degree $4$ defined by
+\item If $x\le 0$ then
+\begin{equation}
+\label{formula_nonint_integral_case1}
+F_{4}(x)=0.
+\end{equation}
+\item If $x\in ]0 , m[$ then
+\begin{equation}
+\label{formula_nonint_integral_case2}
+F_{4}(x)-F_{4}(\lfloor x \rfloor)=P_{\lfloor x \rfloor}(x-\lfloor x \rfloor)
+\end{equation}
+where $P_k$ is a polynomial of degree $4$ defined by
 \begin{equation*}
 P_k (r) =r \left( F_{3}(k) +\frac{r}{2} \left(F_{2}(k)+ \frac{r}{3}\left(F_{1}(k)+\frac{r}{4} f_{k}\right)\right)\right), k=0...m-1.
 \end{equation*}
-\item If $x\ge m$ then $F_{4}(x)-F_{4}(m)=Q(x-m)$ where the polynomial $Q$ is defined by
+\item If $x\ge m$ then
+\begin{equation}
+\label{formula_nonint_integral_case3}
+F_{4}(x)-F_{4}(m)=Q(x-m)
+\end{equation}
+where  $Q$ is a polynomial of degree 3 defined by
 \begin{equation*}
 Q(r)=r \left(F_{3}(m)+\frac{r}{2} \left( F_{2}(m) + \frac{r}{3} F_1 (m)\right)\right).
 \end{equation*}\
